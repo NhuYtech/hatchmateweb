@@ -6,17 +6,23 @@ import EnvironmentCharts from "@/src/components/dashboard/EnvironmentCharts";
 import DeviceOverviewTable from "@/src/components/dashboard/DeviceOverviewTable";
 import RecentAlertsCard from "@/src/components/dashboard/RecentAlertsCard";
 import RecentCameraCard from "@/src/components/dashboard/RecentCameraCard";
-import { chartData, dashboardSummary, deviceList, recentAlerts, cameraFeeds } from "@/src/data/dashboardMock";
+import {
+  chartData,
+  dashboardSummary,
+  deviceList,
+  recentAlerts,
+  cameraFeeds,
+} from "@/src/data/dashboardMock";
 import { Activity, Droplet, Flame, ShieldCheck, Thermometer, Zap } from "lucide-react";
 
 export const metadata = {
   title: "HatchMate Admin Dashboard",
-  description: "Trang dashboard quản trị HatchMate",
+  description: "Dashboard HatchMate với welcome banner và KPI cards",
 };
 
 export default function DashboardPage() {
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-950">
+    <div className="min-h-screen text-slate-950">
       <div className="mx-auto flex min-h-screen max-w-[1680px] gap-6 px-4 py-5 xl:px-8">
         <AdminSidebar />
 
@@ -26,14 +32,13 @@ export default function DashboardPage() {
           <div className="grid gap-6">
             <WelcomeBanner summary={dashboardSummary} />
 
-            <div className="grid gap-6 xl:grid-cols-3">
+            <section className="grid gap-6 xl:grid-cols-3">
               <StatCard
                 label="Tổng thiết bị"
                 value={`${dashboardSummary.totalDevices}`}
                 description="Tổng số trạm ấp đang quản lý"
                 accent="default"
                 icon={<Activity className="h-5 w-5" />}
-                footnote="So sánh với hôm qua: +1 thiết bị"
               />
               <StatCard
                 label="Thiết bị online"
@@ -41,7 +46,6 @@ export default function DashboardPage() {
                 description="Thiết bị đang kết nối ổn định"
                 accent="success"
                 icon={<ShieldCheck className="h-5 w-5" />}
-                footnote="Tỉ lệ online cao giúp phân tích thời gian thực."
               />
               <StatCard
                 label="Thiết bị đang ấp"
@@ -54,7 +58,7 @@ export default function DashboardPage() {
                 label="Thiết bị cảnh báo"
                 value={`${dashboardSummary.warningDevices}`}
                 description="Thiết bị cần kiểm tra nhanh"
-                accent="danger"
+                accent="warning"
                 icon={<Zap className="h-5 w-5" />}
               />
               <StatCard
@@ -67,21 +71,20 @@ export default function DashboardPage() {
               <StatCard
                 label="Độ ẩm trung bình"
                 value={`${dashboardSummary.avgHumidity}%`}
-                description="Độ ẩm toàn hệ thống"
+                description="Độ ẩm tổng thể của môi trường"
                 accent="humidity"
                 icon={<Droplet className="h-5 w-5" />}
               />
-            </div>
+            </section>
 
             <EnvironmentCharts data={chartData} />
 
-            <div className="grid gap-6 xl:grid-cols-[1.6fr_1fr]">
-              <DeviceOverviewTable devices={deviceList} />
-              <div className="grid gap-6">
-                <RecentAlertsCard alerts={recentAlerts} />
-                <RecentCameraCard feeds={cameraFeeds} />
-              </div>
-            </div>
+            <DeviceOverviewTable devices={deviceList} />
+
+            <section className="grid gap-6 md:grid-cols-2">
+              <RecentAlertsCard alerts={recentAlerts} />
+              <RecentCameraCard feeds={cameraFeeds} />
+            </section>
           </div>
         </main>
       </div>

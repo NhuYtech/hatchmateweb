@@ -4,7 +4,7 @@ import type {
   ChartPoint,
   DeviceItem,
   KpiSummary,
-} from "../types/dashboard";
+} from "@/src/types/dashboard";
 
 export const dashboardSummary: KpiSummary = {
   totalDevices: 5,
@@ -34,7 +34,7 @@ export const deviceList: DeviceItem[] = [
     id: "SEI-IoT-002",
     name: "HatchMate Bravo",
     owner: "Nông trại B",
-    status: "incubating",
+    status: "online",
     temperature: 37.2,
     humidity: 60,
     incubatingDay: 10,
@@ -88,21 +88,27 @@ export const recentAlerts: AlertItem[] = [
   {
     id: "A001",
     deviceId: "SEI-IoT-001",
-    title: "Quá nhiệt 38.2°C",
+    deviceName: "HatchMate Alpha",
+    title: "Quá nhiệt",
+    message: "Nhiệt độ đo được 38.2°C vượt ngưỡng an toàn",
     level: "danger",
     timestamp: "09:18",
   },
   {
     id: "A002",
     deviceId: "SEI-IoT-003",
+    deviceName: "HatchMate Delta",
     title: "Mất kết nối",
+    message: "Thiết bị không gửi dữ liệu trong 15 phút qua",
     level: "warning",
     timestamp: "08:55",
   },
   {
     id: "A003",
     deviceId: "SEI-IoT-002",
-    title: "Độ ẩm thấp hơn ngưỡng",
+    deviceName: "HatchMate Bravo",
+    title: "Độ ẩm thấp",
+    message: "Độ ẩm hiện tại 45% (ngưỡng tối thiểu 50%)",
     level: "info",
     timestamp: "08:20",
   },
@@ -112,7 +118,7 @@ export const cameraFeeds: CameraItem[] = [
   {
     id: "C001",
     deviceName: "HatchMate Alpha",
-    imageUrl: undefined,
+    imageUrl: "/incubator_chicks.png",
     aiLabel: "Gà con bình thường",
     capturedAt: "09:22",
   },
@@ -126,8 +132,8 @@ export const cameraFeeds: CameraItem[] = [
   {
     id: "C003",
     deviceName: "HatchMate Foxtrot",
-    imageUrl: undefined,
-    aiLabel: "Hình ảnh rõ nét",
+    imageUrl: "/incubator_eggs.png",
+    aiLabel: "Trứng bình thường",
     capturedAt: "09:10",
   },
 ];

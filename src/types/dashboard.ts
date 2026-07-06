@@ -1,4 +1,4 @@
-export type DeviceStatus = "online" | "offline" | "incubating" | "warning";
+export type DeviceStatus = "online" | "offline" | "warning";
 export type AlertLevel = "danger" | "warning" | "info";
 
 export interface KpiSummary {
@@ -28,7 +28,9 @@ export interface DeviceItem {
 export interface AlertItem {
   id: string;
   deviceId: string;
+  deviceName: string;
   title: string;
+  message: string;
   level: AlertLevel;
   timestamp: string;
 }
