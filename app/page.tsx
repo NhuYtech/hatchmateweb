@@ -17,10 +17,10 @@ export const metadata = {
 export default function DashboardPage() {
   return (
     <div className="min-h-screen text-slate-950">
-      <div className="mx-auto flex min-h-screen max-w-[1680px] gap-6 px-4 py-5 xl:px-8">
+      <div className="mx-auto flex min-h-screen w-full max-w-[1680px] gap-6 px-4 py-5 xl:px-8">
         <AdminSidebar />
 
-        <main className="flex min-h-screen flex-1 flex-col gap-6">
+        <main className="flex min-h-screen flex-1 flex-col gap-6 min-w-0">
           <DashboardTopbar />
 
           <div className="grid gap-6">

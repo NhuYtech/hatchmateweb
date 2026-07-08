@@ -24,7 +24,7 @@ export default function EnvironmentCharts({ data }: EnvironmentChartsProps) {
 
   return (
     <section className="grid gap-6 lg:grid-cols-[1.3fr_1fr]">
-      <div className="rounded-[24px] border border-slate-200/80 bg-white/95 p-5 shadow-sm">
+      <div className="rounded-[24px] border border-slate-200/80 bg-white/95 p-5 shadow-sm min-w-0 overflow-hidden">
         <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.24em] text-slate-500">
