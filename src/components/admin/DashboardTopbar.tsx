@@ -1,45 +1,95 @@
-import { Bell, Search, UserCircle2 } from "lucide-react";
+"use client";
 
-export default function DashboardTopbar() {
+import { useState } from "react";
+import {
+  Search,
+  Bell,
+  Mail,
+  Menu,
+  UserCircle2,
+} from "lucide-react";
+
+interface DashboardTopbarProps {
+  onMenuToggle?: () => void;
+}
+
+export default function DashboardTopbar({ onMenuToggle }: DashboardTopbarProps) {
+  const [searchValue, setSearchValue] = useState("");
+
   return (
-    <div className="flex flex-col gap-6 rounded-[24px] border border-slate-200/80 bg-white px-6 py-5 shadow-sm sm:flex-row sm:items-center sm:justify-between">
-      <div className="space-y-2">
-        <div className="text-sm font-semibold uppercase tracking-[0.24em] text-sky-500">
-          Tổng quan hệ thống
-        </div>
-        <div>
-          <h1 className="text-2xl font-semibold text-slate-950">Tổng quan hệ thống</h1>
-          <p className="mt-2 max-w-2xl text-sm text-slate-600">
-            Giám sát toàn bộ hệ thống ấp trứng HatchMate, theo dõi trạng thái và hành động nhanh.
-          </p>
-        </div>
-      </div>
+    <header className="flex h-16 w-full items-center justify-between border-b border-gray-200 bg-white px-6">
 
-      <div className="grid gap-4 sm:auto-cols-min sm:grid-flow-col sm:items-center">
-        <label className="relative flex h-12 min-w-[260px] items-center rounded-[20px] border border-slate-200 bg-slate-50 px-4 text-slate-500 transition focus-within:border-sky-300">
-          <Search className="h-4 w-4" />
-          <input
-            type="search"
-            placeholder="Tìm thiết bị..."
-            className="ml-3 min-w-0 flex-1 bg-transparent text-sm text-slate-900 outline-none placeholder:text-slate-400"
-          />
-        </label>
+      {/* ── Left: Logo + Hamburger + Search ── */}
+      <div className="flex items-center gap-6">
+        {/* Logo */}
+        <span className="text-[18px] font-bold tracking-tight text-gray-900 select-none">
+          Hệ thống ấp trứng gà thông minh HatchMate
+        </span>
 
+        {/* Hamburger */}
         <button
           type="button"
-          className="inline-flex h-12 items-center justify-center rounded-[20px] bg-slate-50 px-4 text-slate-700 transition hover:bg-slate-100"
+          onClick={onMenuToggle}
+          className="flex items-center justify-center rounded-md p-1 text-gray-500 transition hover:bg-gray-100 hover:text-gray-700"
+          aria-label="Toggle menu"
         >
-          <Bell className="h-5 w-5" />
+          <Menu className="h-5 w-5" />
         </button>
 
-        <div className="inline-flex items-center gap-3 rounded-[20px] border border-slate-200 bg-white px-4 py-3 shadow-sm">
-          <UserCircle2 className="h-10 w-10 rounded-full bg-slate-100 p-1 text-slate-500" />
-          <div className="text-left">
-            <p className="text-sm font-semibold text-slate-900">Nguyễn Admin</p>
-            <p className="text-xs text-slate-500">Quản trị viên</p>
-          </div>
-        </div>
+
+        {/* Search */}
+        <label className="hidden sm:flex relative w-[280px] items-center gap-2 rounded-lg bg-gray-100 px-3 py-2 text-gray-400 focus-within:ring-2 focus-within:ring-blue-200 transition">
+          <input
+            type="search"
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+            placeholder="Search"
+            className="min-w-0 flex-1 bg-transparent text-sm text-gray-800 outline-none placeholder:text-gray-400"
+          />
+          <Search className="h-4 w-4 shrink-0" />
+        </label>
       </div>
-    </div>
+
+      {/* ── Right: Links + Icons + Avatar ── */}
+      <div className="flex items-center gap-6">
+        {/* Documentation link — hidden on mobile
+        <a
+          href="#"
+          className="hidden items-center gap-0.5 text-sm text-gray-500 transition hover:text-gray-800 sm:flex"
+        >
+          <span>Documentation</span>
+          <ChevronRight className="h-3.5 w-3.5" />
+        </a> */}
+
+        {/* Bell */}
+        <button
+          type="button"
+          className="flex items-center justify-center rounded-md p-1 text-gray-500 transition hover:bg-gray-100 hover:text-gray-700"
+          aria-label="Notifications"
+        >
+          <Bell className="h-5 w-5" strokeWidth={1.8} />
+        </button>
+
+        {/* Mail */}
+        <button
+          type="button"
+          className="flex items-center justify-center rounded-md p-1 text-gray-500 transition hover:bg-gray-100 hover:text-gray-700"
+          aria-label="Messages"
+        >
+          <Mail className="h-5 w-5" strokeWidth={1.8} />
+        </button>
+
+        {/* Avatar */}
+        <button
+          type="button"
+          className="flex items-center justify-center"
+          aria-label="User profile"
+        >
+          <div className="h-9 w-9 overflow-hidden rounded-full border border-gray-200 bg-gray-100 ring-1 ring-gray-300">
+            <UserCircle2 className="h-full w-full text-gray-400" strokeWidth={1.2} />
+          </div>
+        </button>
+      </div>
+    </header>
   );
 }

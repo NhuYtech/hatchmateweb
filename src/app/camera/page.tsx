@@ -1,4 +1,3 @@
-import AdminSidebar from "@/src/components/admin/AdminSidebar";
 import CameraPageHeader from "@/src/components/camera/CameraPageHeader";
 import CameraMiniStatCard from "@/src/components/camera/CameraMiniStatCard";
 import CameraFilterBar from "@/src/components/camera/CameraFilterBar";
@@ -21,52 +20,46 @@ export default function CameraPage() {
   const { totalCameras, onlineCameras, analyzedToday, aiAlerts } = cameraSummaryData;
 
   return (
-    <div className="min-h-screen text-slate-950">
-      <div className="mx-auto flex min-h-screen w-full max-w-[1680px] gap-6 px-4 py-5 xl:px-8">
-        <AdminSidebar />
+    <div className="grid gap-6">
+      {/* Header */}
+      <CameraPageHeader totalCameras={totalCameras} />
 
-        <main className="flex min-h-screen flex-1 flex-col gap-6 min-w-0">
-          {/* Header */}
-          <CameraPageHeader totalCameras={totalCameras} />
+      {/* Mini Stats Component Section */}
+      <section className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <CameraMiniStatCard
+          label="Tổng camera"
+          value={totalCameras}
+          icon={Video}
+          accent="indigo"
+        />
+        <CameraMiniStatCard
+          label="Camera online"
+          value={onlineCameras}
+          icon={ShieldCheck}
+          accent="emerald"
+        />
+        <CameraMiniStatCard
+          label="Ảnh đã phân tích"
+          value={analyzedToday}
+          icon={Camera}
+          accent="sky"
+        />
+        <CameraMiniStatCard
+          label="Cảnh báo AI"
+          value={aiAlerts}
+          icon={Brain}
+          accent="rose"
+        />
+      </section>
 
-          {/* Mini Stats Component Section */}
-          <section className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            <CameraMiniStatCard
-              label="Tổng camera"
-              value={totalCameras}
-              icon={Video}
-              accent="indigo"
-            />
-            <CameraMiniStatCard
-              label="Camera online"
-              value={onlineCameras}
-              icon={ShieldCheck}
-              accent="emerald"
-            />
-            <CameraMiniStatCard
-              label="Ảnh đã phân tích"
-              value={analyzedToday}
-              icon={Camera}
-              accent="sky"
-            />
-            <CameraMiniStatCard
-              label="Cảnh báo AI"
-              value={aiAlerts}
-              icon={Brain}
-              accent="rose"
-            />
-          </section>
+      {/* Camera Filter Bar */}
+      <CameraFilterBar />
 
-          {/* Camera Filter Bar */}
-          <CameraFilterBar />
+      {/* Camera Grid Section */}
+      <CameraGrid cameras={cameraMockList} />
 
-          {/* Camera Grid Section */}
-          <CameraGrid cameras={cameraMockList} />
-
-          {/* AI Analysis Section */}
-          <AIAnalysisTable records={aiRecordMockList} />
-        </main>
-      </div>
+      {/* AI Analysis Section */}
+      <AIAnalysisTable records={aiRecordMockList} />
     </div>
   );
 }

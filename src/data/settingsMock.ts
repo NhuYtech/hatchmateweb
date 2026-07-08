@@ -3,7 +3,8 @@ import {
   IncubationProfile, 
   EnvironmentSettings, 
   TurningSettings,
-  IncubationPhase
+  IncubationPhase,
+  AlertSettings,
 } from "@/src/types/incubation-settings";
 
 export const incubationSettingsSummaryData: IncubationSettingsSummary = {
@@ -62,51 +63,77 @@ export const defaultTurningSettings: TurningSettings = {
 
 export const incubationPhasesMock: IncubationPhase[] = [
   {
-    id: "P1",
-    phaseName: "Giai đoạn 1 (Đầu kỳ)",
+    id: "phase-1",
+    phaseName: "Phát triển phôi",
     startDay: 1,
     endDay: 7,
     targetTemperature: 37.8,
-    targetHumidity: 60,
+    targetHumidity: 55,
     turnIntervalMin: 120,
     turnDurationSec: 60,
     turningMode: "auto",
-    notes: "Bắt đầu chu kỳ tạo phôi nóng và phân nhánh mạch máu đỏ.",
+    notes: "Giai đoạn hình thành phôi, giữ ổn định nhiệt độ cao và đảo đều đặn.",
   },
   {
-    id: "P2",
-    phaseName: "Giai đoạn 2 (Giữa kỳ)",
+    id: "phase-2",
+    phaseName: "Tạo hình cơ thể",
     startDay: 8,
     endDay: 14,
-    targetTemperature: 37.5,
-    targetHumidity: 55,
+    targetTemperature: 37.6,
+    targetHumidity: 57,
     turnIntervalMin: 120,
     turnDurationSec: 60,
     turningMode: "auto",
-    notes: "Định hình các cơ quan nội tạng chính và chi.",
+    notes: "Cơ thể gà con bắt đầu hình thành, duy trì chu kỳ đảo đều.",
   },
   {
-    id: "P3",
-    phaseName: "Giai đoạn 3 (Chuẩn bị nở)",
+    id: "phase-3",
+    phaseName: "Hoàn thiện cơ quan",
     startDay: 15,
     endDay: 18,
-    targetTemperature: 37.2,
-    targetHumidity: 55,
+    targetTemperature: 37.4,
+    targetHumidity: 60,
     turnIntervalMin: 180,
     turnDurationSec: 45,
-    turningMode: "auto",
-    notes: "Xoay dọc đầu phôi hướng buồng khí.",
+    turningMode: "manual",
+    notes: "Giảm tần suất đảo, tăng nhẹ độ ẩm để hỗ trợ cơ quan hô hấp.",
   },
   {
-    id: "P4",
-    phaseName: "Giai đoạn 4 (Mổ vỏ & Nở)",
+    id: "phase-4",
+    phaseName: "Chuẩn bị nở",
     startDay: 19,
     endDay: 21,
-    targetTemperature: 37.0,
+    targetTemperature: 37.2,
     targetHumidity: 70,
     turnIntervalMin: 0,
     turnDurationSec: 0,
     turningMode: "disabled",
-    notes: "Ngừng đảo tuyệt đối để tránh làm xoay ngôi thai lúc mổ vỏ.",
+    notes: "Ngừng đảo, tăng độ ẩm cao để gà con dễ mở vỏ trứng và thở.",
   },
 ];
+
+export const defaultAlertSettings: AlertSettings = {
+  // A. Temperature
+  highTempAlertEnabled: true,
+  highTempThreshold: 39,
+  lowTempAlertEnabled: true,
+  lowTempThreshold: 36.5,
+
+  // B. Humidity
+  lowHumidityAlertEnabled: true,
+  lowHumidityThreshold: 50,
+  highHumidityAlertEnabled: false,
+  highHumidityThreshold: 75,
+
+  // C. Connectivity
+  deviceOfflineAlert: true,
+  cameraOfflineAlert: true,
+  sensorNoResponseAlert: true,
+
+  // D. Notification channels
+  pushNotificationEnabled: true,
+  adminNotificationEnabled: true,
+  realtimeAlertEnabled: true,
+};
+
+

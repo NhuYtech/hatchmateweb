@@ -14,52 +14,59 @@ export default function SettingsSummaryCard({
   icon: Icon,
   accent,
 }: SettingsSummaryCardProps) {
-  const accentClasses = {
+  const styles = {
     orange: {
-      bg: "bg-orange-50",
-      text: "text-orange-600",
-      border: "border-orange-100/70",
-      hover: "hover:border-orange-300 hover:shadow-orange-100/40",
+      border: "border-orange-100/60",
+      iconBg: "bg-gradient-to-br from-amber-50 to-orange-50",
+      iconText: "text-orange-500",
+      bar: "bg-gradient-to-r from-amber-400 to-orange-500",
+      hover: "hover:border-orange-200 hover:shadow-orange-100/50",
     },
     blue: {
-      bg: "bg-blue-50/70",
-      text: "text-blue-600",
-      border: "border-blue-100/70",
-      hover: "hover:border-blue-300 hover:shadow-blue-100/40",
+      border: "border-blue-100/60",
+      iconBg: "bg-gradient-to-br from-sky-50 to-blue-50",
+      iconText: "text-blue-500",
+      bar: "bg-gradient-to-r from-sky-400 to-blue-500",
+      hover: "hover:border-blue-200 hover:shadow-blue-100/50",
     },
     rose: {
-      bg: "bg-rose-50/70",
-      text: "text-rose-600",
-      border: "border-rose-100/70",
-      hover: "hover:border-rose-300 hover:shadow-rose-100/40",
+      border: "border-rose-100/60",
+      iconBg: "bg-gradient-to-br from-pink-50 to-rose-50",
+      iconText: "text-rose-500",
+      bar: "bg-gradient-to-r from-pink-400 to-rose-500",
+      hover: "hover:border-rose-200 hover:shadow-rose-100/50",
     },
     emerald: {
-      bg: "bg-emerald-50/70",
-      text: "text-emerald-600",
-      border: "border-emerald-100/70",
-      hover: "hover:border-emerald-300 hover:shadow-emerald-100/40",
+      border: "border-emerald-100/60",
+      iconBg: "bg-gradient-to-br from-teal-50 to-emerald-50",
+      iconText: "text-emerald-600",
+      bar: "bg-gradient-to-r from-teal-400 to-emerald-500",
+      hover: "hover:border-emerald-200 hover:shadow-emerald-100/50",
     },
   };
 
-  const activeStyles = accentClasses[accent] || accentClasses.blue;
+  const s = styles[accent];
 
   return (
     <div
-      className={`group flex items-center justify-between rounded-[24px] border bg-white p-5 shadow-sm shadow-sky-100/10 transition-all duration-300 ${activeStyles.border} ${activeStyles.hover} hover:-translate-y-1 hover:shadow-lg`}
+      className={`group relative overflow-hidden flex items-center justify-between rounded-[22px] border bg-white p-5 shadow-sm transition-all duration-300 ${s.border} ${s.hover} hover:-translate-y-0.5 hover:shadow-md`}
     >
-      <div className="space-y-1">
-        <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-slate-400">
+      {/* Top accent bar */}
+      <div className={`absolute top-0 left-0 right-0 h-0.5 ${s.bar}`} />
+
+      <div className="space-y-1.5 min-w-0 flex-1 pr-3">
+        <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-400 leading-none truncate">
           {label}
         </p>
-        <p className="text-xl font-extrabold tracking-tight text-sky-950 transition-all duration-300 group-hover:scale-[1.03] origin-left">
+        <p className="text-lg font-extrabold tracking-tight text-sky-950 truncate transition-all duration-300 group-hover:scale-[1.02] origin-left">
           {value}
         </p>
       </div>
 
       <div
-        className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl transition-all duration-300 group-hover:scale-110 ${activeStyles.bg} ${activeStyles.text}`}
+        className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl transition-all duration-300 group-hover:scale-110 ${s.iconBg} ${s.iconText}`}
       >
-        <Icon className="h-5 w-5 stroke-[2.2]" />
+        <Icon className="h-5 w-5 stroke-[2]" />
       </div>
     </div>
   );

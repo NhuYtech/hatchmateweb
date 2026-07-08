@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -10,7 +9,6 @@ import {
   ClipboardList,
   Cpu,
   Home,
-  Menu,
   SlidersHorizontal,
   Users,
   LucideIcon,
@@ -52,13 +50,11 @@ function SidebarNavItem({
     <div className="group relative">
       <Link
         href={href}
-        className={`flex w-full items-center gap-3 rounded-[20px] px-4 py-3 text-left text-sm font-medium transition ${
-          collapsed ? "justify-center px-0" : ""
-        } ${
-          active
+        className={`flex w-full items-center gap-3 rounded-[20px] px-4 py-3 text-left text-sm font-medium transition ${collapsed ? "justify-center px-0" : ""
+          } ${active
             ? "bg-sky-50 text-sky-700 shadow-sm"
             : "text-slate-700 hover:bg-slate-100 hover:text-slate-900"
-        }`}
+          }`}
       >
         <Icon className="h-5 w-5 shrink-0" />
         {!collapsed && <span>{label}</span>}
@@ -74,49 +70,40 @@ function SidebarNavItem({
   );
 }
 
-export default function AdminSidebar() {
-  const [collapsed, setCollapsed] = useState(false);
+interface AdminSidebarProps {
+  collapsed: boolean;
+}
+
+export default function AdminSidebar({ collapsed }: AdminSidebarProps) {
   const pathname = usePathname() || "";
 
   return (
     <aside
-      className={`sticky top-5 hidden h-[calc(100vh-40px)] flex-col rounded-[16px] border border-slate-200/80 bg-white py-6 shadow-sm transition-all duration-300 md:flex ${
-        collapsed ? "w-[88px] px-3" : "w-[280px] px-5"
-      }`}
+      className={`hidden h-[calc(100vh-64px)] flex-col border-r border-slate-200 bg-white py-6 transition-all duration-300 md:flex shrink-0 ${collapsed ? "w-[76px] px-2" : "w-[260px] px-4"
+        } overflow-y-auto`}
     >
-      {/* Header */}
-      <div
-        className={`mb-10 rounded-[24px] border border-slate-200/60 bg-slate-50 shadow-sm ${
-          collapsed ? "p-2" : "p-4"
-        }`}
-      >
-        <div
-          className={`flex items-center gap-3 ${collapsed ? "flex-col" : "mb-5"}`}
-        >
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-3xl bg-sky-100 text-sky-700">
-            <span className="text-lg font-semibold">HM</span>
+      {/* Header Info (Optional/Simplified) */}
+      <div className="mb-6 px-2">
+        <div className="flex items-center gap-3">
+          {/* Thay thế cụm div HM cũ: */}
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-sky-50 text-sky-700 font-extrabold text-sm border border-sky-100 overflow-hidden">
+            <img
+              src="/logov2.png" // Đường dẫn đến ảnh logo của bạn trong thư mục public
+              alt="Logo"
+              className="h-full w-full object-cover"
+            />
           </div>
+
           {!collapsed && (
-            <div>
-              <p className="text-sm font-semibold text-slate-900">HatchMate Admin</p>
-              <p className="text-xs text-slate-500">Bảng điều khiển hệ thống</p>
+            <div className="min-w-0 flex-1">
+              <p className="text-xs font-bold text-sky-950 truncate">HatchMate</p>
+              <p className="text-[10px] font-medium text-slate-400 truncate">Hệ thống ấp trứng gà thông minh</p>
             </div>
           )}
-          <button
-            type="button"
-            onClick={() => setCollapsed((v) => !v)}
-            className="ml-auto flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-slate-500 hover:bg-slate-100"
-          >
-            <Menu className="h-4 w-4" />
-          </button>
         </div>
-
-        {!collapsed && (
-          <div className="rounded-3xl bg-white p-3 text-sm text-slate-500">
-            Web admin giám sát hệ thống ấp trứng thông minh
-          </div>
-        )}
       </div>
+
+
 
       <nav className="space-y-2">
         {menus.map((item) => {

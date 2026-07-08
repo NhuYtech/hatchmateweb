@@ -21,14 +21,6 @@ export interface EnvironmentSettings {
   syncIntervalSec: number;
 }
 
-export interface TurningSettings {
-  autoTurningEnabled: boolean;
-  turnIntervalMin: number;
-  turnDurationSec: number;
-  maxTurnsPerDay: number;
-  stopTurningLastDays: boolean;
-}
-
 export type TurningMode = "auto" | "manual" | "disabled";
 
 export interface IncubationPhase {
@@ -41,5 +33,38 @@ export interface IncubationPhase {
   turnIntervalMin: number;
   turnDurationSec: number;
   turningMode: TurningMode;
-  notes?: string | null;
+  notes?: string;
 }
+
+export interface TurningSettings {
+  autoTurningEnabled: boolean;
+  turnIntervalMin: number;
+  turnDurationSec: number;
+  maxTurnsPerDay: number;
+  stopTurningLastDays: boolean;
+}
+
+export interface AlertSettings {
+  // A. Temperature alerts
+  highTempAlertEnabled: boolean;
+  highTempThreshold: number;
+  lowTempAlertEnabled: boolean;
+  lowTempThreshold: number;
+
+  // B. Humidity alerts
+  lowHumidityAlertEnabled: boolean;
+  lowHumidityThreshold: number;
+  highHumidityAlertEnabled: boolean;
+  highHumidityThreshold: number;
+
+  // C. Connectivity / system alerts
+  deviceOfflineAlert: boolean;
+  cameraOfflineAlert: boolean;
+  sensorNoResponseAlert: boolean;
+
+  // D. Notification channels
+  pushNotificationEnabled: boolean;
+  adminNotificationEnabled: boolean;
+  realtimeAlertEnabled: boolean;
+}
+
