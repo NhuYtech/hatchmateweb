@@ -10,14 +10,12 @@ export interface AuthUser {
   email: string | null;
   displayName: string | null;
   photoURL: string | null;
-  isMock?: boolean;
 }
 
 interface AuthContextType {
   currentUser: AuthUser | null;
   loading: boolean;
   signInWithGoogle: () => Promise<void>;
-  signInMock: () => void;
   logout: () => Promise<void>;
 }
 
@@ -28,21 +26,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // 1. Check if there is a saved mock user session in sessionStorage
-    const savedMockUser = sessionStorage.getItem("hatchmate_mock_user");
-    if (savedMockUser) {
-      try {
-        const parsed = JSON.parse(savedMockUser);
-        setCurrentUser(parsed);
-        setLoading(false);
-        return;
-      } catch (e) {
-        console.error("Failed to parse mock user:", e);
-        sessionStorage.removeItem("hatchmate_mock_user");
-      }
-    }
-
-    // 2. If Firebase is configured, subscribe to auth state changes
+    // If Firebase is configured, subscribe to auth state changes
     if (isFirebaseConfigured) {
       const unsubscribe = onAuthStateChanged(auth, (user) => {
         if (user) {
@@ -66,25 +50,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signInWithGoogle = async () => {
     if (!isFirebaseConfigured) {
-      throw new Error("Firebase chưa được cấu hình! Vui lòng sử dụng chế độ Đăng nhập Thử nghiệm.");
+      throw new Error("Firebase chưa được cấu hình!");
     }
     await firebaseSignInWithGoogle();
   };
 
-  const signInMock = () => {
-    const mockUser: AuthUser = {
-      uid: "mock-admin-uid",
-      email: "test-admin@hatchmate.vn",
-      displayName: "Test Admin",
-      photoURL: null,
-      isMock: true,
-    };
-    setCurrentUser(mockUser);
-    sessionStorage.setItem("hatchmate_mock_user", JSON.stringify(mockUser));
-  };
-
   const logout = async () => {
-    sessionStorage.removeItem("hatchmate_mock_user");
     setCurrentUser(null);
     if (isFirebaseConfigured) {
       try {
@@ -96,7 +67,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ currentUser, loading, signInWithGoogle, signInMock, logout }}>
+    <AuthContext.Provider value={{ currentUser, loading, signInWithGoogle, logout }}>
       {children}
     </AuthContext.Provider>
   );
