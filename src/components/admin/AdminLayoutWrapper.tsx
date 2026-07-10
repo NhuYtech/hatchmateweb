@@ -1,19 +1,66 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import DashboardTopbar from "./DashboardTopbar";
 import AdminSidebar from "./AdminSidebar";
+import { useAuth } from "@/src/components/AuthProvider";
 
 export default function AdminLayoutWrapper({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const pathname = usePathname();
+  const router = useRouter();
   const [collapsed, setCollapsed] = useState(false);
+  const [authorized, setAuthorized] = useState(false);
+  const { currentUser, loading } = useAuth();
+
+  useEffect(() => {
+    if (loading) return;
+
+    const isLoginPath = pathname === "/" || pathname === "/login";
+
+    if (!currentUser && !isLoginPath) {
+      setAuthorized(false);
+      router.replace("/");
+    } else if (currentUser && isLoginPath) {
+      setAuthorized(false);
+      router.replace("/dashboard");
+    } else {
+      setAuthorized(true);
+    }
+  }, [currentUser, loading, pathname, router]);
 
   const toggleSidebar = () => {
     setCollapsed((v) => !v);
   };
+
+  const isLoginPath = pathname === "/" || pathname === "/login";
+
+  // If still loading auth state, show loader
+  if (loading) {
+    return (
+      <div className="h-screen w-screen flex items-center justify-center bg-[#FFF8E8]">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#F5B000]"></div>
+      </div>
+    );
+  }
+
+  // Render the login page directly with its own layout/bg
+  if (isLoginPath) {
+    return <>{children}</>;
+  }
+
+  // If not authorized yet (during redirect), keep showing the loader
+  if (!authorized) {
+    return (
+      <div className="h-screen w-screen flex items-center justify-center bg-[#FFF8E8]">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#F5B000]"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="h-screen overflow-hidden flex flex-col bg-slate-50 text-slate-900">

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import AdminLayoutWrapper from "@/src/components/admin/AdminLayoutWrapper";
+import { AuthProvider } from "@/src/components/AuthProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,9 +31,11 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="h-screen overflow-hidden flex flex-col bg-slate-50 text-slate-900">
-        <AdminLayoutWrapper>
-          {children}
-        </AdminLayoutWrapper>
+        <AuthProvider>
+          <AdminLayoutWrapper>
+            {children}
+          </AdminLayoutWrapper>
+        </AuthProvider>
       </body>
     </html>
   );
