@@ -9,7 +9,8 @@ import {
   Download,
   RotateCw,
   Cpu,
-  Plus
+  Plus,
+  ArrowRight
 } from "lucide-react";
 import { DeviceItem } from "@/src/types/device";
 import DataTablePagination from "@/src/components/common/DataTablePagination";
@@ -58,27 +59,32 @@ export default function DeviceTable({ devices, onAddDevice, onRefresh }: DeviceT
   };
 
   const getIncubationBadge = (status: DeviceItem["incubationStatus"], day: number, total: number) => {
-    const configs = {
-      incubating: "bg-sky-50 text-sky-700 border-sky-100",
-      hatchingSoon: "bg-gradient-to-r from-amber-50 to-orange-50 text-orange-700 border-orange-100",
-      paused: "bg-slate-50 text-slate-500 border-slate-200/60",
-    };
-    const labels = {
-      incubating: "Đang ấp",
-      hatchingSoon: "Sắp nở",
-      paused: "Tạm dừng",
-    };
-    return (
-      <div className="space-y-1">
-        <span className={`inline-flex rounded-lg border px-2 py-0.5 text-xs font-semibold ${configs[status]}`}>
-          {labels[status]}
+    if (status === "paused") {
+      return (
+        <span className="inline-flex rounded-lg border border-slate-200/60 bg-slate-50 px-2 py-0.5 text-xs font-semibold text-slate-500">
+          Tạm dừng
         </span>
-        {status !== "paused" && (
+      );
+    }
+    
+    if (status === "hatchingSoon") {
+      return (
+        <div className="space-y-1">
+          <span className="inline-flex rounded-lg border border-orange-100 bg-gradient-to-r from-amber-50 to-orange-50 px-2 py-0.5 text-xs font-semibold text-orange-700">
+            Sắp nở
+          </span>
           <p className="text-[11px] font-medium text-slate-500 pl-0.5">
             Ngày {day}/{total}
           </p>
-        )}
-      </div>
+        </div>
+      );
+    }
+
+    // Default 'incubating' cycle: just show the day text, no 'Đang ấp' badge
+    return (
+      <span className="text-sm font-semibold text-slate-700">
+        Ngày {day}/{total}
+      </span>
     );
   };
 
@@ -181,7 +187,7 @@ export default function DeviceTable({ devices, onAddDevice, onRefresh }: DeviceT
 
       {/* Responsive Wrapper */}
       <div className="overflow-x-auto relative min-h-[300px]">
-        <table className="w-full min-w-[1000px] border-collapse text-left text-sm">
+        <table className="w-full min-w-[1100px] border-collapse text-left text-sm">
           <thead>
             <tr className="border-b border-slate-100 bg-slate-50/40 text-[11px] font-bold uppercase tracking-wider text-slate-400">
               <th className="px-6 py-4">ID Máy</th>
@@ -193,6 +199,7 @@ export default function DeviceTable({ devices, onAddDevice, onRefresh }: DeviceT
               <th className="px-6 py-4">Độ ẩm</th>
               <th className="px-6 py-4">Camera</th>
               <th className="px-6 py-4">Cập nhật cuối</th>
+              <th className="px-6 py-4 text-center">Hành động</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
@@ -271,6 +278,14 @@ export default function DeviceTable({ devices, onAddDevice, onRefresh }: DeviceT
                 {/* Cập nhật cuối */}
                 <td className="px-6 py-4 text-xs text-slate-400 font-semibold">
                   {device.lastSeen}
+                </td>
+
+                {/* Hành động */}
+                <td className="px-6 py-4 align-middle text-center">
+                  <button className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 hover:bg-amber-100 border border-amber-200/60 px-3.5 py-1.5 text-xs font-semibold text-amber-800 transition active:scale-95 duration-100 cursor-pointer">
+                    Xem chi tiết
+                    <ArrowRight className="h-3 w-3" />
+                  </button>
                 </td>
               </tr>
             ))}
