@@ -9,7 +9,7 @@ export default function CameraPageHeader({ totalCameras }: CameraPageHeaderProps
   return (
     <div className="flex flex-col gap-6 rounded-[24px] border border-sky-100/80 bg-white/90 backdrop-blur-md px-6 py-5 shadow-sm shadow-sky-100/30 sm:flex-row sm:items-center sm:justify-between">
       <div className="space-y-1">
-        <div className="flex items-center gap-2">
+        {/* <div className="flex items-center gap-2">
           <div className="text-xs font-bold uppercase tracking-[0.24em] text-sky-500">
             Giám sát thị giác
           </div>
@@ -17,7 +17,7 @@ export default function CameraPageHeader({ totalCameras }: CameraPageHeaderProps
             <Video className="h-3.5 w-3.5" />
             {totalCameras} camera đang theo dõi
           </span>
-        </div>
+        </div> */}
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-sky-950">Camera & AI</h1>
           <p className="mt-1 text-sm text-slate-500">
@@ -37,7 +37,7 @@ export default function CameraPageHeader({ totalCameras }: CameraPageHeaderProps
 
         <div className="h-8 w-px bg-slate-100 hidden sm:block"></div>
 
-        <button
+        {/* <button
           type="button"
           className="inline-flex h-12 w-12 items-center justify-center rounded-[20px] border border-slate-100 bg-slate-50/50 text-slate-600 transition hover:bg-slate-100 active:scale-95"
         >
@@ -50,7 +50,7 @@ export default function CameraPageHeader({ totalCameras }: CameraPageHeaderProps
             <p className="text-sm font-semibold text-sky-950">Nguyễn Admin</p>
             <p className="text-[11px] font-medium text-sky-600/80">Quản trị viên</p>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

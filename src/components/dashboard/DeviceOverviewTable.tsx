@@ -7,7 +7,7 @@ interface DeviceOverviewTableProps {
 
 export default function DeviceOverviewTable({ devices }: DeviceOverviewTableProps) {
   return (
-    <section className="rounded-[24px] border border-slate-200/80 bg-white/95 p-6 shadow-sm transition-all duration-300 hover:shadow-md">
+    <section className="rounded-[24px] border border-slate-200/80 bg-white/95 p-4 sm:p-6 shadow-sm transition-all duration-300 hover:shadow-md min-w-0 overflow-hidden">
       <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h3 className="text-xl font-bold text-slate-900 tracking-tight">Tổng quan thiết bị</h3>
@@ -21,7 +21,7 @@ export default function DeviceOverviewTable({ devices }: DeviceOverviewTableProp
         </button>
       </div>
 
-      <div className="overflow-x-auto -mx-6 px-6">
+      <div className="overflow-x-auto -mx-4 px-4 sm:-mx-6 sm:px-6">
         <table className="w-full min-w-[1050px] border-collapse text-left">
           <thead>
             <tr className="border-b border-slate-100 text-xs font-semibold uppercase tracking-wider text-slate-400">

@@ -31,7 +31,7 @@ const levelConfigs = {
 
 export default function RecentAlertsCard({ alerts }: RecentAlertsCardProps) {
   return (
-    <section className="rounded-[24px] border border-slate-200/80 bg-white/95 p-6 shadow-sm transition-all duration-300 hover:shadow-md flex flex-col h-full">
+    <section className="rounded-[24px] border border-slate-200/80 bg-white/95 p-4 sm:p-6 shadow-sm transition-all duration-300 hover:shadow-md flex flex-col h-full">
       <div className="mb-6 flex items-center justify-between gap-3">
         <div>
           <h3 className="text-xl font-bold text-slate-900 tracking-tight">Cảnh báo mới nhất</h3>
@@ -43,19 +43,19 @@ export default function RecentAlertsCard({ alerts }: RecentAlertsCardProps) {
         </button>
       </div>
 
-      <div className="space-y-3.5 flex-1">
+      <div className="space-y-3 flex-1">
         {alerts.map((alert) => {
           const config = levelConfigs[alert.level];
           const Icon = config.icon;
           return (
             <div
               key={alert.id}
-              className={`rounded-[18px] border p-4 transition-all duration-200 ${config.bgClass}`}
+              className={`rounded-[18px] border p-3 sm:p-4 transition-all duration-200 ${config.bgClass}`}
             >
               <div className="flex items-start justify-between gap-3">
-                <div className="flex items-start gap-3">
-                  <div className={`mt-0.5 rounded-lg p-1.5 ${config.iconColor} bg-white shadow-sm border border-slate-100`}>
-                    <Icon className="h-4 w-4" />
+                <div className="flex items-start gap-2.5 sm:gap-3">
+                  <div className={`mt-0.5 rounded-lg p-1 sm:p-1.5 ${config.iconColor} bg-white shadow-sm border border-slate-100`}>
+                    <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                   </div>
                   <div>
                     <div className="flex items-center gap-2 flex-wrap">
@@ -72,7 +72,7 @@ export default function RecentAlertsCard({ alerts }: RecentAlertsCardProps) {
                   {config.label}
                 </span>
               </div>
-              <div className="mt-3 flex items-center justify-between text-[11px] text-slate-400 pl-11">
+              <div className="mt-3 flex items-center justify-between text-[11px] text-slate-400 pl-9 sm:pl-11">
                 <span>Cập nhật: {alert.timestamp}</span>
               </div>
             </div>

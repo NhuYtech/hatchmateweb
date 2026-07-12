@@ -7,7 +7,7 @@ interface RecentCameraCardProps {
 
 export default function RecentCameraCard({ feeds }: RecentCameraCardProps) {
   return (
-    <section className="rounded-[24px] border border-slate-200/80 bg-white/95 p-6 shadow-sm transition-all duration-300 hover:shadow-md flex flex-col h-full">
+    <section className="rounded-[24px] border border-slate-200/80 bg-white/95 p-4 sm:p-6 shadow-sm transition-all duration-300 hover:shadow-md flex flex-col h-full">
       <div className="mb-6 flex items-center justify-between gap-3">
         <div>
           <h3 className="text-xl font-bold text-slate-900 tracking-tight">Ảnh camera mới nhất</h3>
@@ -18,9 +18,9 @@ export default function RecentCameraCard({ feeds }: RecentCameraCardProps) {
         </button>
       </div>
 
-      <div className="grid gap-5 sm:grid-cols-2 flex-1">
+      <div className="grid gap-4 sm:gap-5 sm:grid-cols-2 flex-1">
         {feeds.map((feed) => (
-          <div key={feed.id} className="rounded-[20px] border border-slate-200/80 bg-slate-50/50 p-4 shadow-sm hover:shadow transition-all duration-200 flex flex-col">
+          <div key={feed.id} className="rounded-[20px] border border-slate-200/80 bg-slate-50/50 p-3 sm:p-4 shadow-sm hover:shadow transition-all duration-200 flex flex-col">
             <div className="relative mb-4 aspect-[4/3] w-full overflow-hidden rounded-2xl bg-slate-100 border border-slate-200/40 flex items-center justify-center">
               {feed.imageUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element

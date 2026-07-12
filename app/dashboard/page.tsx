@@ -20,10 +20,10 @@ export const metadata = {
 
 export default function DashboardPage() {
   return (
-    <div className="grid gap-6">
+    <div className="grid gap-4 sm:gap-6">
       <WelcomeBanner summary={dashboardSummary} />
 
-      <section className="grid gap-6 xl:grid-cols-3">
+      <section className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
         <StatCard
           label="Tổng thiết bị"
           value={`${dashboardSummary.totalDevices}`}
@@ -72,7 +72,7 @@ export default function DashboardPage() {
 
       <DeviceOverviewTable devices={deviceList} />
 
-      <section className="grid gap-6 md:grid-cols-2">
+      <section className="grid gap-4 sm:gap-6 md:grid-cols-2">
         <RecentAlertsCard alerts={recentAlerts} />
         <RecentCameraCard feeds={cameraFeeds} />
       </section>

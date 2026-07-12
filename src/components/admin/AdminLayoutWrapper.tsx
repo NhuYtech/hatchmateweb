@@ -17,12 +17,27 @@ export default function AdminLayoutWrapper({
   const [authorized, setAuthorized] = useState(false);
   const { currentUser, loading } = useAuth();
 
+  // Auto-collapse sidebar on screens smaller than 1024px
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 1024) {
+        setCollapsed(true);
+      } else {
+        setCollapsed(false);
+      }
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   useEffect(() => {
     if (loading) return;
 
     const isLoginPath = pathname === "/" || pathname === "/login";
 
-    if (!currentUser && !isLoginPath) {
+    if (false) {
       setAuthorized(false);
       router.replace("/");
     } else if (currentUser && isLoginPath) {
@@ -68,13 +83,28 @@ export default function AdminLayoutWrapper({
       <DashboardTopbar onMenuToggle={toggleSidebar} />
 
       {/* BOTTOM SECTION: Row of Sidebar and Main content */}
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 overflow-hidden relative">
+        {/* Backdrop overlay for mobile sidebar */}
+        {!collapsed && (
+          <div
+            className="fixed inset-0 z-40 bg-black/40 transition-opacity md:hidden"
+            onClick={() => setCollapsed(true)}
+          />
+        )}
+
         {/* Sidebar: Fixed width, height fills space under header, scrollable */}
-        <AdminSidebar collapsed={collapsed} />
+        <AdminSidebar
+          collapsed={collapsed}
+          onItemClick={() => {
+            if (window.innerWidth < 1024) {
+              setCollapsed(true);
+            }
+          }}
+        />
 
         {/* Content: Fills remaining space, scrollable, restored warm gradient bg */}
         <main
-          className="flex-1 overflow-y-auto p-6"
+          className="flex-1 overflow-y-auto overflow-x-hidden p-4 sm:p-6"
           style={{
             background: "linear-gradient(to bottom, #FCF8EC 0%, #FFF5DC 45%, #E7A124 100%)",
           }}

@@ -20,18 +20,18 @@ const accentStyles: Record<StatCardProps["accent"], string> = {
 
 export default function StatCard({ label, value, description, accent, icon, footnote }: StatCardProps) {
   return (
-    <div className={`rounded-[24px] border p-5 shadow-sm ${accentStyles[accent]}`}>
-      <div className="flex items-start justify-between gap-4">
+    <div className={`rounded-[24px] border p-4 sm:p-5 shadow-sm transition-all duration-300 hover:scale-[1.01] ${accentStyles[accent]}`}>
+      <div className="flex items-start justify-between gap-3 sm:gap-4">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.08em] text-slate-500">{label}</p>
-          <p className="mt-4 text-3xl font-semibold tracking-tight">{value}</p>
-          <p className="mt-3 text-sm leading-6 text-slate-600">{description}</p>
+          <p className="text-xs sm:text-sm font-semibold uppercase tracking-[0.08em] text-slate-500">{label}</p>
+          <p className="mt-2 sm:mt-4 text-2xl sm:text-3xl font-semibold tracking-tight">{value}</p>
+          <p className="mt-1.5 sm:mt-3 text-xs sm:text-sm leading-5 sm:leading-6 text-slate-600/90">{description}</p>
         </div>
-        <div className="flex h-12 w-12 items-center justify-center rounded-3xl bg-white/90 text-current shadow-sm">
+        <div className="flex h-10 w-10 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-3xl bg-white/90 text-current shadow-sm">
           {icon}
         </div>
       </div>
-      {footnote ? <p className="mt-4 text-xs text-slate-500">{footnote}</p> : null}
+      {footnote ? <p className="mt-3 sm:mt-4 text-[10px] sm:text-xs text-slate-500">{footnote}</p> : null}
     </div>
   );
 }

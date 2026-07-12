@@ -26,7 +26,7 @@ const menus: MenuItem[] = [
   { label: "Người dùng", icon: Users, href: "/users" },
   { label: "Camera & AI", icon: Camera, href: "/camera" },
   { label: "Cấu hình ấp", icon: SlidersHorizontal, href: "/settings" },
-  { label: "Cảnh báo", icon: BellRing, href: "/alerts" },
+  // { label: "Cảnh báo", icon: BellRing, href: "/alerts" },
   { label: "Nhật ký", icon: ClipboardList, href: "/logs" },
   { label: "Báo cáo", icon: BarChart3, href: "/reports" },
 ];
@@ -37,6 +37,7 @@ interface SidebarNavItemProps {
   href: string;
   active: boolean;
   collapsed: boolean;
+  onClick?: () => void;
 }
 
 function SidebarNavItem({
@@ -45,11 +46,13 @@ function SidebarNavItem({
   href,
   active,
   collapsed,
+  onClick,
 }: SidebarNavItemProps) {
   return (
     <div className="group relative">
       <Link
         href={href}
+        onClick={onClick}
         className={`flex w-full items-center gap-3 rounded-[20px] px-4 py-3 text-left text-sm font-medium transition ${collapsed ? "justify-center px-0" : ""
           } ${active
             ? "bg-sky-50 text-sky-700 shadow-sm"
@@ -72,15 +75,18 @@ function SidebarNavItem({
 
 interface AdminSidebarProps {
   collapsed: boolean;
+  onItemClick?: () => void;
 }
 
-export default function AdminSidebar({ collapsed }: AdminSidebarProps) {
+export default function AdminSidebar({ collapsed, onItemClick }: AdminSidebarProps) {
   const pathname = usePathname() || "";
 
   return (
     <aside
-      className={`hidden h-[calc(100vh-64px)] flex-col border-r border-slate-200 bg-white py-6 transition-all duration-300 md:flex shrink-0 ${collapsed ? "w-[76px] px-2" : "w-[260px] px-4"
-        } overflow-y-auto`}
+      className={`fixed inset-y-0 left-0 z-50 flex h-full flex-col border-r border-slate-200 bg-white py-6 transition-all duration-300 md:static md:h-[calc(100vh-64px)] shrink-0 ${collapsed
+        ? "-translate-x-full md:translate-x-0 md:w-[76px] md:px-2"
+        : "translate-x-0 md:w-[260px] md:px-4"
+        } w-[260px] px-4 overflow-y-auto`}
     >
       {/* Header Info (Optional/Simplified) */}
       <div className="mb-6 px-2">
@@ -121,6 +127,7 @@ export default function AdminSidebar({ collapsed }: AdminSidebarProps) {
               href={item.href}
               active={isActive}
               collapsed={collapsed}
+              onClick={onItemClick}
             />
           );
         })}

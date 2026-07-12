@@ -37,13 +37,13 @@ export default function DashboardTopbar({ onMenuToggle }: DashboardTopbarProps) 
   };
 
   return (
-    <header className="flex h-16 w-full items-center justify-between border-b border-gray-200 bg-white px-6">
+    <header className="flex h-16 w-full items-center justify-between border-b border-gray-200 bg-white px-4 sm:px-6">
 
-      {/* ── Left: Logo + Hamburger + Search ── */}
-      <div className="flex items-center gap-6">
+      {/* ── Left: Logo + Hamburger ── */}
+      <div className="flex items-center gap-4 sm:gap-6">
         {/* Logo */}
-        <span className="text-[18px] font-bold tracking-tight text-gray-900 select-none">
-          Hệ thống ấp trứng gà thông minh HatchMate
+        <span className="text-sm sm:text-base md:text-lg font-bold tracking-tight text-gray-900 select-none truncate max-w-[160px] sm:max-w-none">
+          Hệ thống ấp trứng HatchMate
         </span>
 
         {/* Hamburger */}
@@ -55,8 +55,10 @@ export default function DashboardTopbar({ onMenuToggle }: DashboardTopbarProps) 
         >
           <Menu className="h-5 w-5" />
         </button>
+      </div>
 
-
+      {/* ── Right: Search + Links + Icons + Avatar ── */}
+      <div className="flex items-center gap-4 sm:gap-6">
         {/* Search */}
         <label className="hidden sm:flex relative w-[280px] items-center gap-2 rounded-lg bg-gray-100 px-3 py-2 text-gray-400 focus-within:ring-2 focus-within:ring-blue-200 transition">
           <input
@@ -68,18 +70,6 @@ export default function DashboardTopbar({ onMenuToggle }: DashboardTopbarProps) 
           />
           <Search className="h-4 w-4 shrink-0" />
         </label>
-      </div>
-
-      {/* ── Right: Links + Icons + Avatar ── */}
-      <div className="flex items-center gap-6">
-        {/* Documentation link — hidden on mobile
-        <a
-          href="#"
-          className="hidden items-center gap-0.5 text-sm text-gray-500 transition hover:text-gray-800 sm:flex"
-        >
-          <span>Documentation</span>
-          <ChevronRight className="h-3.5 w-3.5" />
-        </a> */}
 
         {/* Bell */}
         <button
@@ -119,8 +109,8 @@ export default function DashboardTopbar({ onMenuToggle }: DashboardTopbarProps) 
           {showDropdown && (
             <>
               {/* Backdrop */}
-              <div 
-                className="fixed inset-0 z-30" 
+              <div
+                className="fixed inset-0 z-30"
                 onClick={() => setShowDropdown(false)}
               />
               {/* Dropdown Menu */}
@@ -130,7 +120,7 @@ export default function DashboardTopbar({ onMenuToggle }: DashboardTopbarProps) 
                   <p className="text-sm font-bold text-slate-800">{userName}</p>
                   <p className="text-xs font-semibold text-slate-400 truncate">{userEmail}</p>
                 </div>
-                
+
                 {/* Actions */}
                 <div className="mt-2 space-y-1">
                   <button
@@ -143,9 +133,9 @@ export default function DashboardTopbar({ onMenuToggle }: DashboardTopbarProps) 
                     <Settings className="w-4 h-4 text-slate-400" />
                     <span>Cấu hình hệ thống</span>
                   </button>
-                  
+
                   <div className="h-px bg-slate-100 my-1" />
-                  
+
                   <button
                     onClick={handleLogout}
                     className="w-full flex items-center gap-2.5 px-3 py-2 text-left text-xs font-bold text-red-500 rounded-xl hover:bg-red-50 transition"
