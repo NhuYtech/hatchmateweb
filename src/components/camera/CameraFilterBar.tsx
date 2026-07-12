@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Search, SlidersHorizontal, ArrowUpDown, RotateCcw } from "lucide-react";
+import { Search, ChevronDown, ArrowUpDown, RotateCcw } from "lucide-react";
 
 interface CameraFilterBarProps {
   onSearchChange?: (value: string) => void;
@@ -91,7 +91,7 @@ export default function CameraFilterBar({
               <option value="offline">Ngoại tuyến (Offline)</option>
             </select>
             <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-slate-400">
-              <SlidersHorizontal className="h-4 w-4" />
+              <ChevronDown className="h-4 w-4" />
             </div>
           </div>
         </div>
@@ -115,7 +115,7 @@ export default function CameraFilterBar({
               <option value="SEI-IoT-005">SEI-IoT-005 (Foxtrot)</option>
             </select>
             <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-slate-400">
-              <SlidersHorizontal className="h-4 w-4" />
+              <ChevronDown className="h-4 w-4" />
             </div>
           </div>
         </div>
@@ -137,7 +137,7 @@ export default function CameraFilterBar({
               <option value="warning">Có cảnh báo (Nứt vỏ / Quá lạnh)</option>
             </select>
             <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-slate-400">
-              <SlidersHorizontal className="h-4 w-4" />
+              <ChevronDown className="h-4 w-4" />
             </div>
           </div>
         </div>

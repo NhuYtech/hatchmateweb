@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Search, SlidersHorizontal, ArrowUpDown, RotateCcw, Calendar } from "lucide-react";
+import { Search, ChevronDown, ArrowUpDown, RotateCcw, Calendar } from "lucide-react";
 
 interface LogFilterBarProps {
   onSearchChange?: (value: string) => void;
@@ -96,7 +96,7 @@ export default function LogFilterBar({
               <option value="system">Hệ thống (System)</option>
             </select>
             <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-slate-400">
-              <SlidersHorizontal className="h-4 w-4" />
+              <ChevronDown className="h-4 w-4" />
             </div>
           </div>
         </div>
@@ -119,7 +119,7 @@ export default function LogFilterBar({
               <option value="danger">Danger (Nguy hiểm)</option>
             </select>
             <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-slate-400">
-              <SlidersHorizontal className="h-4 w-4" />
+              <ChevronDown className="h-4 w-4" />
             </div>
           </div>
         </div>
@@ -143,7 +143,7 @@ export default function LogFilterBar({
               <option value="SEI-IoT-005">SEI-IoT-005 (Foxtrot)</option>
             </select>
             <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-slate-400">
-              <SlidersHorizontal className="h-4 w-4" />
+              <ChevronDown className="h-4 w-4" />
             </div>
           </div>
         </div>

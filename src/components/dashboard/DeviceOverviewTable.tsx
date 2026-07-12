@@ -25,7 +25,7 @@ export default function DeviceOverviewTable({ devices }: DeviceOverviewTableProp
         <table className="w-full min-w-[1050px] border-collapse text-left">
           <thead>
             <tr className="border-b border-slate-100 text-xs font-semibold uppercase tracking-wider text-slate-400">
-              <th className="pb-4 pt-2 font-semibold">Device ID</th>
+              <th className="pb-4 pt-2 font-semibold">ID Máy</th>
               <th className="pb-4 pt-2 font-semibold">Tên máy</th>
               <th className="pb-4 pt-2 font-semibold">Chủ sở hữu</th>
               <th className="pb-4 pt-2 font-semibold text-center">Trạng thái</th>

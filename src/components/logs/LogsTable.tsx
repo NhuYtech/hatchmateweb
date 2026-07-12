@@ -17,7 +17,7 @@ import {
   User,
   Check,
   Link2,
-  SlidersHorizontal
+  Filter
 } from "lucide-react";
 import { LogItem } from "@/src/types/log";
 import DataTablePagination from "@/src/components/common/DataTablePagination";
@@ -288,7 +288,7 @@ export default function LogsTable({ logs, onRefresh }: LogsTableProps) {
                             type="button"
                             className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-xs font-semibold text-sky-950 hover:bg-sky-50 transition"
                           >
-                            <SlidersHorizontal className="h-3.5 w-3.5 text-slate-400" />
+                            <Filter className="h-3.5 w-3.5 text-slate-400" />
                             Lọc theo mức độ này
                           </button>
                           <button

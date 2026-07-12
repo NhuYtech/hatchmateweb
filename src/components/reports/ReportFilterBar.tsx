@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { SlidersHorizontal, Calendar, RotateCcw, LayoutGrid } from "lucide-react";
+import { ChevronDown, Calendar, RotateCcw, LayoutGrid } from "lucide-react";
 
 interface ReportFilterBarProps {
   onDateRangeChange?: (value: string) => void;
@@ -113,7 +113,7 @@ export default function ReportFilterBar({
               <option value="cycle">Chu kỳ ấp</option>
             </select>
             <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-slate-400">
-              <SlidersHorizontal className="h-4 w-4" />
+              <ChevronDown className="h-4 w-4" />
             </div>
           </div>
         </div>
@@ -140,7 +140,7 @@ export default function ReportFilterBar({
               <option value="SEI-IoT-005">SEI-IoT-005 (Foxtrot)</option>
             </select>
             <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-slate-400">
-              <SlidersHorizontal className="h-4 w-4" />
+              <ChevronDown className="h-4 w-4" />
             </div>
           </div>
         </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { ChevronLeft, ChevronRight, SlidersHorizontal } from "lucide-react";
+import { ChevronLeft, ChevronRight, ChevronDown } from "lucide-react";
 
 interface DataTablePaginationProps {
   totalItems: number;
@@ -64,8 +64,7 @@ export default function DataTablePagination({
       {/* 1. Item description & Page size select */}
       <div className="flex flex-wrap items-center gap-4 text-xs font-semibold text-slate-500">
         <div>
-          Hiển thị <span className="font-bold text-sky-950">{from}–{to}</span> trên{" "}
-          <span className="font-bold text-sky-950">{totalItems}</span> {itemLabel}
+          Hiển thị <span className="font-bold text-sky-950">{from}–{to}</span>
         </div>
         
         <div className="h-4 w-px bg-slate-100 hidden sm:block"></div>
@@ -88,7 +87,7 @@ export default function DataTablePagination({
               ))}
             </select>
             <div className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400">
-              <SlidersHorizontal className="h-3 w-3" />
+              <ChevronDown className="h-3.5 w-3.5" />
             </div>
           </div>
         </div>

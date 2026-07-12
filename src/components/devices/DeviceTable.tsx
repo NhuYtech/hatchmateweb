@@ -1,22 +1,14 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
-import { 
-  Eye, 
-  Edit3, 
-  MoreVertical, 
-  Wifi, 
-  Battery, 
-  Camera, 
-  CameraOff, 
-  Thermometer, 
+import React, { useState, useEffect } from "react";
+import {
+  Camera,
+  CameraOff,
+  Thermometer,
   Droplet,
   Download,
   RotateCw,
   Cpu,
-  Trash2,
-  Settings2,
-  PowerOff,
   Plus
 } from "lucide-react";
 import { DeviceItem } from "@/src/types/device";
@@ -25,13 +17,13 @@ import DataTablePagination from "@/src/components/common/DataTablePagination";
 interface DeviceTableProps {
   devices: DeviceItem[];
   onAddDevice?: () => void;
+  onRefresh?: () => void | Promise<void>;
 }
 
-export default function DeviceTable({ devices, onAddDevice }: DeviceTableProps) {
-  const [activeDropdownId, setActiveDropdownId] = useState<string | null>(null);
+export default function DeviceTable({ devices, onAddDevice, onRefresh }: DeviceTableProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   // Reset to page 1 if devices list changes (e.g. filtered)
   const [prevDevices, setPrevDevices] = useState(devices);
@@ -40,36 +32,29 @@ export default function DeviceTable({ devices, onAddDevice }: DeviceTableProps) 
     setCurrentPage(1);
   }
 
-  // Close dropdown on click outside
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setActiveDropdownId(null);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
   const getStatusBadge = (status: DeviceItem["status"]) => {
-    const configs = {
-      online: "bg-emerald-50 text-emerald-700 border-emerald-200/80",
-      offline: "bg-rose-50 text-rose-700 border-rose-200/60",
-      warning: "bg-amber-50 text-amber-700 border-amber-200/80",
-    };
-    const labels = {
-      online: "Online",
-      offline: "Ngoại tuyến",
-      warning: "Cảnh báo",
-    };
-    return (
-      <span className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold ${configs[status]}`}>
-        <span className={`h-1.5 w-1.5 rounded-full ${status === "online" ? "bg-emerald-500 animate-pulse" : status === "offline" ? "bg-rose-500" : "bg-amber-500 animate-bounce"}`} />
-        {labels[status]}
-      </span>
-    );
+    if (status === "online") {
+      return (
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 border border-emerald-200/40 px-2.5 py-1 text-xs font-medium text-emerald-700">
+          <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+          Online
+        </span>
+      );
+    } else if (status === "warning") {
+      return (
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 border border-amber-200/40 px-2.5 py-1 text-xs font-medium text-amber-700">
+          <span className="h-1.5 w-1.5 rounded-full bg-amber-500 animate-pulse" />
+          Warning
+        </span>
+      );
+    } else {
+      return (
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-50 border border-slate-200/60 px-2.5 py-1 text-xs font-medium text-slate-500">
+          <span className="h-1.5 w-1.5 rounded-full bg-slate-400" />
+          Offline
+        </span>
+      );
+    }
   };
 
   const getIncubationBadge = (status: DeviceItem["incubationStatus"], day: number, total: number) => {
@@ -97,36 +82,50 @@ export default function DeviceTable({ devices, onAddDevice }: DeviceTableProps) 
     );
   };
 
-  const getBatteryIcon = (level: number) => {
-    let color = "text-emerald-500";
-    if (level < 20) color = "text-rose-500 animate-pulse";
-    else if (level < 50) color = "text-amber-500";
-
-    return (
-      <div className="flex items-center gap-1.5">
-        <Battery className={`h-4 w-4 ${color}`} />
-        <span className="text-xs font-semibold text-slate-700">{level}%</span>
-      </div>
-    );
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    if (onRefresh) {
+      try {
+        await onRefresh();
+      } catch (err) {
+        console.error("Refresh error:", err);
+      }
+    }
+    setTimeout(() => {
+      setIsRefreshing(false);
+    }, 600);
   };
 
-  const getWifiSignal = (signal: number) => {
-    let color = "text-emerald-500";
-    if (signal <= 2) color = "text-rose-500";
-    else if (signal <= 3) color = "text-amber-500";
+  const handleExport = () => {
+    const headers = ["ID Máy", "Tên máy", "Chủ sở hữu", "Trạng thái", "Chu kỳ", "Nhiệt độ (°C)", "Độ ẩm (%)", "Camera", "Cập nhật cuối"];
+    const rows = devices.map(device => [
+      device.id,
+      device.name,
+      device.owner,
+      device.status === "online" ? "Online" : (device.status === "warning" ? "Cảnh báo" : "Offline"),
+      device.incubationStatus === "incubating" ? "Đang ấp" : (device.incubationStatus === "hatchingSoon" ? "Sắp nở" : "Tạm dừng"),
+      device.temperature > 0 ? device.temperature.toFixed(1) : "--",
+      device.humidity > 0 ? device.humidity.toString() : "--",
+      device.hasCamera ? "Có ảnh" : "Chưa có",
+      device.lastSeen
+    ]);
 
-    return (
-      <div className="flex items-center gap-1.5">
-        <Wifi className={`h-4 w-4 ${color}`} />
-        <span className="text-xs font-semibold text-slate-700">{signal}/5</span>
-      </div>
-    );
+    // Construct CSV with UTF-8 BOM to display Vietnamese characters correctly in Excel
+    const csvContent = "\uFEFF" + [headers.join(","), ...rows.map(e => e.map(val => `"${val.replace(/"/g, '""')}"`).join(","))].join("\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `danh_sach_thiet_bi_${new Date().toISOString().slice(0, 10)}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
-  // Empty State Render with Warm Yellow-Orange Theme
+  // Empty State Render
   if (devices.length === 0) {
     return (
-      <div className="rounded-[24px] border border-sky-100/80 bg-white p-16 text-center shadow-sm shadow-sky-100/10">
+      <div className="w-full max-w-full min-w-0 overflow-hidden rounded-[24px] border border-sky-100/80 bg-white p-8 sm:p-16 text-center shadow-sm shadow-sky-100/10">
         <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-50 text-amber-500 shadow-sm shadow-amber-100">
           <Cpu className="h-8 w-8 stroke-[2.2] animate-pulse" />
         </div>
@@ -150,60 +149,56 @@ export default function DeviceTable({ devices, onAddDevice }: DeviceTableProps) 
 
   return (
     <div className="rounded-[24px] border border-sky-100/80 bg-white shadow-sm shadow-sky-100/10 overflow-hidden">
-      
+
       {/* Table Toolbar */}
       <div className="border-b border-slate-100 bg-white px-6 py-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="space-y-0.5">
           <h3 className="text-xs font-bold uppercase tracking-[0.15em] text-slate-400">
             Danh sách thiết bị máy ấp
           </h3>
-          <p className="text-xs text-slate-500">
-            Tổng cộng <span className="font-semibold text-sky-600">{devices.length}</span> thiết bị
-          </p>
         </div>
 
         <div className="flex items-center gap-2.5">
           <button
             type="button"
-            className="inline-flex h-10 items-center justify-center gap-2 rounded-[16px] border border-sky-100 bg-sky-50/20 px-4 text-xs font-bold text-sky-700 shadow-sm transition hover:bg-sky-50 hover:text-sky-800 active:scale-95 duration-150"
+            onClick={handleExport}
+            className="inline-flex h-10 items-center justify-center gap-2 rounded-[16px] border border-sky-100 bg-sky-50/20 px-4 text-xs font-bold text-sky-700 shadow-sm transition hover:bg-sky-50 hover:text-sky-800 active:scale-95 duration-150 cursor-pointer"
           >
             <Download className="h-4 w-4 text-sky-600" />
             <span>Xuất dữ liệu</span>
           </button>
-          
+
           <button
             type="button"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-[16px] border border-sky-100 bg-sky-50/20 text-sky-700 shadow-sm transition hover:bg-sky-50 hover:text-sky-800 active:scale-95 duration-150"
+            onClick={handleRefresh}
+            className="inline-flex h-10 w-10 items-center justify-center rounded-[16px] border border-sky-100 bg-sky-50/20 text-sky-700 shadow-sm transition hover:bg-sky-50 hover:text-sky-800 active:scale-95 duration-150 cursor-pointer"
             title="Làm mới bảng"
           >
-            <RotateCw className="h-4 w-4 text-sky-600" />
+            <RotateCw className={`h-4 w-4 text-sky-600 ${isRefreshing ? "animate-spin" : ""}`} />
           </button>
         </div>
       </div>
 
       {/* Responsive Wrapper */}
       <div className="overflow-x-auto relative min-h-[300px]">
-        <table className="w-full min-w-[1200px] border-collapse text-left text-sm">
+        <table className="w-full min-w-[1000px] border-collapse text-left text-sm">
           <thead>
             <tr className="border-b border-slate-100 bg-slate-50/40 text-[11px] font-bold uppercase tracking-wider text-slate-400">
-              <th className="px-6 py-4">Device ID</th>
+              <th className="px-6 py-4">ID Máy</th>
               <th className="px-6 py-4">Tên máy</th>
               <th className="px-6 py-4">Chủ sở hữu</th>
               <th className="px-6 py-4">Trạng thái</th>
               <th className="px-6 py-4">Chu kỳ ấp</th>
               <th className="px-6 py-4">Nhiệt độ</th>
               <th className="px-6 py-4">Độ ẩm</th>
-              <th className="px-6 py-4">Pin</th>
-              <th className="px-6 py-4">WiFi</th>
               <th className="px-6 py-4">Camera</th>
               <th className="px-6 py-4">Cập nhật cuối</th>
-              <th className="px-6 py-4 text-center">Hành động</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
             {paginatedDevices.map((device) => (
-              <tr 
-                key={device.id} 
+              <tr
+                key={device.id}
                 className="group hover:bg-sky-50/10 transition-colors duration-150"
               >
                 {/* Device ID */}
@@ -236,7 +231,7 @@ export default function DeviceTable({ devices, onAddDevice }: DeviceTableProps) 
 
                 {/* Nhiệt độ */}
                 <td className="px-6 py-4">
-                  {device.status === "offline" ? (
+                  {device.temperature <= 0 ? (
                     <span className="text-slate-300 font-semibold">--</span>
                   ) : (
                     <div className="flex items-center gap-1 font-bold text-sky-950">
@@ -248,31 +243,13 @@ export default function DeviceTable({ devices, onAddDevice }: DeviceTableProps) 
 
                 {/* Độ ẩm */}
                 <td className="px-6 py-4">
-                  {device.status === "offline" ? (
+                  {device.humidity <= 0 ? (
                     <span className="text-slate-300 font-semibold">--</span>
                   ) : (
                     <div className="flex items-center gap-1 font-bold text-sky-950">
                       <Droplet className="h-4 w-4 text-blue-500" />
                       <span>{device.humidity}%</span>
                     </div>
-                  )}
-                </td>
-
-                {/* Pin */}
-                <td className="px-6 py-4">
-                  {device.status === "offline" ? (
-                    <span className="text-slate-300 font-medium">--</span>
-                  ) : (
-                    getBatteryIcon(device.battery)
-                  )}
-                </td>
-
-                {/* WiFi */}
-                <td className="px-6 py-4">
-                  {device.status === "offline" ? (
-                    <span className="text-slate-300 font-medium">--</span>
-                  ) : (
-                    getWifiSignal(device.wifi)
                   )}
                 </td>
 
@@ -295,82 +272,19 @@ export default function DeviceTable({ devices, onAddDevice }: DeviceTableProps) 
                 <td className="px-6 py-4 text-xs text-slate-400 font-semibold">
                   {device.lastSeen}
                 </td>
-
-                {/* Row Actions Dropdown */}
-                <td className="px-6 py-4 relative">
-                  <div className="flex items-center justify-center gap-2">
-                    <button
-                      type="button"
-                      title="Xem chi tiết"
-                      className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:bg-sky-50 hover:text-sky-600 transition duration-150"
-                    >
-                      <Eye className="h-4 w-4" />
-                    </button>
-                    <button
-                      type="button"
-                      title="Chỉnh sửa"
-                      className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:bg-sky-50 hover:text-sky-600 transition duration-150"
-                    >
-                      <Edit3 className="h-4 w-4" />
-                    </button>
-                    
-                    <div className="relative">
-                      <button
-                        type="button"
-                        onClick={() => setActiveDropdownId(activeDropdownId === device.id ? null : device.id)}
-                        className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition duration-150"
-                      >
-                        <MoreVertical className="h-4 w-4" />
-                      </button>
-
-                      {activeDropdownId === device.id && (
-                        <div 
-                          ref={dropdownRef}
-                          className="absolute right-0 top-full z-[100] mt-1.5 w-48 rounded-xl border border-sky-100 bg-white p-1.5 shadow-xl animate-in fade-in duration-100"
-                        >
-                          <button
-                            type="button"
-                            className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-xs font-semibold text-sky-950 hover:bg-sky-50 transition"
-                          >
-                            <Settings2 className="h-3.5 w-3.5 text-slate-400" />
-                            Đồng bộ cấu hình
-                          </button>
-                          <button
-                            type="button"
-                            className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-xs font-semibold text-sky-950 hover:bg-sky-50 transition"
-                          >
-                            <PowerOff className="h-3.5 w-3.5 text-slate-400" />
-                            Tạm vô hiệu hóa
-                          </button>
-                          <div className="my-1 border-t border-slate-100" />
-                          <button
-                            type="button"
-                            className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-xs font-bold text-rose-600 hover:bg-rose-50 transition"
-                          >
-                            <Trash2 className="h-3.5 w-3.5" />
-                            Xóa khỏi danh sách
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
 
-      {/* Pagination UI */}
+      {/* Pagination component */}
       <DataTablePagination
-        totalItems={devices.length}
         currentPage={currentPage}
         pageSize={pageSize}
+        totalItems={devices.length}
         onPageChange={setCurrentPage}
-        onPageSizeChange={(size) => {
-          setPageSize(size);
-          setCurrentPage(1);
-        }}
+        onPageSizeChange={setPageSize}
         itemLabel="thiết bị"
       />
     </div>
