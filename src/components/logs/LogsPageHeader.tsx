@@ -19,7 +19,7 @@ export default function LogsPageHeader({ totalToday }: LogsPageHeaderProps) {
           </span>
         </div> */}
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-sky-950">Nhật ký hệ thống</h1>
+          <h1 className="text-2xl font-bold tracking-tight text-sky-950">NHẬT KÝ HỆ THỐNG</h1>
           <p className="mt-1 text-sm text-slate-500">
             Theo dõi lịch sử hoạt động của thiết bị, cảnh báo và thao tác quản trị trong HatchMate
           </p>
