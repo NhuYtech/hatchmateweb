@@ -19,7 +19,7 @@ export default function UserPageHeader({ totalUsers }: UserPageHeaderProps) {
           </span>
         </div> */}
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-sky-950">QUẢN LÝ NGƯỜI DÙNG</h1>
+          <h5 className="text-1xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">QUẢN LÝ NGƯỜI DÙNG</h5>
           <p className="mt-1 text-sm text-slate-500">
             Theo dõi tài khoản, phân quyền và quản lý người dùng trong hệ thống HatchMate
           </p>

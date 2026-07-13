@@ -19,7 +19,7 @@ export default function DevicePageHeader({ totalDevices }: DevicePageHeaderProps
           </span>
         </div> */}
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-sky-950">QUẢN LÝ THIẾT BỊ</h1>
+          <h5 className="text-1xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">QUẢN LÝ THIẾT BỊ</h5>
           <p className="mt-1 text-sm text-slate-500">
             Theo dõi, tìm kiếm và cấu hình các máy ấp trứng thông minh HatchMate
           </p>

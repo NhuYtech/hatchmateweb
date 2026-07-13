@@ -17,7 +17,7 @@ html {
 body {
   margin: 0;
   min-height: 100%;
-  font-family: var(--font-sans);
+  font-family: var(--font-times);
   background: linear-gradient(to bottom, #FCF8EC 0%, #FFF5DC 45%, #E7A124 100%) fixed;
   color: #0f172a;
 }

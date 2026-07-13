@@ -15,7 +15,7 @@ export default function ReportsPageHeader() {
           </span>
         </div> */}
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-sky-950">BÁO CÁO & THỐNG KÊ</h1>
+          <h5 className="text-1xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">BÁO CÁO & THỐNG KÊ</h5>
           <p className="mt-1 text-sm text-slate-500">
             Tổng hợp hiệu suất thiết bị, dữ liệu môi trường và cảnh báo trong hệ thống HatchMate
           </p>

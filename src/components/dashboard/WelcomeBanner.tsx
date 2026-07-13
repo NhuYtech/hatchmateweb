@@ -13,13 +13,13 @@ export default function WelcomeBanner({ summary }: WelcomeBannerProps) {
         <div className="inline-flex items-center gap-2 rounded-full bg-sky-100 px-3 py-1.5 text-xs sm:text-sm font-semibold text-sky-800 mb-3 sm:mb-4">
           <Sparkles className="h-3.5 w-3.5 sm:h-4 sm:w-4" /> Giữ nhịp hệ thống HatchMate
         </div>
-        <p className="text-xs sm:text-sm font-semibold uppercase tracking-[0.24em] text-slate-500">
+        <p className="text-xs sm:text-sm font-normal text-slate-400 tracking-wide uppercase">
           Chào mừng trở lại, Admin
         </p>
-        <h3 className="mt-3 text-xl sm:text-2xl md:text-3xl lg:text-4xl font-semibold tracking-tight text-slate-950 max-w-3xl leading-snug">
+        <h5 className="mt-3 text-1xl sm:text-2xl font-extrabold text-slate-900 tracking-tight max-w-3xl leading-snug">
           Giám sát toàn bộ hệ thống ấp trứng HatchMate theo thời gian thực
-        </h3>
-        <p className="mt-3 sm:mt-4 max-w-2xl text-xs sm:text-sm leading-6 sm:leading-7 text-slate-600/90">
+        </h5>
+        <p className="mt-3 sm:mt-4 max-w-2xl text-xs sm:text-sm font-normal text-slate-400 tracking-wide uppercase leading-6 sm:leading-7">
           Theo dõi trạng thái thiết bị, nhiệt độ, độ ẩm và cảnh báo quan trọng trên cùng một trang điều khiển.
         </p>
       </div>

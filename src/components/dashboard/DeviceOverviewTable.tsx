@@ -136,7 +136,7 @@ export default function DeviceOverviewTable({ devices }: DeviceOverviewTableProp
                   </td>
                   {/* Action */}
                   <td className="py-4 align-middle text-right">
-                    <Link href="/settings" className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 hover:bg-amber-100 border border-amber-200/60 px-3.5 py-1.5 text-xs font-semibold text-amber-800 transition active:scale-95 cursor-pointer">
+                    <Link href={`/settings?id=${device.id}`} className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 hover:bg-amber-100 border border-amber-200/60 px-3.5 py-1.5 text-xs font-semibold text-amber-800 transition active:scale-95 cursor-pointer">
                       Xem chi tiết
                       <ArrowRight className="h-3 w-3 group-hover:translate-x-0.5 transition-transform duration-200" />
                     </Link>

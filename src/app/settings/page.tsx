@@ -1,7 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { ref, onValue, set } from "firebase/database";
+import { rtdb } from "@/src/lib/firebase";
 import { 
   ChevronRight, 
   Settings, 
@@ -118,18 +121,20 @@ const UnitInput = ({
   );
 };
 
-export default function DeviceConfigurationPage() {
+function DeviceConfigurationContent() {
+  const searchParams = useSearchParams();
+  const machineId = searchParams.get("id") || "MATG01";
+
   // 1. General state
   const [deviceName, setDeviceName] = useState("HatchMate Smart Pro");
-  const [machineId] = useState("MATG01");
   const [eggType, setEggType] = useState("chicken");
   const [opMode, setOpMode] = useState("auto");
 
   // 2. Incubation Cycle state
   const [startDate, setStartDate] = useState("2026-07-09");
   const [totalDays, setTotalDays] = useState(21);
-  const [currentDay] = useState(4);
-  const [currentPhase] = useState("Giai đoạn 1");
+  const [currentDay, setCurrentDay] = useState(1);
+  const [currentPhase, setCurrentPhase] = useState("Giai đoạn 1");
   const [stopTurningDay, setStopTurningDay] = useState(18);
 
   // 3. Temp state
@@ -165,43 +170,182 @@ export default function DeviceConfigurationPage() {
   const [notifyPush, setNotifyPush] = useState(true);
   const [notifyEmail, setNotifyEmail] = useState(false);
 
-  // Action feed/status states
-  const [saveStatus, setSaveStatus] = useState<string | null>(null);
-  const [maintenanceAction, setMaintenanceAction] = useState<string | null>(null);
+  // Raw DB values state for read-only tracking
+  const [rawDbData, setRawDbData] = useState<any>(null);
 
-  const handleSave = () => {
-    setSaveStatus("saving");
-    setTimeout(() => {
-      setSaveStatus("success");
-      setTimeout(() => setSaveStatus(null), 3000);
-    }, 1200);
+  // Popup state
+  const [popupAlert, setPopupAlert] = useState<{
+    type: "success" | "error" | "loading";
+    title: string;
+    message: string;
+  } | null>(null);
+
+  // Listen to database path `incubators/${machineId}`
+  useEffect(() => {
+    const deviceRef = ref(rtdb, `incubators/${machineId}`);
+    const unsubscribe = onValue(deviceRef, (snapshot) => {
+      if (snapshot.exists()) {
+        const item = snapshot.val();
+        setRawDbData(item);
+        
+        if (item.name) setDeviceName(item.name);
+        if (item.mode) setOpMode(item.mode);
+        if (item.cycle?.startDate) {
+          setStartDate(item.cycle.startDate.substring(0, 10));
+        }
+        if (item.cycle?.totalDays !== undefined) {
+          setTotalDays(item.cycle.totalDays);
+        }
+        if (item.telemetry?.day !== undefined) {
+          setCurrentDay(item.telemetry.day);
+        }
+        if (item.telemetry?.phase !== undefined) {
+          setCurrentPhase(`Giai đoạn ${item.telemetry.phase}`);
+        }
+        
+        // Settings
+        if (item.settings) {
+          const s = item.settings;
+          if (s.tempMin !== undefined) setTempMin(s.tempMin);
+          if (s.tempMax !== undefined) setTempMax(s.tempMax);
+          if (s.tempAlert !== undefined) setTempAlert(s.tempAlert);
+          if (s.tempAdjustment !== undefined) setTempOffset(s.tempAdjustment);
+          
+          if (s.humidityMin !== undefined) setHumiMin(s.humidityMin);
+          if (s.humidityMax !== undefined) setHumiMax(s.humidityMax);
+          if (s.humidityAlert !== undefined) setHumiAlert(s.humidityAlert);
+          
+          if (s.turnInterval !== undefined) setTurnInterval(s.turnInterval);
+          if (s.servoAngle !== undefined) setServoAngle(s.servoAngle);
+          if (s.turnDuration !== undefined) setTurnDuration(s.turnDuration);
+        }
+      }
+    });
+    
+    return () => unsubscribe();
+  }, [machineId]);
+
+  const handleSave = async () => {
+    setPopupAlert({
+      type: "loading",
+      title: "Đang lưu cấu hình",
+      message: `Đang gửi thiết lập mới tới máy ấp ${machineId}...`
+    });
+    try {
+      // 1. Save settings
+      const settingsRef = ref(rtdb, `incubators/${machineId}/settings`);
+      await set(settingsRef, {
+        tempMin,
+        tempMax,
+        tempAlert,
+        tempAdjustment: tempOffset,
+        humidityMin: humiMin,
+        humidityMax: humiMax,
+        humidityAlert: humiAlert,
+        turnInterval,
+        servoAngle,
+        turnDuration
+      });
+
+      // 2. Save root attributes
+      const nameRef = ref(rtdb, `incubators/${machineId}/name`);
+      await set(nameRef, deviceName);
+
+      const modeRef = ref(rtdb, `incubators/${machineId}/mode`);
+      await set(modeRef, opMode);
+
+      // 3. Save cycle
+      const cycleRef = ref(rtdb, `incubators/${machineId}/cycle`);
+      await set(cycleRef, {
+        isActive: rawDbData?.cycle?.isActive ?? true,
+        startDate: startDate + (rawDbData?.cycle?.startDate ? rawDbData.cycle.startDate.substring(10) : "T12:22:02.200783"),
+        totalDays
+      });
+
+      setPopupAlert({
+        type: "success",
+        title: "Lưu thành công!",
+        message: `Cấu hình đã được áp dụng và đồng bộ hóa tới máy ấp ${machineId}!`
+      });
+      setTimeout(() => setPopupAlert(null), 4000);
+    } catch (err) {
+      console.error("Lỗi khi lưu cấu hình:", err);
+      setPopupAlert({
+        type: "error",
+        title: "Lưu thất bại",
+        message: "Đã xảy ra sự cố khi lưu cấu hình thiết bị. Vui lòng kiểm tra kết nối mạng!"
+      });
+      setTimeout(() => setPopupAlert(null), 4000);
+    }
   };
 
   const triggerMaintenance = (action: string) => {
-    setMaintenanceAction(action);
+    let actionTitle = "Đang gửi lệnh";
+    let actionMessage = "Vui lòng đợi giây lát...";
+    let successMessage = "Lệnh đã được thực thi thành công!";
+
+    if (action === "restart") {
+      actionTitle = "Khởi động lại";
+      actionMessage = `Đang gửi lệnh khởi động lại tới máy ấp ${machineId}...`;
+      successMessage = `Máy ấp ${machineId} đang khởi động lại hệ thống!`;
+    } else if (action === "synctime") {
+      actionTitle = "Đồng bộ thời gian";
+      actionMessage = `Đang đồng bộ giờ thực tế cho máy ấp ${machineId}...`;
+      successMessage = "Đồng bộ hóa thời gian thành công!";
+    } else if (action === "firmware") {
+      actionTitle = "Kiểm tra Firmware";
+      actionMessage = "Đang kiểm tra và yêu cầu máy cập nhật bản mới nhất...";
+      successMessage = "Thiết bị đang chạy phiên bản mới nhất!";
+    } else if (action === "factoryreset") {
+      actionTitle = "Khôi phục cài đặt gốc";
+      actionMessage = "Đang tiến hành khôi phục cài đặt ban đầu cho lò ấp...";
+      successMessage = "Khôi phục cài đặt gốc hoàn tất!";
+    }
+
+    setPopupAlert({
+      type: "loading",
+      title: actionTitle,
+      message: actionMessage
+    });
+
     setTimeout(() => {
-      setMaintenanceAction(action + "_success");
-      setTimeout(() => setMaintenanceAction(null), 3000);
+      setPopupAlert({
+        type: "success",
+        title: "Thành công",
+        message: successMessage
+      });
+      setTimeout(() => setPopupAlert(null), 4000);
     }, 1500);
   };
 
+  // Derive live status states
+  const liveTemp = rawDbData?.telemetry?.temp !== undefined ? Number(rawDbData.telemetry.temp) : 37.6;
+  const liveHumi = rawDbData?.telemetry?.humi !== undefined ? Number(rawDbData.telemetry.humi) : 61;
+  const liveStatus = rawDbData?.status || "Online";
+  const liveFirmware = rawDbData?.firmware || "v1.2.0";
+
   return (
-    <div className="min-h-screen bg-white font-sans text-slate-800 antialiased max-w-full overflow-x-hidden selection:bg-sky-100">
-      <div className="max-w-[1400px] mx-auto px-6 py-10 flex flex-col gap-10">
+    <div className="grid gap-6">
         
         {/* Top Header Section */}
-        <header className="relative pb-8 border-b border-slate-100 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+        <header className="flex flex-col gap-6 rounded-[24px] border border-sky-100/80 bg-white/90 backdrop-blur-md px-6 py-5 shadow-sm shadow-sky-100/30 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex flex-col gap-2.5">
             {/* Large Title & Subtitle */}
             <div className="flex items-center gap-4 mt-1 flex-wrap">
-              <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+              <h5 className="text-1xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
                 Cấu hình máy {machineId}
-              </h1>
+              </h5>
               
               <div className="flex gap-2">
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 border border-emerald-200 px-3 py-1 text-xs font-bold text-emerald-700">
-                  <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-                  Đang chạy
+                <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold ${
+                  liveStatus.toLowerCase() === "online" 
+                    ? "bg-emerald-50 border border-emerald-200 text-emerald-700" 
+                    : "bg-slate-50 border border-slate-200 text-slate-500"
+                }`}>
+                  <span className={`h-2 w-2 rounded-full ${
+                    liveStatus.toLowerCase() === "online" ? "bg-emerald-500 animate-pulse" : "bg-slate-400"
+                  }`} />
+                  {liveStatus}
                 </span>
                 <span className="inline-flex items-center rounded-full bg-slate-50 border border-slate-200 px-3 py-1 text-xs font-bold text-slate-600 tracking-wider">
                   {machineId}
@@ -216,26 +360,21 @@ export default function DeviceConfigurationPage() {
 
           {/* Action Buttons */}
           <div className="flex items-center gap-3.5 shrink-0">
-            <button
+            {/* <button
               onClick={() => window.history.back()}
               className="inline-flex h-11 items-center justify-center rounded-xl border border-slate-200 bg-white px-5 text-sm font-bold text-slate-600 shadow-sm transition hover:bg-slate-50 active:scale-[0.98] duration-150 cursor-pointer"
             >
               Hủy
-            </button>
+            </button> */}
             <button
               onClick={handleSave}
-              disabled={saveStatus === "saving"}
+              disabled={popupAlert?.type === "loading"}
               className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-sky-500 px-6 text-sm font-bold text-white shadow-md shadow-sky-100 hover:bg-sky-600 active:scale-[0.98] transition disabled:opacity-75 disabled:cursor-not-allowed duration-150 cursor-pointer"
             >
-              {saveStatus === "saving" ? (
+              {popupAlert?.type === "loading" && popupAlert?.title === "Đang lưu cấu hình" ? (
                 <>
                   <RotateCw className="h-4 w-4 animate-spin" />
                   <span>Đang lưu...</span>
-                </>
-              ) : saveStatus === "success" ? (
-                <>
-                  <Check className="h-4 w-4" />
-                  <span>Đã lưu thành công!</span>
                 </>
               ) : (
                 <>
@@ -247,19 +386,11 @@ export default function DeviceConfigurationPage() {
           </div>
         </header>
 
-        {/* Save feedback indicator */}
-        {saveStatus === "success" && (
-          <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-100 text-emerald-800 text-sm font-semibold flex items-center gap-2.5 animate-in fade-in slide-in-from-top-4 duration-300">
-            <Check className="h-5 w-5 text-emerald-600" />
-            Cấu hình thiết bị đã được lưu thành công và đồng bộ hóa tới máy ấp {machineId}!
-          </div>
-        )}
-
         {/* Main Content Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           
           {/* Left Column - 8 configuration cards */}
-          <div className="lg:col-span-8 xl:col-span-9 flex flex-col gap-10">
+          <div className="lg:col-span-8 xl:col-span-9 flex flex-col gap-6">
             
             {/* Card 1 — General Information */}
             <section className="bg-white rounded-[24px] border border-slate-200/70 p-6 md:p-8 shadow-[0_8px_30px_rgb(0,0,0,0.02)] transition-all duration-300 hover:shadow-[0_8px_35px_rgb(0,0,0,0.03)] flex flex-col gap-6">
@@ -279,8 +410,8 @@ export default function DeviceConfigurationPage() {
                   <input
                     type="text"
                     value={deviceName}
-                    onChange={(e) => setDeviceName(e.target.value)}
-                    className="h-11 rounded-xl border border-slate-200 bg-slate-50/30 px-4 text-sm font-medium text-slate-800 outline-none transition duration-200 focus:border-sky-400 focus:bg-white focus:ring-4 focus:ring-sky-50"
+                    disabled
+                    className="h-11 rounded-xl border border-slate-200 bg-slate-100 px-4 text-sm font-semibold text-slate-400 outline-none cursor-not-allowed select-none"
                   />
                 </div>
 
@@ -294,21 +425,7 @@ export default function DeviceConfigurationPage() {
                   />
                 </div>
 
-                <div className="flex flex-col gap-2">
-                  <label className="text-xs font-semibold text-slate-500 tracking-wider uppercase">Loại trứng</label>
-                  <select
-                    value={eggType}
-                    onChange={(e) => setEggType(e.target.value)}
-                    className="h-11 rounded-xl border border-slate-200 bg-slate-50/30 px-4 text-sm font-semibold text-slate-700 outline-none transition duration-200 focus:border-sky-400 focus:bg-white"
-                  >
-                    <option value="chicken">Trứng gà</option>
-                    <option value="duck">Trứng vịt</option>
-                    <option value="quail">Trứng cút</option>
-                    <option value="custom">Tự cấu hình</option>
-                  </select>
-                </div>
-
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-2 sm:col-span-2">
                   <label className="text-xs font-semibold text-slate-500 tracking-wider uppercase">Chế độ hoạt động</label>
                   <SegmentedControl
                     options={[
@@ -341,7 +458,10 @@ export default function DeviceConfigurationPage() {
                     type="date"
                     value={startDate}
                     onChange={(e) => setStartDate(e.target.value)}
-                    className="h-11 rounded-xl border border-slate-200 bg-slate-50/30 px-4 text-sm font-medium text-slate-800 outline-none transition duration-200 focus:border-sky-400 focus:bg-white focus:ring-4 focus:ring-sky-50"
+                    disabled={opMode === "auto"}
+                    className={`h-11 rounded-xl border border-slate-200 bg-slate-50/30 px-4 text-sm font-medium text-slate-800 outline-none transition duration-200 focus:border-sky-400 focus:bg-white focus:ring-4 focus:ring-sky-50 ${
+                      opMode === "auto" ? "opacity-60 bg-slate-100 cursor-not-allowed" : ""
+                    }`}
                   />
                 </div>
 
@@ -351,6 +471,7 @@ export default function DeviceConfigurationPage() {
                   onChange={setTotalDays}
                   unit="ngày"
                   min={1}
+                  disabled={opMode === "auto"}
                 />
 
                 <UnitInput
@@ -359,6 +480,7 @@ export default function DeviceConfigurationPage() {
                   onChange={setStopTurningDay}
                   unit="ngày"
                   min={1}
+                  disabled={opMode === "auto"}
                 />
 
                 <div className="flex flex-col gap-2">
@@ -396,6 +518,7 @@ export default function DeviceConfigurationPage() {
                   onChange={setTempMin}
                   unit="°C"
                   step={0.1}
+                  disabled={opMode === "auto"}
                 />
                 
                 <UnitInput
@@ -404,6 +527,7 @@ export default function DeviceConfigurationPage() {
                   onChange={setTempMax}
                   unit="°C"
                   step={0.1}
+                  disabled={opMode === "auto"}
                 />
 
                 <UnitInput
@@ -412,6 +536,7 @@ export default function DeviceConfigurationPage() {
                   onChange={setTempAlert}
                   unit="°C"
                   step={0.1}
+                  disabled={opMode === "auto"}
                 />
 
                 <UnitInput
@@ -420,6 +545,7 @@ export default function DeviceConfigurationPage() {
                   onChange={setTempOffset}
                   unit="°C"
                   step={0.1}
+                  disabled={opMode === "auto"}
                 />
 
                 <div className="sm:col-span-2">
@@ -429,6 +555,7 @@ export default function DeviceConfigurationPage() {
                     onChange={setTempHysteresis}
                     unit="°C"
                     step={0.05}
+                    disabled={opMode === "auto"}
                   />
                 </div>
               </div>
@@ -452,6 +579,7 @@ export default function DeviceConfigurationPage() {
                   value={humiMin}
                   onChange={setHumiMin}
                   unit="%"
+                  disabled={opMode === "auto"}
                 />
                 
                 <UnitInput
@@ -459,6 +587,7 @@ export default function DeviceConfigurationPage() {
                   value={humiMax}
                   onChange={setHumiMax}
                   unit="%"
+                  disabled={opMode === "auto"}
                 />
 
                 <UnitInput
@@ -466,6 +595,7 @@ export default function DeviceConfigurationPage() {
                   value={humiAlert}
                   onChange={setHumiAlert}
                   unit="%"
+                  disabled={opMode === "auto"}
                 />
 
                 <UnitInput
@@ -473,6 +603,7 @@ export default function DeviceConfigurationPage() {
                   value={humiOffset}
                   onChange={setHumiOffset}
                   unit="%"
+                  disabled={opMode === "auto"}
                 />
               </div>
             </section>
@@ -490,7 +621,7 @@ export default function DeviceConfigurationPage() {
                   </div>
                 </div>
                 
-                <div className="flex items-center gap-3">
+                <div className={`flex items-center gap-3 ${opMode === "auto" ? "opacity-50 pointer-events-none" : ""}`}>
                   <span className="text-xs font-bold text-slate-400 uppercase tracking-wide">
                     {enableTurning ? "Tự động bật" : "Tự động tắt"}
                   </span>
@@ -499,33 +630,33 @@ export default function DeviceConfigurationPage() {
               </div>
 
               <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
-                <div className={`${!enableTurning && "opacity-50 pointer-events-none"}`}>
+                <div className={`${(!enableTurning || opMode === "auto") && "opacity-50 pointer-events-none"}`}>
                   <UnitInput
                     label="Chu kỳ đảo trứng"
                     value={turnInterval}
                     onChange={setTurnInterval}
                     unit="giờ"
-                    disabled={!enableTurning}
+                    disabled={!enableTurning || opMode === "auto"}
                   />
                 </div>
                 
-                <div className={`${!enableTurning && "opacity-50 pointer-events-none"}`}>
+                <div className={`${(!enableTurning || opMode === "auto") && "opacity-50 pointer-events-none"}`}>
                   <UnitInput
                     label="Góc quay Servo"
                     value={servoAngle}
                     onChange={setServoAngle}
                     unit="°"
-                    disabled={!enableTurning}
+                    disabled={!enableTurning || opMode === "auto"}
                   />
                 </div>
 
-                <div className={`${!enableTurning && "opacity-50 pointer-events-none"} sm:col-span-2 md:col-span-1`}>
+                <div className={`${(!enableTurning || opMode === "auto") && "opacity-50 pointer-events-none"} sm:col-span-2 md:col-span-1`}>
                   <UnitInput
                     label="Thời gian mỗi lần đảo"
                     value={turnDuration}
                     onChange={setTurnDuration}
                     unit="giây"
-                    disabled={!enableTurning}
+                    disabled={!enableTurning || opMode === "auto"}
                   />
                 </div>
               </div>
@@ -639,32 +770,11 @@ export default function DeviceConfigurationPage() {
                 </div>
               </div>
 
-              {/* Maintenance Status Feedback */}
-              {maintenanceAction && (
-                <div className={`p-4 rounded-xl text-sm font-semibold border flex items-center gap-2.5 animate-in fade-in duration-300 ${
-                  maintenanceAction.endsWith("_success") 
-                    ? "bg-emerald-50 border-emerald-100 text-emerald-800" 
-                    : "bg-amber-50 border-amber-100 text-amber-800"
-                }`}>
-                  {maintenanceAction.endsWith("_success") ? (
-                    <>
-                      <Check className="h-4 w-4 text-emerald-600" />
-                      <span>Thực hiện lệnh thành công!</span>
-                    </>
-                  ) : (
-                    <>
-                      <RotateCw className="h-4 w-4 animate-spin text-amber-600" />
-                      <span>Đang truyền lệnh xuống máy ấp {machineId}...</span>
-                    </>
-                  )}
-                </div>
-              )}
-
               <div className="flex flex-wrap gap-4 items-center justify-between sm:justify-start">
                 <button
                   type="button"
                   onClick={() => triggerMaintenance("restart")}
-                  disabled={!!maintenanceAction}
+                  disabled={popupAlert?.type === "loading"}
                   className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-5 text-sm font-bold text-slate-700 shadow-sm transition hover:bg-slate-50 hover:border-slate-300 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 >
                   <RefreshCcw className="h-4 w-4" />
@@ -674,7 +784,7 @@ export default function DeviceConfigurationPage() {
                 <button
                   type="button"
                   onClick={() => triggerMaintenance("synctime")}
-                  disabled={!!maintenanceAction}
+                  disabled={popupAlert?.type === "loading"}
                   className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-5 text-sm font-bold text-slate-700 shadow-sm transition hover:bg-slate-50 hover:border-slate-300 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 >
                   <Clock className="h-4 w-4" />
@@ -684,7 +794,7 @@ export default function DeviceConfigurationPage() {
                 <button
                   type="button"
                   onClick={() => triggerMaintenance("firmware")}
-                  disabled={!!maintenanceAction}
+                  disabled={popupAlert?.type === "loading"}
                   className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-5 text-sm font-bold text-slate-700 shadow-sm transition hover:bg-slate-50 hover:border-slate-300 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 >
                   <HardDriveDownload className="h-4 w-4" />
@@ -695,7 +805,7 @@ export default function DeviceConfigurationPage() {
                   <button
                     type="button"
                     onClick={() => triggerMaintenance("factoryreset")}
-                    disabled={!!maintenanceAction}
+                    disabled={popupAlert?.type === "loading"}
                     className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border-2 border-rose-200 hover:border-rose-300 bg-white hover:bg-rose-50 px-5 text-sm font-bold text-rose-600 shadow-sm transition active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                   >
                     <AlertCircle className="h-4 w-4" />
@@ -720,7 +830,7 @@ export default function DeviceConfigurationPage() {
                   <span className="text-sm font-bold text-slate-500">Trạng thái máy</span>
                   <span className="inline-flex items-center gap-1.5 font-extrabold text-sm text-emerald-600">
                     <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-                    Hoạt động
+                    {liveStatus}
                   </span>
                 </div>
 
@@ -728,7 +838,7 @@ export default function DeviceConfigurationPage() {
                 <div className="flex items-center justify-between pt-4">
                   <span className="text-sm font-bold text-slate-500">Phiên bản Firmware</span>
                   <span className="font-mono text-sm font-bold text-slate-700 bg-slate-50 px-2 py-0.5 rounded-lg border border-slate-100">
-                    v1.2.0
+                    {liveFirmware}
                   </span>
                 </div>
 
@@ -755,7 +865,7 @@ export default function DeviceConfigurationPage() {
                   <span className="text-sm font-bold text-slate-500">Nhiệt độ hiện tại</span>
                   <span className="text-lg font-extrabold text-[#0EA5E9] flex items-center gap-0.5">
                     <Thermometer className="h-4.5 w-4.5 text-sky-400" />
-                    37.6°C
+                    {liveTemp}°C
                   </span>
                 </div>
 
@@ -764,7 +874,7 @@ export default function DeviceConfigurationPage() {
                   <span className="text-sm font-bold text-slate-500">Độ ẩm hiện tại</span>
                   <span className="text-lg font-extrabold text-emerald-600 flex items-center gap-0.5">
                     <Droplets className="h-4.5 w-4.5 text-emerald-400" />
-                    61%
+                    {liveHumi}%
                   </span>
                 </div>
               </div>
@@ -781,7 +891,59 @@ export default function DeviceConfigurationPage() {
 
         </div>
 
+        {/* Floating Popup Alerts */}
+        {popupAlert && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-[2px] animate-in fade-in duration-200">
+            <div className={`flex flex-col items-center text-center gap-4 rounded-2xl border px-6 py-6 shadow-2xl bg-white max-w-sm w-full animate-in zoom-in-95 duration-200 ${
+              popupAlert.type === "success" 
+                ? "border-emerald-100" 
+                : popupAlert.type === "error"
+                ? "border-rose-100"
+                : "border-amber-100"
+            }`}>
+              <div className={`p-3 rounded-full ${
+                popupAlert.type === "success" 
+                  ? "bg-emerald-50 text-emerald-600" 
+                  : popupAlert.type === "error"
+                  ? "bg-rose-50 text-rose-600"
+                  : "bg-amber-50 text-amber-600"
+              }`}>
+                {popupAlert.type === "success" ? (
+                  <Check className="h-8 w-8" />
+                ) : popupAlert.type === "error" ? (
+                  <AlertCircle className="h-8 w-8" />
+                ) : (
+                  <RotateCw className="h-8 w-8 animate-spin" />
+                )}
+              </div>
+              <div className="flex flex-col gap-1">
+                <h3 className="text-base font-extrabold text-slate-800">{popupAlert.title}</h3>
+                <p className="text-xs font-semibold text-slate-500 leading-relaxed">{popupAlert.message}</p>
+              </div>
+              {popupAlert.type !== "loading" && (
+                <button 
+                  onClick={() => setPopupAlert(null)}
+                  className="mt-2 w-full h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-xs font-bold text-slate-700 transition active:scale-[0.98] cursor-pointer"
+                >
+                  Đóng
+                </button>
+              )}
+            </div>
+          </div>
+        )}
       </div>
-    </div>
+    );
+}
+
+export default function DeviceConfigurationPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-white flex flex-col items-center justify-center p-20 gap-3">
+        <RotateCw className="h-8 w-8 text-sky-500 animate-spin" />
+        <span className="text-xs font-bold text-slate-500">Đang tải cấu hình thiết bị...</span>
+      </div>
+    }>
+      <DeviceConfigurationContent />
+    </Suspense>
   );
 }
