@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { DeviceItem } from "@/src/types/device";
 import DataTablePagination from "@/src/components/common/DataTablePagination";
+import Link from "next/link";
 
 interface DeviceTableProps {
   devices: DeviceItem[];
@@ -282,10 +283,10 @@ export default function DeviceTable({ devices, onAddDevice, onRefresh }: DeviceT
 
                 {/* Hành động */}
                 <td className="px-6 py-4 align-middle text-center">
-                  <button className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 hover:bg-amber-100 border border-amber-200/60 px-3.5 py-1.5 text-xs font-semibold text-amber-800 transition active:scale-95 duration-100 cursor-pointer">
+                  <Link href="/settings" className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 hover:bg-amber-100 border border-amber-200/60 px-3.5 py-1.5 text-xs font-semibold text-amber-800 transition active:scale-95 duration-100 cursor-pointer">
                     Xem chi tiết
                     <ArrowRight className="h-3 w-3" />
-                  </button>
+                  </Link>
                 </td>
               </tr>
             ))}

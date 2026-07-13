@@ -19,7 +19,7 @@ export default function CameraPageHeader({ totalCameras }: CameraPageHeaderProps
           </span>
         </div> */}
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-sky-950">CAMERA & AI</h1>
+          <h1 className="text-2xl font-bold tracking-tight text-sky-950">CAMERA GIÁM SÁT VÀ NHẬN DIỆN</h1>
           <p className="mt-1 text-sm text-slate-500">
             Theo dõi camera thiết bị, ảnh chụp và kết quả phân tích AI trong hệ thống HatchMate
           </p>

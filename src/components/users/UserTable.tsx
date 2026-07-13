@@ -21,12 +21,67 @@ import DataTablePagination from "@/src/components/common/DataTablePagination";
 interface UserTableProps {
   users: UserItem[];
   onAddUser?: () => void;
+  onRefresh?: () => Promise<void> | void;
 }
 
-export default function UserTable({ users, onAddUser }: UserTableProps) {
+export default function UserTable({ users, onAddUser, onRefresh }: UserTableProps) {
   const [activeDropdownId, setActiveDropdownId] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const handleRefreshClick = async () => {
+    if (isRefreshing) return;
+    setIsRefreshing(true);
+    if (onRefresh) {
+      try {
+        await onRefresh();
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    setTimeout(() => {
+      setIsRefreshing(false);
+    }, 600);
+  };
+
+  const handleExportExcel = () => {
+    const headers = [
+      "Họ tên",
+      "Email",
+      "Vai trò",
+      "Trạng thái máy",
+      "Số thiết bị",
+      "Thiết bị đang quản lý",
+      "Ngày tạo (Khởi động)",
+      "Trạng thái hoạt động"
+    ];
+
+    const rows = users.map(user => {
+      const roleLabel = user.role === "admin" ? "Admin" : user.role === "owner" ? "Chủ máy" : user.role === "guest" ? "Khách" : "Thành viên";
+      const statusLabel = user.status === "active" ? "Đang hoạt động" : user.status === "disabled" ? "Ngoại tuyến" : "Chờ kết nối";
+      return [
+        `"${user.fullName.replace(/"/g, '""')}"`,
+        `"${user.email.replace(/"/g, '""')}"`,
+        `"${roleLabel}"`,
+        `"${statusLabel}"`,
+        user.deviceCount,
+        `"${user.devices.join(", ").replace(/"/g, '""')}"`,
+        `"${user.createdAt}"`,
+        `"${user.lastActiveAt}"`
+      ];
+    });
+
+    const csvContent = "\uFEFF" + [headers.join(","), ...rows.map(e => e.join(","))].join("\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `danh_sach_thanh_vien_${new Date().toISOString().slice(0, 10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Reset to page 1 if users list changes
@@ -62,15 +117,19 @@ export default function UserTable({ users, onAddUser }: UserTableProps) {
     const configs = {
       admin: "bg-amber-50 text-amber-700 border-amber-200/80 shadow-sm shadow-amber-50/50",
       user: "bg-sky-50 text-sky-700 border-sky-200/80 shadow-sm shadow-sky-50/50",
+      owner: "bg-rose-50 text-rose-700 border-rose-200/80 shadow-sm shadow-rose-50/50",
+      guest: "bg-slate-50 text-slate-600 border-slate-200/80 shadow-sm shadow-slate-50/50",
     };
     const labels = {
       admin: "Admin",
       user: "User",
+      owner: "Chủ máy",
+      guest: "Khách",
     };
     return (
-      <span className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-xs font-semibold ${configs[role]}`}>
-        {role === "admin" && <ShieldCheck className="h-3 w-3 stroke-[2.2]" />}
-        {labels[role]}
+      <span className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-xs font-semibold ${configs[role] || configs.user}`}>
+        {(role === "admin" || role === "owner") && <ShieldCheck className="h-3 w-3 stroke-[2.2]" />}
+        {labels[role] || labels.user}
       </span>
     );
   };
@@ -83,8 +142,8 @@ export default function UserTable({ users, onAddUser }: UserTableProps) {
     };
     const labels = {
       active: "Đang hoạt động",
-      disabled: "Bị khóa",
-      pending: "Chờ kích hoạt",
+      disabled: "Ngoại tuyến",
+      pending: "Chờ kết nối",
     };
     return (
       <span className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold ${configs[status]}`}>
@@ -150,30 +209,30 @@ export default function UserTable({ users, onAddUser }: UserTableProps) {
       
       {/* Table Toolbar */}
       <div className="border-b border-slate-100 bg-white px-6 py-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="space-y-0.5">
+        <div>
           <h3 className="text-xs font-bold uppercase tracking-[0.15em] text-slate-400">
             Danh sách thành viên
           </h3>
-          <p className="text-xs text-slate-500">
-            Tổng cộng <span className="font-semibold text-sky-600">{users.length}</span> người dùng
-          </p>
         </div>
 
         <div className="flex items-center gap-2.5">
           <button
             type="button"
-            className="inline-flex h-10 items-center justify-center gap-2 rounded-[16px] border border-sky-100 bg-sky-50/20 px-4 text-xs font-bold text-sky-700 shadow-sm transition hover:bg-sky-50 hover:text-sky-800 active:scale-95 duration-150"
+            onClick={handleExportExcel}
+            className="inline-flex h-10 items-center justify-center gap-2 rounded-[16px] border border-sky-100 bg-sky-50/20 px-4 text-xs font-bold text-sky-700 shadow-sm transition hover:bg-sky-50 hover:text-sky-800 active:scale-95 duration-150 cursor-pointer"
           >
             <Download className="h-4 w-4 text-sky-600" />
-            <span>Xuất báo cáo</span>
+            <span>Xuất Excel</span>
           </button>
           
           <button
             type="button"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-[16px] border border-sky-100 bg-sky-50/20 text-sky-700 shadow-sm transition hover:bg-sky-50 hover:text-sky-800 active:scale-95 duration-150"
+            onClick={handleRefreshClick}
+            disabled={isRefreshing}
+            className="inline-flex h-10 w-10 items-center justify-center rounded-[16px] border border-sky-100 bg-sky-50/20 text-sky-700 shadow-sm transition hover:bg-sky-50 hover:text-sky-800 active:scale-95 duration-150 cursor-pointer disabled:opacity-50"
             title="Làm mới bảng"
           >
-            <RotateCw className="h-4 w-4 text-sky-600" />
+            <RotateCw className={`h-4 w-4 text-sky-600 ${isRefreshing ? "animate-spin" : ""}`} />
           </button>
         </div>
       </div>
@@ -185,7 +244,6 @@ export default function UserTable({ users, onAddUser }: UserTableProps) {
             <tr className="border-b border-slate-100 bg-slate-50/40 text-[11px] font-bold uppercase tracking-wider text-slate-400">
               <th className="px-6 py-4">Người dùng</th>
               <th className="px-6 py-4">Email</th>
-              <th className="px-6 py-4">UID</th>
               <th className="px-6 py-4">Vai trò</th>
               <th className="px-6 py-4">Trạng thái</th>
               <th className="px-6 py-4">Số thiết bị</th>
@@ -219,7 +277,6 @@ export default function UserTable({ users, onAddUser }: UserTableProps) {
                       <div className="font-bold text-sky-950 group-hover:text-sky-600 transition-colors">
                         {user.fullName}
                       </div>
-                      <p className="text-[11px] text-slate-400 font-medium mt-0.5">ID: {user.id}</p>
                     </div>
                   </div>
                 </td>
@@ -227,11 +284,6 @@ export default function UserTable({ users, onAddUser }: UserTableProps) {
                 {/* Email */}
                 <td className="px-6 py-4 font-medium text-slate-600">
                   {user.email}
-                </td>
-
-                {/* UID */}
-                <td className="px-6 py-4 font-mono text-xs font-semibold text-slate-500">
-                  {user.uid}
                 </td>
 
                 {/* Vai trò */}

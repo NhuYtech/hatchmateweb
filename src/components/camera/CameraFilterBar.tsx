@@ -42,9 +42,6 @@ export default function CameraFilterBar({
           <h3 className="text-xs font-bold uppercase tracking-[0.15em] text-slate-400">
             Bộ lọc & Tìm kiếm Camera
           </h3>
-          <p className="text-xs text-slate-500 mt-1">
-            Tra cứu luồng live camera và lịch sử phân tích thị giác máy
-          </p>
         </div>
 
         <button
