@@ -19,12 +19,12 @@ export default function LogsPage() {
   const { totalToday, deviceLogs, alertLogs, adminLogs } = logsSummaryData;
 
   return (
-    <div className="grid gap-6">
+    <div className="grid gap-4">
       {/* Header */}
       <LogsPageHeader totalToday={totalToday} />
 
       {/* Mini Stats Component Section */}
-      <section className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <LogsMiniStatCard
           label="Tổng log hôm nay"
           value={totalToday}

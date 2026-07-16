@@ -140,10 +140,10 @@ export default function DashboardPage() {
   }, [ownerEmail]); // Re-subscribe when ownerEmail is loaded to update owner column
 
   return (
-    <div className="grid gap-6">
+    <div className="grid gap-4">
       <WelcomeBanner summary={kpi} />
 
-      <section className="grid gap-6 xl:grid-cols-3">
+      <section className="grid gap-4 xl:grid-cols-3">
         <StatCard
           label="Tổng thiết bị"
           value={`${kpi.totalDevices}`}

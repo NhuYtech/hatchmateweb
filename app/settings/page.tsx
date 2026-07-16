@@ -322,7 +322,7 @@ function DeviceConfigurationContent() {
   const liveFirmware = rawDbData?.firmware || "v1.2.0";
 
   return (
-    <div className="grid gap-6">
+    <div className="grid gap-4">
 
         {/* Top Header Section */}
         <header className="flex flex-col gap-6 rounded-[24px] border border-sky-100/80 bg-white/90 backdrop-blur-md px-6 py-5 shadow-sm shadow-sky-100/30 sm:flex-row sm:items-center sm:justify-between">
@@ -382,10 +382,10 @@ function DeviceConfigurationContent() {
         </header>
 
         {/* Main Content Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
 
           {/* Left Column - 8 configuration cards */}
-          <div className="lg:col-span-8 xl:col-span-9 flex flex-col gap-6">
+          <div className="lg:col-span-8 xl:col-span-9 flex flex-col gap-4">
 
             {/* Card 1 — General Information */}
             <section className="bg-white rounded-[24px] border border-slate-200/70 p-6 md:p-8 shadow-[0_8px_30px_rgb(0,0,0,0.02)] transition-all duration-300 hover:shadow-[0_8px_35px_rgb(0,0,0,0.03)] flex flex-col gap-6">
@@ -813,7 +813,7 @@ function DeviceConfigurationContent() {
           </div>
 
           {/* Right Column - Sticky summary card */}
-          <aside className="lg:col-span-4 xl:col-span-3 lg:sticky lg:top-8 flex flex-col gap-6">
+          <aside className="lg:col-span-4 xl:col-span-3 lg:sticky lg:top-8 flex flex-col gap-4">
             <div className="bg-white rounded-[24px] border border-slate-200/70 p-6 shadow-[0_8px_30px_rgb(0,0,0,0.02)] transition-all duration-300 hover:shadow-[0_8px_35px_rgb(0,0,0,0.03)] flex flex-col gap-6">
               <h3 className="text-xs font-bold uppercase tracking-[0.18em] text-slate-400 border-b border-slate-100 pb-3">
                 Tổng quan trực tiếp

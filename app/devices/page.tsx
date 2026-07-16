@@ -181,12 +181,12 @@ export default function DevicesPage() {
   const warning = devices.filter((d) => d.status === "warning").length;
 
   return (
-    <div className="grid gap-6 w-full max-w-full min-w-0 overflow-hidden">
+    <div className="grid gap-4 w-full max-w-full min-w-0 overflow-hidden">
       {/* Header */}
       <DevicePageHeader totalDevices={total} />
 
       {/* Mini Stats Component Section */}
-      <section className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <DeviceMiniStatCard
           label="Tổng thiết bị"
           value={total}

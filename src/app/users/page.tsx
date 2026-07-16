@@ -190,12 +190,12 @@ export default function UsersPage() {
   const disabledUsers = users.filter((u) => u.status === "disabled").length;
 
   return (
-    <div className="grid gap-6">
+    <div className="grid gap-4">
       {/* Header */}
       <UserPageHeader totalUsers={totalUsers} />
 
       {/* Mini Stats Cards */}
-      <section className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <UserMiniStatCard
           label="Tổng người dùng"
           value={totalUsers}

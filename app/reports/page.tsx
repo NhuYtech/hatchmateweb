@@ -21,12 +21,12 @@ export default function ReportsPage() {
   const { trackedDevices, avgOnlineRate, totalAlerts, avgTemperature } = reportsSummaryData;
 
   return (
-    <div className="grid gap-6">
+    <div className="grid gap-4">
       {/* Header */}
       <ReportsPageHeader />
 
       {/* Mini Stats Component Section */}
-      <section className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <ReportsMiniStatCard
           label="Tổng thiết bị theo dõi"
           value={trackedDevices}
@@ -60,7 +60,7 @@ export default function ReportsPage() {
       <ReportsChartsSection data={reportChartData} />
 
       {/* Summary Table & Export Card Section */}
-      <div className="flex flex-col lg:flex-row gap-6 items-start">
+      <div className="flex flex-col lg:flex-row gap-4 items-start">
         <ReportSummaryTable items={reportSummaryList} />
         <ReportExportCard />
       </div>

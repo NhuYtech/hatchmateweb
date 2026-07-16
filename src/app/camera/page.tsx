@@ -20,12 +20,12 @@ export default function CameraPage() {
   const { totalCameras, onlineCameras, analyzedToday, aiAlerts } = cameraSummaryData;
 
   return (
-    <div className="grid gap-6">
+    <div className="grid gap-4">
       {/* Header */}
       <CameraPageHeader totalCameras={totalCameras} />
 
       {/* Mini Stats Component Section */}
-      <section className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <CameraMiniStatCard
           label="Tổng camera"
           value={totalCameras}
