@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/src/components/AuthProvider";
 import { isFirebaseConfigured } from "@/src/lib/firebase";
+import AnimatedBackground from "@/src/components/common/AnimatedBackground";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -51,7 +52,8 @@ export default function LoginPage() {
   if (!mounted) return null;
 
   return (
-    <div className="relative w-screen h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-[#FFF8E8] via-[#FFD56B] to-[#F5B000] select-none font-sans">
+    <div className="relative w-screen h-screen flex items-center justify-center overflow-hidden select-none font-sans">
+      <AnimatedBackground />
 
       {/* Dynamic inline styles for premium floating animations */}
       <style jsx global>{`
@@ -110,8 +112,7 @@ export default function LoginPage() {
         </svg>
       </div>
 
-      {/* Ambient Radial Soft Glow */}
-      <div className="absolute w-[600px] h-[600px] rounded-full bg-white/20 blur-3xl animate-pulse-soft -z-10 pointer-events-none"></div>
+
 
       {/* Main Login Card */}
       <div className="relative w-full max-w-[460px] mx-4 bg-white/95 rounded-[32px] shadow-[0_24px_70px_rgba(224,140,0,0.22)] border border-white/60 p-8 sm:p-10 md:p-12 z-10 backdrop-blur-md transition-all duration-500 hover:shadow-[0_30px_80px_rgba(224,140,0,0.3)] hover:scale-[1.01] flex flex-col items-center">

@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import DashboardTopbar from "./DashboardTopbar";
 import AdminSidebar from "./AdminSidebar";
 import { useAuth } from "@/src/components/AuthProvider";
+import AnimatedBackground from "@/src/components/common/AnimatedBackground";
 
 export default function AdminLayoutWrapper({
   children,
@@ -103,13 +104,9 @@ export default function AdminLayoutWrapper({
         />
 
         {/* Content: Fills remaining space, scrollable, restored warm gradient bg */}
-        <main
-          className="flex-1 overflow-y-auto overflow-x-hidden p-4 sm:p-6"
-          style={{
-            background: "linear-gradient(to bottom, #FCF8EC 0%, #FFF5DC 45%, #E7A124 100%)",
-          }}
-        >
-          <div className="mx-auto max-w-[1600px] w-full">
+        <main className="flex-1 overflow-y-auto overflow-x-hidden p-4 sm:p-6 relative">
+          <AnimatedBackground />
+          <div className="mx-auto max-w-[1600px] w-full relative z-10">
             {children}
           </div>
         </main>
