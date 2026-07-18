@@ -79,7 +79,7 @@ export default function AdminLayoutWrapper({
   }
 
   return (
-    <div className="h-screen overflow-hidden flex flex-col bg-slate-50 text-slate-900">
+    <div className="h-screen overflow-hidden flex flex-col text-slate-900">
       {/* HEADER: Full width, top level */}
       <DashboardTopbar onMenuToggle={toggleSidebar} />
 

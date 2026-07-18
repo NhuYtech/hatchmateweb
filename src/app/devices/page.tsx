@@ -7,7 +7,7 @@ import DeviceFilterBar from "@/src/components/devices/DeviceFilterBar";
 import DeviceTable from "@/src/components/devices/DeviceTable";
 import { ref, onValue, get } from "firebase/database";
 import { collection, getDocs } from "firebase/firestore";
-import { db, rtdb } from "@/src/lib/firebase";
+import { auth, db, rtdb } from "@/src/lib/firebase";
 import { 
   Cpu, 
   Wifi, 
@@ -28,40 +28,47 @@ export default function DevicesPage() {
 
   // 1. Fetch Owner Email from Firestore "users" collection
   useEffect(() => {
-    const fetchOwnerEmail = async () => {
-      try {
-        const usersCol = collection(db, "users");
-        const querySnapshot = await getDocs(usersCol);
-        let foundEmail = "";
+    // Listen for auth state change to fetch owner email once logged in
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (!user) return;
 
-        querySnapshot.forEach((doc) => {
-          const userData = doc.data();
-          if (userData.role === "owner" && userData.email) {
-            foundEmail = userData.email;
-          }
-        });
+      const fetchOwnerEmail = async () => {
+        try {
+          const usersCol = collection(db, "users");
+          const querySnapshot = await getDocs(usersCol);
+          let foundEmail = "";
 
-        if (!foundEmail) {
           querySnapshot.forEach((doc) => {
             const userData = doc.data();
-            if ((userData.role === "admin" || userData.role === "guest") && userData.email && !foundEmail) {
+            if (userData.role === "owner" && userData.email) {
               foundEmail = userData.email;
             }
           });
-        }
 
-        if (foundEmail) {
-          setOwnerEmail(foundEmail);
-        } else {
+          if (!foundEmail) {
+            querySnapshot.forEach((doc) => {
+              const userData = doc.data();
+              if ((userData.role === "admin" || userData.role === "guest") && userData.email && !foundEmail) {
+                foundEmail = userData.email;
+              }
+            });
+          }
+
+          if (foundEmail) {
+            setOwnerEmail(foundEmail);
+          } else {
+            setOwnerEmail("owner@hatchmate.com");
+          }
+        } catch (err) {
+          // Fallback silently to prevent F12 console noise
           setOwnerEmail("owner@hatchmate.com");
         }
-      } catch (err) {
-        console.error("Error fetching users from Firestore:", err);
-        setOwnerEmail("owner@hatchmate.com");
-      }
-    };
+      };
 
-    fetchOwnerEmail();
+      fetchOwnerEmail();
+    });
+
+    return () => unsubscribe();
   }, []);
 
   // Map snapshot value into DeviceItem array

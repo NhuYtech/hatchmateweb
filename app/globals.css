@@ -71,3 +71,73 @@ body {
     transform: translate(-30px, -70px) scale(1.1) rotate(150deg);
   }
 }
+
+/* ==========================================
+   GLOBAL GLASSMORPHISM THEME OVERRIDES
+   ========================================== */
+
+/* Áp dụng kính mờ cho Sidebar, Topbar, Thẻ Card và Khung nội dung trắng */
+aside,
+header,
+.bg-white,
+.bg-white\/95,
+div[class*="bg-gradient-to-br"] {
+  background-color: rgba(255, 255, 255, 0.45) !important;
+  background-image: none !important; /* Tắt dải gradient đục của thẻ KPI */
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border-color: rgba(255, 255, 255, 0.4) !important;
+}
+
+/* Tinh chỉnh các phần tử phụ: Bảng dữ liệu, hàng, bộ lọc */
+.bg-slate-50,
+.bg-slate-50\/50,
+.bg-slate-100,
+tr.border-b {
+  background-color: rgba(255, 255, 255, 0.25) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Đồng bộ kính mờ cho ô nhập liệu, bộ chọn và nút bấm phụ */
+input, 
+select,
+button.bg-slate-50,
+a.bg-slate-50 {
+  background-color: rgba(255, 255, 255, 0.35) !important;
+  backdrop-filter: blur(8px) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+button.bg-slate-50:hover,
+a.bg-slate-50:hover {
+  background-color: rgba(255, 255, 255, 0.6) !important;
+}
+
+/* ==========================================
+   GHI ĐÈ TOÀN BỘ CHỮ MÀU XÁM THÀNH ĐEN TUYỀN (TRIỆT ĐỂ)
+   ========================================== */
+
+/* 1. Ghi đè chữ xám và icon xám của Tailwind (Tăng độ ưu tiên bằng html body) */
+html body [class*="text-slate-"],
+html body [class*="text-gray-"],
+html body [class*="text-zinc-"],
+html body [class*="text-neutral-"],
+html body [class*="text-stone-"] {
+  color: #000000 !important;
+}
+
+/* 2. Ghi đè các chữ đen/xám bị giảm độ đục (ví dụ: text-black/50, text-slate-900/60) */
+html body [class*="text-black/"],
+html body [class*="text-slate-900/"],
+html body [class*="text-slate-800/"] {
+  color: #000000 !important;
+}
+
+/* 3. Ghi đè nhãn chữ số dạng SVG trong biểu đồ Recharts */
+html body .recharts-text,
+html body .recharts-cartesian-axis-tick text,
+html body .recharts-legend-item-text,
+html body .recharts-label {
+  fill: #000000 !important;
+  color: #000000 !important;
+}

@@ -7,7 +7,7 @@ import DeviceOverviewTable from "@/src/components/dashboard/DeviceOverviewTable"
 import RecentCameraCard from "@/src/components/dashboard/RecentCameraCard";
 import { ref, onValue } from "firebase/database";
 import { collection, getDocs } from "firebase/firestore";
-import { db, rtdb } from "@/src/lib/firebase";
+import { auth, db, rtdb } from "@/src/lib/firebase";
 import {
   dashboardSummary as mockSummary,
   cameraFeeds,
@@ -22,43 +22,49 @@ export default function DashboardPage() {
   const [ownerEmail, setOwnerEmail] = useState<string>("Đang tải...");
 
   useEffect(() => {
-    // 1. Fetch Owner Email from Firestore "users" collection
-    const fetchOwnerEmail = async () => {
-      try {
-        const usersCol = collection(db, "users");
-        const querySnapshot = await getDocs(usersCol);
-        let foundEmail = "";
+    // Listen for auth state change to fetch owner email once logged in
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (!user) return;
 
-        // First look for role === "owner"
-        querySnapshot.forEach((doc) => {
-          const userData = doc.data();
-          if (userData.role === "owner" && userData.email) {
-            foundEmail = userData.email;
-          }
-        });
+      const fetchOwnerEmail = async () => {
+        try {
+          const usersCol = collection(db, "users");
+          const querySnapshot = await getDocs(usersCol);
+          let foundEmail = "";
 
-        // Fallback to admin or first available email if no "owner" role found
-        if (!foundEmail) {
+          // First look for role === "owner"
           querySnapshot.forEach((doc) => {
             const userData = doc.data();
-            if ((userData.role === "admin" || userData.role === "guest") && userData.email && !foundEmail) {
+            if (userData.role === "owner" && userData.email) {
               foundEmail = userData.email;
             }
           });
-        }
 
-        if (foundEmail) {
-          setOwnerEmail(foundEmail);
-        } else {
+          // Fallback to admin or first available email if no "owner" role found
+          if (!foundEmail) {
+            querySnapshot.forEach((doc) => {
+              const userData = doc.data();
+              if ((userData.role === "admin" || userData.role === "guest") && userData.email && !foundEmail) {
+                foundEmail = userData.email;
+              }
+            });
+          }
+
+          if (foundEmail) {
+            setOwnerEmail(foundEmail);
+          } else {
+            setOwnerEmail("owner@hatchmate.com");
+          }
+        } catch (err) {
+          // Fallback silently to prevent F12 console noise
           setOwnerEmail("owner@hatchmate.com");
         }
-      } catch (err) {
-        console.error("Error fetching users from Firestore:", err);
-        setOwnerEmail("owner@hatchmate.com");
-      }
-    };
+      };
 
-    fetchOwnerEmail();
+      fetchOwnerEmail();
+    });
+
+    return () => unsubscribe();
   }, []);
 
   useEffect(() => {

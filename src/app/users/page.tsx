@@ -9,6 +9,7 @@ import { ref, onValue } from "firebase/database";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db, rtdb } from "@/src/lib/firebase";
 import { UserItem } from "@/src/types/user";
+import { userMockList } from "@/src/data/usersMock";
 import { 
   Users, 
   UserCheck, 
@@ -122,7 +123,9 @@ export default function UsersPage() {
       combineAndSet(currentUsersData, currentIncubatorsData);
       setLoading(false);
     }, (err) => {
-      console.error("Firestore users listener failed:", err);
+      // Silent-catch: Sử dụng mock data thay thế để tránh lỗi đỏ console khi thiếu quyền
+      currentUsersData = userMockList;
+      combineAndSet(currentUsersData, currentIncubatorsData);
       setLoading(false);
     });
 

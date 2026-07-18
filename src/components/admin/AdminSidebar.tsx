@@ -53,10 +53,10 @@ function SidebarNavItem({
       <Link
         href={href}
         onClick={onClick}
-        className={`flex w-full items-center gap-3 rounded-[20px] px-4 py-3 text-left text-sm font-medium transition ${collapsed ? "justify-center px-0" : ""
+        className={`flex w-full items-center gap-3 rounded-[20px] px-4 py-3 text-left text-sm transition ${collapsed ? "justify-center px-0" : ""
           } ${active
-            ? "bg-sky-50 text-sky-700 shadow-sm"
-            : "text-slate-700 hover:bg-slate-100 hover:text-slate-900"
+            ? "bg-amber-100 text-slate-950 font-bold shadow-sm"
+            : "text-slate-900 font-semibold hover:bg-amber-50/60 hover:text-black"
           }`}
       >
         <Icon className="h-5 w-5 shrink-0" />

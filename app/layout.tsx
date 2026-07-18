@@ -17,7 +17,7 @@ export default function RootLayout({
   return (
     <html lang="vi" suppressHydrationWarning>
       <body
-        className="font-times h-screen overflow-hidden flex flex-col bg-slate-50 text-slate-900"
+        className="font-times h-screen overflow-hidden flex flex-col text-slate-900"
       >
         <AuthProvider>
           <AdminLayoutWrapper>
