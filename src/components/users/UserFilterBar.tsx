@@ -68,9 +68,9 @@ export default function UserFilterBar({
               }}
               className="h-12 w-full appearance-none rounded-[20px] border border-slate-200 bg-slate-50/50 px-4 pr-10 text-sm font-semibold text-slate-700 outline-none transition duration-200 hover:border-slate-300 focus:border-sky-300 focus:bg-white focus:ring-4 focus:ring-sky-50"
             >
-              <option value="all">Vai trò: Tất cả</option>
-              <option value="owner">Chủ máy (Owner)</option>
-              <option value="guest">Khách (Guest)</option>
+              <option value="all">Tất cả</option>
+              <option value="owner">Chủ máy</option>
+              <option value="guest">Khách</option>
             </select>
             <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-slate-400">
               <ChevronDown className="h-4 w-4" />
@@ -89,7 +89,7 @@ export default function UserFilterBar({
               }}
               className="h-12 w-full appearance-none rounded-[20px] border border-slate-200 bg-slate-50/50 px-4 pr-10 text-sm font-semibold text-slate-700 outline-none transition duration-200 hover:border-slate-300 focus:border-sky-300 focus:bg-white focus:ring-4 focus:ring-sky-50"
             >
-              <option value="all">Trạng thái: Tất cả</option>
+              <option value="all">Tất cả</option>
               <option value="active">Đang hoạt động</option>
               <option value="disabled">Ngoại tuyến</option>
               <option value="pending">Chờ kết nối</option>

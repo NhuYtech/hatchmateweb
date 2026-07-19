@@ -7,7 +7,7 @@ interface SettingsPageHeaderProps {
 
 export default function SettingsPageHeader({ activeProfile }: SettingsPageHeaderProps) {
   return (
-    <div className="flex flex-col gap-5 rounded-[24px] border border-sky-100/80 bg-white/95 backdrop-blur-md px-6 py-5 shadow-sm shadow-sky-100/20 sm:flex-row sm:items-center sm:justify-between">
+    <div className="flex flex-col gap-5 py-3 sm:flex-row sm:items-center sm:justify-between">
       {/* Left: breadcrumb + title */}
       <div className="space-y-1.5">
         {/* Breadcrumb-style label */}

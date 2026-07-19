@@ -1,16 +1,16 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { 
-  Eye, 
-  Edit3, 
-  MoreVertical, 
-  User, 
-  ShieldCheck, 
-  Plus, 
-  Download, 
-  RotateCw, 
-  Trash2, 
+import {
+  Eye,
+  Edit3,
+  MoreVertical,
+  User,
+  ShieldCheck,
+  Plus,
+  Download,
+  RotateCw,
+  Trash2,
   Lock,
   Link,
   Shield
@@ -114,40 +114,38 @@ export default function UserTable({ users, onAddUser, onRefresh }: UserTableProp
   };
 
   const getRoleBadge = (role: UserItem["role"]) => {
-    const configs = {
-      admin: "bg-amber-50 text-amber-700 border-amber-200/80 shadow-sm shadow-amber-50/50",
-      user: "bg-sky-50 text-sky-700 border-sky-200/80 shadow-sm shadow-sky-50/50",
-      owner: "bg-rose-50 text-rose-700 border-rose-200/80 shadow-sm shadow-rose-50/50",
-      guest: "bg-slate-50 text-slate-600 border-slate-200/80 shadow-sm shadow-slate-50/50",
-    };
     const labels = {
       admin: "Admin",
       user: "User",
       owner: "Chủ máy",
       guest: "Khách",
     };
+    const colors = {
+      admin: "text-amber-600 font-bold",
+      user: "text-slate-900 font-medium",
+      owner: "text-slate-900 font-bold",
+      guest: "text-slate-900 font-medium",
+    };
     return (
-      <span className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-xs font-semibold ${configs[role] || configs.user}`}>
-        {(role === "admin" || role === "owner") && <ShieldCheck className="h-3 w-3 stroke-[2.2]" />}
+      <span className={`inline-flex items-center text-xs ${colors[role] || colors.user}`}>
         {labels[role] || labels.user}
       </span>
     );
   };
 
   const getStatusBadge = (status: UserItem["status"]) => {
-    const configs = {
-      active: "bg-emerald-50 text-emerald-700 border-emerald-200/80",
-      disabled: "bg-rose-50 text-rose-700 border-rose-200/80",
-      pending: "bg-amber-50 text-amber-700 border-amber-200/80",
-    };
     const labels = {
       active: "Đang hoạt động",
       disabled: "Ngoại tuyến",
       pending: "Chờ kết nối",
     };
+    const colors = {
+      active: "text-emerald-600 font-semibold",
+      disabled: "text-rose-600 font-semibold",
+      pending: "text-amber-600 font-semibold",
+    };
     return (
-      <span className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold ${configs[status]}`}>
-        <span className={`h-1.5 w-1.5 rounded-full ${status === "active" ? "bg-emerald-500 animate-pulse" : status === "disabled" ? "bg-rose-500" : "bg-amber-500 animate-bounce"}`} />
+      <span className={`text-xs ${colors[status]}`}>
         {labels[status]}
       </span>
     );
@@ -157,26 +155,10 @@ export default function UserTable({ users, onAddUser, onRefresh }: UserTableProp
     if (devices.length === 0) {
       return <span className="text-xs text-slate-400 italic">Chưa liên kết</span>;
     }
-    const maxVisible = 2;
-    const visible = devices.slice(0, maxVisible);
-    const extra = devices.length - maxVisible;
-
     return (
-      <div className="flex flex-wrap items-center gap-1">
-        {visible.map((d) => (
-          <span 
-            key={d} 
-            className="inline-flex rounded-lg border border-sky-100 bg-sky-50/30 px-2 py-0.5 text-[11px] font-semibold text-sky-700"
-          >
-            {d}
-          </span>
-        ))}
-        {extra > 0 && (
-          <span className="inline-flex rounded-lg border border-slate-200 bg-slate-50 px-1.5 py-0.5 text-[11px] font-bold text-slate-500">
-            +{extra}
-          </span>
-        )}
-      </div>
+      <span className="text-xs font-semibold text-sky-600">
+        {devices.join(", ")}
+      </span>
     );
   };
 
@@ -206,12 +188,12 @@ export default function UserTable({ users, onAddUser, onRefresh }: UserTableProp
 
   return (
     <div className="rounded-[24px] border border-sky-100/80 bg-white shadow-sm shadow-sky-100/10 overflow-hidden">
-      
+
       {/* Table Toolbar */}
-      <div className="border-b border-slate-100 bg-white px-6 py-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="border-b border-slate-100 bg-white px-4 py-3 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h3 className="text-xs font-bold uppercase tracking-[0.15em] text-slate-400">
-            Danh sách thành viên
+            Danh sách người dùng
           </h3>
         </div>
 
@@ -224,7 +206,7 @@ export default function UserTable({ users, onAddUser, onRefresh }: UserTableProp
             <Download className="h-4 w-4 text-sky-600" />
             <span>Xuất Excel</span>
           </button>
-          
+
           <button
             type="button"
             onClick={handleRefreshClick}
@@ -239,34 +221,34 @@ export default function UserTable({ users, onAddUser, onRefresh }: UserTableProp
 
       {/* Responsive Table Wrapper */}
       <div className="overflow-x-auto relative min-h-[300px]">
-        <table className="w-full min-w-[1200px] border-collapse text-left text-sm">
+        <table className="w-full min-w-[1200px] border-collapse text-left text-sm whitespace-nowrap">
           <thead>
             <tr className="border-b border-slate-100 bg-slate-50/40 text-[11px] font-bold uppercase tracking-wider text-slate-400">
-              <th className="px-6 py-4">Người dùng</th>
-              <th className="px-6 py-4">Email</th>
-              <th className="px-6 py-4">Vai trò</th>
-              <th className="px-6 py-4">Trạng thái</th>
-              <th className="px-6 py-4">Số thiết bị</th>
-              <th className="px-6 py-4">Thiết bị đang quản lý</th>
-              <th className="px-6 py-4">Ngày tạo</th>
-              <th className="px-6 py-4">Hoạt động gần nhất</th>
-              <th className="px-6 py-4 text-center">Hành động</th>
+              <th className="px-4 py-2.5">Người dùng</th>
+              <th className="px-4 py-2.5">Email</th>
+              <th className="px-4 py-2.5">Vai trò</th>
+              <th className="px-4 py-2.5">Trạng thái</th>
+              <th className="px-4 py-2.5">Số thiết bị</th>
+              <th className="px-4 py-2.5">Thiết bị đang quản lý</th>
+              <th className="px-4 py-2.5">Ngày tạo</th>
+              <th className="px-4 py-2.5">Hoạt động gần nhất</th>
+              <th className="px-4 py-2.5 text-center">Hành động</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
             {paginatedUsers.map((user) => (
-              <tr 
-                key={user.id} 
+              <tr
+                key={user.id}
                 className="group hover:bg-sky-50/10 transition-colors duration-150"
               >
                 {/* Người dùng */}
-                <td className="px-6 py-4">
+                <td className="px-4 py-2.5">
                   <div className="flex items-center gap-3">
                     <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-sky-50 font-bold text-sky-700 border border-sky-100/50">
                       {user.avatarUrl ? (
-                        <img 
-                          src={user.avatarUrl} 
-                          alt={user.fullName} 
+                        <img
+                          src={user.avatarUrl}
+                          alt={user.fullName}
                           className="h-full w-full object-cover rounded-xl"
                         />
                       ) : (
@@ -282,42 +264,47 @@ export default function UserTable({ users, onAddUser, onRefresh }: UserTableProp
                 </td>
 
                 {/* Email */}
-                <td className="px-6 py-4 font-medium text-slate-600">
+                <td className="px-4 py-2.5 font-medium text-slate-600">
                   {user.email}
                 </td>
 
                 {/* Vai trò */}
-                <td className="px-6 py-4">
+                <td className="px-4 py-2.5">
                   {getRoleBadge(user.role)}
                 </td>
 
                 {/* Trạng thái */}
-                <td className="px-6 py-4">
+                <td className="px-4 py-2.5">
                   {getStatusBadge(user.status)}
                 </td>
 
                 {/* Số thiết bị */}
-                <td className="px-6 py-4 font-bold text-sky-950 text-center sm:text-left">
+                <td className="px-4 py-2.5 font-bold text-sky-950 text-center sm:text-left">
                   {user.deviceCount}
                 </td>
 
                 {/* Thiết bị đang quản lý */}
-                <td className="px-6 py-4">
+                <td className="px-4 py-2.5">
                   {renderDevices(user.devices)}
                 </td>
 
                 {/* Ngày tạo */}
-                <td className="px-6 py-4 text-xs font-semibold text-slate-400">
+                <td className="px-4 py-2.5 text-xs font-semibold text-slate-400">
                   {user.createdAt}
                 </td>
 
                 {/* Hoạt động gần nhất */}
-                <td className="px-6 py-4 text-xs font-semibold text-slate-400">
+                <td className={`px-4 py-2.5 text-xs font-bold ${user.lastActiveAt === "Đang hoạt động"
+                    ? "text-emerald-600"
+                    : user.lastActiveAt === "Ngoại tuyến"
+                      ? "text-rose-600"
+                      : "text-slate-500"
+                  }`}>
                   {user.lastActiveAt}
                 </td>
 
                 {/* Row Actions Dropdown */}
-                <td className="px-6 py-4 relative">
+                <td className="px-4 py-2.5 relative">
                   <div className="flex items-center justify-center gap-2">
                     <button
                       type="button"
@@ -333,7 +320,7 @@ export default function UserTable({ users, onAddUser, onRefresh }: UserTableProp
                     >
                       <Edit3 className="h-4 w-4" />
                     </button>
-                    
+
                     <div className="relative">
                       <button
                         type="button"
@@ -344,7 +331,7 @@ export default function UserTable({ users, onAddUser, onRefresh }: UserTableProp
                       </button>
 
                       {activeDropdownId === user.id && (
-                        <div 
+                        <div
                           ref={dropdownRef}
                           className="absolute right-0 top-full z-[100] mt-1.5 w-48 rounded-xl border border-sky-100 bg-white p-1.5 shadow-xl animate-in fade-in duration-100"
                         >

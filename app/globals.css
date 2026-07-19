@@ -98,14 +98,21 @@ tr.border-b {
   border-color: rgba(255, 255, 255, 0.2) !important;
 }
 
-/* Đồng bộ kính mờ cho ô nhập liệu, bộ chọn và nút bấm phụ */
-input:not(.bg-transparent), 
-select,
-button.bg-slate-50,
-a.bg-slate-50 {
-  background-color: rgba(255, 255, 255, 0.35) !important;
-  backdrop-filter: blur(8px) !important;
-  border-color: rgba(255, 255, 255, 0.3) !important;
+/* Đồng bộ màu trắng tinh cho ô nhập liệu, bộ chọn, nhãn bọc tìm kiếm và ô thông tin tĩnh */
+html body input:not(.bg-transparent), 
+html body select,
+html body button.bg-slate-50,
+html body a.bg-slate-50,
+html body label.bg-slate-50\/50,
+html body div.bg-slate-50\/50,
+html body select.bg-slate-50\/50,
+html body select.bg-slate-50\/40,
+html body select.bg-slate-50\/30,
+html body div.bg-slate-100 {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }
 
 button.bg-slate-50:hover,
@@ -172,5 +179,26 @@ html body select.bg-white {
   background-color: #ffffff !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
+}
+
+/* Force solid white background and disable backdrop blur for modals and alerts */
+.bg-pure-white {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  opacity: 1 !important;
+}
+
+/* Force solid gray background for secondary buttons to prevent glassmorphism issues */
+.bg-button-gray {
+  background: #f1f5f9 !important;
+  background-color: #f1f5f9 !important;
+  color: #334155 !important;
+}
+.bg-button-gray:hover {
+  background: #e2e8f0 !important;
+  background-color: #e2e8f0 !important;
+  color: #1e293b !important;
 }
 

@@ -5,20 +5,22 @@ import UserPageHeader from "@/src/components/users/UserPageHeader";
 import UserMiniStatCard from "@/src/components/users/UserMiniStatCard";
 import UserFilterBar from "@/src/components/users/UserFilterBar";
 import UserTable from "@/src/components/users/UserTable";
+import AddUserModal from "@/src/components/users/AddUserModal";
 import { ref, onValue } from "firebase/database";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db, rtdb } from "@/src/lib/firebase";
 import { UserItem } from "@/src/types/user";
-import { 
-  Users, 
-  UserCheck, 
-  UserMinus, 
+import {
+  Users,
+  UserCheck,
+  UserMinus,
   ShieldCheck
 } from "lucide-react";
 
 export default function UsersPage() {
   const [users, setUsers] = useState<UserItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
   // Search & filter states
   const [search, setSearch] = useState("");
@@ -193,7 +195,7 @@ export default function UsersPage() {
   return (
     <div className="grid gap-4">
       {/* Header */}
-      <UserPageHeader totalUsers={totalUsers} />
+      <UserPageHeader totalUsers={totalUsers} onAddUser={() => setIsAddModalOpen(true)} />
 
       {/* Mini Stats Cards */}
       <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -210,7 +212,7 @@ export default function UsersPage() {
           accent="emerald"
         />
         <UserMiniStatCard
-          label="Quản trị & Chủ máy"
+          label="Chủ máy"
           value={adminUsers}
           icon={ShieldCheck}
           accent="sky"
@@ -224,7 +226,7 @@ export default function UsersPage() {
       </section>
 
       {/* Search & Filter Bar */}
-      <UserFilterBar 
+      <UserFilterBar
         onSearchChange={setSearch}
         onRoleChange={setRole}
         onStatusChange={setStatus}
@@ -238,7 +240,22 @@ export default function UsersPage() {
       />
 
       {/* User Table Component Section */}
-      <UserTable users={sortedUsers} onRefresh={() => setRefreshTrigger((prev) => prev + 1)} />
+      <UserTable 
+        users={sortedUsers} 
+        onAddUser={() => setIsAddModalOpen(true)}
+        onRefresh={() => setRefreshTrigger((prev) => prev + 1)} 
+      />
+
+      {/* Add User Modal */}
+      {isAddModalOpen && (
+        <AddUserModal
+          onClose={() => setIsAddModalOpen(false)}
+          onSuccess={() => {
+            setIsAddModalOpen(false);
+            setRefreshTrigger((prev) => prev + 1);
+          }}
+        />
+      )}
     </div>
   );
 }

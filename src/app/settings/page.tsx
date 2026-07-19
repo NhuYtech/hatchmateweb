@@ -629,7 +629,7 @@ function DeviceConfigurationContent() {
                 </div>
               </div>
 
-              <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
+              <div className="grid gap-6 sm:grid-cols-2">
                 <div className={`${(!enableTurning || opMode === "auto") && "opacity-50 pointer-events-none"}`}>
                   <UnitInput
                     label="Chu kỳ đảo trứng"
@@ -639,18 +639,8 @@ function DeviceConfigurationContent() {
                     disabled={!enableTurning || opMode === "auto"}
                   />
                 </div>
-                
-                <div className={`${(!enableTurning || opMode === "auto") && "opacity-50 pointer-events-none"}`}>
-                  <UnitInput
-                    label="Góc quay Servo"
-                    value={servoAngle}
-                    onChange={setServoAngle}
-                    unit="°"
-                    disabled={!enableTurning || opMode === "auto"}
-                  />
-                </div>
 
-                <div className={`${(!enableTurning || opMode === "auto") && "opacity-50 pointer-events-none"} sm:col-span-2 md:col-span-1`}>
+                <div className={`${(!enableTurning || opMode === "auto") && "opacity-50 pointer-events-none"}`}>
                   <UnitInput
                     label="Thời gian mỗi lần đảo"
                     value={turnDuration}
@@ -713,50 +703,6 @@ function DeviceConfigurationContent() {
               </div>
             </section>
 
-            {/* Card 7 — Notifications */}
-            <section className="bg-white rounded-[24px] border border-slate-200/70 p-6 md:p-8 shadow-[0_8px_30px_rgb(0,0,0,0.02)] transition-all duration-300 hover:shadow-[0_8px_35px_rgb(0,0,0,0.03)] flex flex-col gap-6">
-              <div className="flex items-center gap-3 pb-4 border-b border-slate-100">
-                <div className="p-2.5 rounded-xl bg-sky-50 text-sky-500">
-                  <Bell className="h-5 w-5" />
-                </div>
-                <div>
-                  <h2 className="text-lg font-extrabold text-slate-800">Thông báo & Cảnh báo</h2>
-                  <p className="text-xs text-slate-400 font-semibold mt-0.5">Bật/tắt các kênh nhận thông báo và sự kiện quan trọng</p>
-                </div>
-              </div>
-
-              <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
-                <div className="flex items-center justify-between border border-slate-100 rounded-xl p-3.5 bg-slate-50/10">
-                  <span className="text-xs font-bold text-slate-600 uppercase tracking-wide">Báo nhiệt độ</span>
-                  <Toggle checked={notifyTemp} onChange={setNotifyTemp} />
-                </div>
-                
-                <div className="flex items-center justify-between border border-slate-100 rounded-xl p-3.5 bg-slate-50/10">
-                  <span className="text-xs font-bold text-slate-600 uppercase tracking-wide">Báo độ ẩm</span>
-                  <Toggle checked={notifyHumi} onChange={setNotifyHumi} />
-                </div>
-
-                <div className="flex items-center justify-between border border-slate-100 rounded-xl p-3.5 bg-slate-50/10">
-                  <span className="text-xs font-bold text-slate-600 uppercase tracking-wide">Mất kết nối máy</span>
-                  <Toggle checked={notifyOffline} onChange={setNotifyOffline} />
-                </div>
-
-                <div className="flex items-center justify-between border border-slate-100 rounded-xl p-3.5 bg-slate-50/10">
-                  <span className="text-xs font-bold text-slate-600 uppercase tracking-wide">Cảnh báo cháy nổ</span>
-                  <Toggle checked={notifyFire} onChange={setNotifyFire} />
-                </div>
-
-                <div className="flex items-center justify-between border border-slate-100 rounded-xl p-3.5 bg-slate-50/10">
-                  <span className="text-xs font-bold text-slate-600 uppercase tracking-wide">Thông báo đẩy (Push)</span>
-                  <Toggle checked={notifyPush} onChange={setNotifyPush} />
-                </div>
-
-                <div className="flex items-center justify-between border border-slate-100 rounded-xl p-3.5 bg-slate-50/10">
-                  <span className="text-xs font-bold text-slate-600 uppercase tracking-wide">Gửi Email cảnh báo</span>
-                  <Toggle checked={notifyEmail} onChange={setNotifyEmail} />
-                </div>
-              </div>
-            </section>
 
             {/* Card 8 — Maintenance */}
             <section className="bg-white rounded-[24px] border border-slate-200/70 p-6 md:p-8 shadow-[0_8px_30px_rgb(0,0,0,0.02)] transition-all duration-300 hover:shadow-[0_8px_35px_rgb(0,0,0,0.03)] flex flex-col gap-6">
@@ -893,8 +839,8 @@ function DeviceConfigurationContent() {
 
         {/* Floating Popup Alerts */}
         {popupAlert && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-[2px] animate-in fade-in duration-200">
-            <div className={`flex flex-col items-center text-center gap-4 rounded-2xl border px-6 py-6 shadow-2xl bg-white max-w-sm w-full animate-in zoom-in-95 duration-200 ${
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-[2px] animate-in fade-in duration-200">
+            <div className={`flex flex-col items-center text-center gap-4 rounded-2xl border px-6 py-6 shadow-2xl bg-pure-white max-w-sm w-full animate-in zoom-in-95 duration-200 ${
               popupAlert.type === "success" 
                 ? "border-emerald-100" 
                 : popupAlert.type === "error"
@@ -923,7 +869,7 @@ function DeviceConfigurationContent() {
               {popupAlert.type !== "loading" && (
                 <button 
                   onClick={() => setPopupAlert(null)}
-                  className="mt-2 w-full h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-xs font-bold text-slate-700 transition active:scale-[0.98] cursor-pointer"
+                  className="mt-2 w-full h-9 rounded-xl text-xs font-bold transition active:scale-[0.98] cursor-pointer bg-button-gray"
                 >
                   Đóng
                 </button>

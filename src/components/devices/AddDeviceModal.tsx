@@ -137,9 +137,7 @@ export default function AddDeviceModal({ isOpen, onClose, onSuccess }: AddDevice
 
     // 5. Owner Validation
     const emailTrimmed = selectedUserEmail.trim();
-    if (!emailTrimmed) {
-      newErrors.owner = "Vui lòng nhập chủ sở hữu";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailTrimmed)) {
+    if (emailTrimmed && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailTrimmed)) {
       newErrors.owner = "Địa chỉ email không đúng định dạng";
     }
 
@@ -236,16 +234,10 @@ export default function AddDeviceModal({ isOpen, onClose, onSuccess }: AddDevice
         </button>
 
         {/* Modal Header */}
-        <div className="flex flex-col items-center text-center gap-3 mb-6 pb-5 border-b border-slate-100">
-          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-50 text-amber-500 shadow-sm border border-amber-100 animate-pulse">
-            <Cpu className="h-7 w-7 stroke-[2.2]" />
-          </div>
-          <div>
-            <h3 className="text-lg font-bold text-slate-900">
-              THÊM MÁY ẤP MỚI
-            </h3>
-            {/* <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mt-1">Đăng ký thiết bị HatchMate</p> */}
-          </div>
+        <div className="flex flex-col items-center text-center gap-2 mb-6 pb-5 border-b border-slate-100">
+          <h3 className="text-lg font-bold text-slate-900">
+            THÊM MÁY ẤP MỚI
+          </h3>
         </div>
 
         {/* Global Error Banner */}
@@ -262,7 +254,7 @@ export default function AddDeviceModal({ isOpen, onClose, onSuccess }: AddDevice
           {/* Device ID Input */}
           <div className="space-y-1.5">
             <label className="text-xs font-bold text-slate-500 uppercase tracking-wider block pl-1">
-              Mã thiết bị (ID) <span className="text-rose-500">*</span>
+              Mã thiết bị<span className="text-rose-500">*</span>
             </label>
             <div className="relative flex items-center">
               <Tag className="absolute left-3.5 h-4 w-4 text-slate-400 z-10" />
@@ -365,7 +357,7 @@ export default function AddDeviceModal({ isOpen, onClose, onSuccess }: AddDevice
           {/* Owner Input */}
           <div className="space-y-1.5">
             <label className="text-xs font-bold text-slate-500 uppercase tracking-wider block pl-1">
-              Chủ sở hữu (Email) <span className="text-rose-500">*</span>
+              Chủ sở hữu (Email) (Tùy chọn)
             </label>
             <div className="relative flex items-center">
               <User className="absolute left-3.5 h-4 w-4 text-slate-400 z-10" />
@@ -403,7 +395,7 @@ export default function AddDeviceModal({ isOpen, onClose, onSuccess }: AddDevice
           {/* Egg Type Select */}
           <div className="space-y-1.5">
             <label className="text-xs font-bold text-slate-500 uppercase tracking-wider block pl-1">
-              Loại trứng & Chu kỳ ấp mặc định
+              Loại trứng & Chu kỳ ấp
             </label>
             <div className="relative flex items-center">
               <Calendar className="absolute left-3.5 h-4 w-4 text-slate-400 z-10" />

@@ -3,7 +3,7 @@ import { FileText, Bell, UserCircle2, Calendar } from "lucide-react";
 
 export default function ReportsPageHeader() {
   return (
-    <div className="flex flex-col gap-6 rounded-[24px] border border-sky-100/80 bg-white/90 backdrop-blur-md px-6 py-5 shadow-sm shadow-sky-100/30 sm:flex-row sm:items-center sm:justify-between">
+    <div className="flex flex-col gap-6 py-3 sm:flex-row sm:items-center sm:justify-between">
       <div className="space-y-1">
         {/* <div className="flex items-center gap-2">
           <div className="text-xs font-bold uppercase tracking-[0.24em] text-sky-500">
