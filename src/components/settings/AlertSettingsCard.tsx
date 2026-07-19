@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { AlertSettings } from "@/src/types/incubation-settings";
-import { defaultAlertSettings } from "@/src/data/settingsMock";
+import { defaultAlertSettings } from "@/src/constants/presets";
 import {
   Thermometer,
   Droplets,

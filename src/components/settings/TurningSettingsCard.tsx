@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { defaultTurningSettings } from "@/src/data/settingsMock";
+import { defaultTurningSettings } from "@/src/constants/presets";
 import { RefreshCw, Moon } from "lucide-react";
 
 /* ── Shared styles ── */

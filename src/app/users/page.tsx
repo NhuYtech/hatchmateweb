@@ -9,7 +9,6 @@ import { ref, onValue } from "firebase/database";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db, rtdb } from "@/src/lib/firebase";
 import { UserItem } from "@/src/types/user";
-import { userMockList } from "@/src/data/usersMock";
 import { 
   Users, 
   UserCheck, 
@@ -123,8 +122,7 @@ export default function UsersPage() {
       combineAndSet(currentUsersData, currentIncubatorsData);
       setLoading(false);
     }, (err) => {
-      // Silent-catch: Sử dụng mock data thay thế để tránh lỗi đỏ console khi thiếu quyền
-      currentUsersData = userMockList;
+      currentUsersData = [];
       combineAndSet(currentUsersData, currentIncubatorsData);
       setLoading(false);
     });

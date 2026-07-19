@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { incubationPhasesMock } from "@/src/data/settingsMock";
+import { incubationPhases } from "@/src/constants/presets";
 import { IncubationPhase, TurningMode } from "@/src/types/incubation-settings";
 import DataTablePagination from "@/src/components/common/DataTablePagination";
 import {
@@ -66,7 +66,7 @@ function PhaseBadge({ index }: { index: number }) {
    Main component
 ────────────────────────────────────────────── */
 export default function IncubationPhaseTable() {
-  const [phases] = useState<IncubationPhase[]>(incubationPhasesMock);
+  const [phases] = useState<IncubationPhase[]>(incubationPhases);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(5);
   const [openMenu, setOpenMenu] = useState<string | null>(null);

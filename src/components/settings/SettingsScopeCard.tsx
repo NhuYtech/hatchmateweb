@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { incubationProfilesMock } from "@/src/data/settingsMock";
+import { incubationProfiles } from "@/src/constants/presets";
 import { Sliders, Copy, Plus, Info, LayoutGrid } from "lucide-react";
 
 interface SettingsScopeCardProps {
@@ -17,9 +17,9 @@ export default function SettingsScopeCard({
   const [selectedDevice, setSelectedDevice] = useState("SEI-IoT-001");
   const [selectedProfileId, setSelectedProfileId] = useState("chicken");
 
-  const selectedProfile = incubationProfilesMock.find(
+  const selectedProfile = incubationProfiles.find(
     (p) => p.id === selectedProfileId
-  ) || incubationProfilesMock[0];
+  ) || incubationProfiles[0];
 
   const handleScopeChange = (newScope: "all" | "device") => {
     setScope(newScope);
@@ -145,7 +145,7 @@ export default function SettingsScopeCard({
                 onChange={(e) => handleProfileChange(e.target.value)}
                 className="h-11 w-full appearance-none rounded-xl border border-slate-200 bg-slate-50/30 px-3.5 pr-10 text-xs font-semibold text-slate-700 outline-none transition duration-200 focus:border-sky-300 focus:bg-white focus:ring-2 focus:ring-sky-50"
               >
-                {incubationProfilesMock.map((profile) => (
+                {incubationProfiles.map((profile) => (
                   <option key={profile.id} value={profile.id}>
                     {profile.name}
                   </option>

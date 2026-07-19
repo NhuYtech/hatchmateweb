@@ -8,16 +8,23 @@ import RecentCameraCard from "@/src/components/dashboard/RecentCameraCard";
 import { ref, onValue } from "firebase/database";
 import { collection, getDocs } from "firebase/firestore";
 import { auth, db, rtdb } from "@/src/lib/firebase";
-import {
-  dashboardSummary as mockSummary,
-  cameraFeeds,
-} from "@/src/data/dashboardMock";
 import { Activity, ShieldCheck, Flame } from "lucide-react";
-import type { DeviceItem, KpiSummary } from "@/src/types/dashboard";
+import type { DeviceItem, KpiSummary, CameraItem } from "@/src/types/dashboard";
+
+const initialKpi: KpiSummary = {
+  totalDevices: 0,
+  onlineDevices: 0,
+  incubatingDevices: 0,
+  warningDevices: 0,
+  avgTemperature: 0,
+  avgHumidity: 0,
+  openAlerts: 0,
+};
 
 export default function DashboardPage() {
   const [devices, setDevices] = useState<DeviceItem[]>([]);
-  const [kpi, setKpi] = useState<KpiSummary>(mockSummary);
+  const [kpi, setKpi] = useState<KpiSummary>(initialKpi);
+  const [cameraFeeds, setCameraFeeds] = useState<CameraItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [ownerEmail, setOwnerEmail] = useState<string>("Đang tải...");
 
@@ -127,17 +134,39 @@ export default function DashboardPage() {
         const warning = list.filter((d) => d.status === "warning").length;
         const incubating = list.filter((d) => d.incubatingDay > 0).length;
 
+        const activeForMetrics = list.filter(d => d.status === "online" || d.status === "warning");
+        const avgTemp = activeForMetrics.length > 0 
+          ? Number((activeForMetrics.reduce((sum, d) => sum + d.temperature, 0) / activeForMetrics.length).toFixed(1))
+          : 0;
+        const avgHumi = activeForMetrics.length > 0 
+          ? Math.round(activeForMetrics.reduce((sum, d) => sum + d.humidity, 0) / activeForMetrics.length)
+          : 0;
+
         setKpi({
           totalDevices: total,
           onlineDevices: online,
           warningDevices: warning,
           incubatingDevices: incubating,
-          avgTemperature: mockSummary.avgTemperature,
-          avgHumidity: mockSummary.avgHumidity,
+          avgTemperature: avgTemp,
+          avgHumidity: avgHumi,
           openAlerts: warning,
         });
+
+        // Set camera feeds dynamically from real devices with cameras
+        const activeCameraFeeds: CameraItem[] = list
+          .filter((d) => d.hasCamera)
+          .map((d) => ({
+            id: `cam-${d.id}`,
+            deviceName: d.name,
+            imageUrl: undefined,
+            aiLabel: null,
+            capturedAt: d.lastSeen,
+          }));
+        setCameraFeeds(activeCameraFeeds);
       } else {
         setDevices([]);
+        setKpi(initialKpi);
+        setCameraFeeds([]);
       }
       setLoading(false);
     });

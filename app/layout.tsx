@@ -5,7 +5,7 @@ import AdminLayoutWrapper from "@/src/components/admin/AdminLayoutWrapper";
 import { AuthProvider } from "@/src/components/AuthProvider";
 
 export const metadata: Metadata = {
-  title: "SB Admin Pro - HatchMate",
+  title: "Đăng nhập",
   description: "Hệ thống giám sát và quản lý máy ấp trứng HatchMate",
 };
 

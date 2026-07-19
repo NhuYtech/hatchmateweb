@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { defaultEnvironmentSettings } from "@/src/data/settingsMock";
+import { defaultEnvironmentSettings } from "@/src/constants/presets";
 import { Thermometer, Droplets, Activity } from "lucide-react";
 
 /* ── Shared label styles ── */

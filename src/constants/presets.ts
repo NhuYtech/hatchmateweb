@@ -1,5 +1,4 @@
 import { 
-  IncubationSettingsSummary, 
   IncubationProfile, 
   EnvironmentSettings, 
   TurningSettings,
@@ -7,14 +6,7 @@ import {
   AlertSettings,
 } from "@/src/types/incubation-settings";
 
-export const incubationSettingsSummaryData: IncubationSettingsSummary = {
-  activeProfile: "Gà ta 21 ngày",
-  appliedDevices: 5,
-  turnInterval: "120 phút/lần",
-  mainAlert: ">39°C / <50% RH",
-};
-
-export const incubationProfilesMock: IncubationProfile[] = [
+export const incubationProfiles: IncubationProfile[] = [
   {
     id: "chicken",
     name: "Gà ta 21 ngày",
@@ -61,7 +53,7 @@ export const defaultTurningSettings: TurningSettings = {
   stopTurningLastDays: true,
 };
 
-export const incubationPhasesMock: IncubationPhase[] = [
+export const incubationPhases: IncubationPhase[] = [
   {
     id: "phase-1",
     phaseName: "Phát triển phôi",
@@ -113,27 +105,18 @@ export const incubationPhasesMock: IncubationPhase[] = [
 ];
 
 export const defaultAlertSettings: AlertSettings = {
-  // A. Temperature
   highTempAlertEnabled: true,
   highTempThreshold: 39,
   lowTempAlertEnabled: true,
   lowTempThreshold: 36.5,
-
-  // B. Humidity
   lowHumidityAlertEnabled: true,
   lowHumidityThreshold: 50,
   highHumidityAlertEnabled: false,
   highHumidityThreshold: 75,
-
-  // C. Connectivity
   deviceOfflineAlert: true,
   cameraOfflineAlert: true,
   sensorNoResponseAlert: true,
-
-  // D. Notification channels
   pushNotificationEnabled: true,
   adminNotificationEnabled: true,
   realtimeAlertEnabled: true,
 };
-
-
