@@ -5,13 +5,15 @@ import DevicePageHeader from "@/src/components/devices/DevicePageHeader";
 import DeviceMiniStatCard from "@/src/components/devices/DeviceMiniStatCard";
 import DeviceFilterBar from "@/src/components/devices/DeviceFilterBar";
 import DeviceTable from "@/src/components/devices/DeviceTable";
+import AddDeviceModal from "@/src/components/devices/AddDeviceModal";
+import DeleteConfirmModal from "@/src/components/devices/DeleteConfirmModal";
 import { ref, onValue, get } from "firebase/database";
 import { collection, getDocs } from "firebase/firestore";
 import { auth, db, rtdb } from "@/src/lib/firebase";
-import { 
-  Cpu, 
-  Wifi, 
-  WifiOff, 
+import {
+  Cpu,
+  Wifi,
+  WifiOff,
   AlertTriangle
 } from "lucide-react";
 import type { DeviceItem } from "@/src/types/device";
@@ -20,6 +22,10 @@ export default function DevicesPage() {
   const [devices, setDevices] = useState<DeviceItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [ownerEmail, setOwnerEmail] = useState<string>("Đang tải...");
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [deleteDeviceId, setDeleteDeviceId] = useState("");
+  const [deleteDeviceName, setDeleteDeviceName] = useState("");
 
   // Filter & Search states
   const [search, setSearch] = useState("");
@@ -77,35 +83,35 @@ export default function DevicesPage() {
     Object.keys(data).forEach((key) => {
       const item = data[key];
       if (typeof item === "object" && item !== null) {
-        const temperature = item.telemetry?.temp !== undefined 
-          ? Number(item.telemetry.temp) 
+        const temperature = item.telemetry?.temp !== undefined
+          ? Number(item.telemetry.temp)
           : (item.temperature !== undefined ? Number(item.temperature) : Number(item.temp ?? 0));
 
-        const humidity = item.telemetry?.humi !== undefined 
-          ? Number(item.telemetry.humi) 
+        const humidity = item.telemetry?.humi !== undefined
+          ? Number(item.telemetry.humi)
           : (item.humidity !== undefined ? Number(item.humidity) : Number(item.humi ?? 0));
 
-        const incubatingDay = item.telemetry?.day !== undefined 
-          ? Number(item.telemetry.day) 
+        const incubatingDay = item.telemetry?.day !== undefined
+          ? Number(item.telemetry.day)
           : (item.incubatingDay !== undefined ? Number(item.incubatingDay) : Number(item.day ?? 0));
 
-        const totalIncubationDays = item.cycle?.totalDays !== undefined 
-          ? Number(item.cycle.totalDays) 
+        const totalIncubationDays = item.cycle?.totalDays !== undefined
+          ? Number(item.cycle.totalDays)
           : Number(item.totalIncubationDays ?? 21);
 
-        const remainingDays = item.remainingDays !== undefined 
-          ? Number(item.remainingDays) 
+        const remainingDays = item.remainingDays !== undefined
+          ? Number(item.remainingDays)
           : Math.max(0, totalIncubationDays - incubatingDay);
 
-        const incubationStatus = 
-          incubatingDay === 0 
-            ? "paused" 
+        const incubationStatus =
+          incubatingDay === 0
+            ? "paused"
             : (totalIncubationDays - incubatingDay <= 3 ? "hatchingSoon" : "incubating");
 
         list.push({
           id: key,
           name: item.name ?? key,
-          owner: ownerEmail,
+          owner: item.ownerEmail || ownerEmail,
           status: String(item.status ?? (item.alert === "NORMAL" ? "online" : (item.alert ? "warning" : "offline"))).toLowerCase() as any,
           incubationStatus,
           temperature,
@@ -160,7 +166,7 @@ export default function DevicesPage() {
 
   // Handle Filtering & Sorting client-side
   const filteredDevices = devices.filter((device) => {
-    const matchesSearch = 
+    const matchesSearch =
       device.name.toLowerCase().includes(search.toLowerCase()) ||
       device.id.toLowerCase().includes(search.toLowerCase()) ||
       device.owner.toLowerCase().includes(search.toLowerCase());
@@ -190,12 +196,12 @@ export default function DevicesPage() {
   return (
     <div className="grid gap-4 w-full max-w-full min-w-0 overflow-hidden">
       {/* Header */}
-      <DevicePageHeader totalDevices={total} />
+      <DevicePageHeader totalDevices={total} onAddDevice={() => setIsAddModalOpen(true)} />
 
       {/* Mini Stats Component Section */}
-      <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <section className="grid gap-4 sm:grid-cols-3">
         <DeviceMiniStatCard
-          label="Tổng thiết bị"
+          label="Tổng số thiết bị"
           value={total}
           icon={Cpu}
           accent="indigo"
@@ -212,26 +218,47 @@ export default function DevicesPage() {
           icon={WifiOff}
           accent="rose"
         />
-        <DeviceMiniStatCard
-          label="Thiết bị cảnh báo"
-          value={warning}
-          icon={AlertTriangle}
-          accent="amber"
-        />
       </section>
 
       {/* Search & Filter Bar */}
-      <DeviceFilterBar 
+      <DeviceFilterBar
         onSearchChange={setSearch}
         onStatusChange={setStatus}
         onSortChange={setSort}
       />
 
       {/* Device Table Component Section */}
-      <DeviceTable 
-        devices={sortedDevices} 
-        onAddDevice={() => console.log("Thêm thiết bị click")}
+      <DeviceTable
+        devices={sortedDevices}
+        onAddDevice={() => setIsAddModalOpen(true)}
         onRefresh={handleRefresh}
+        onDeleteDevice={(id, name) => {
+          setDeleteDeviceId(id);
+          setDeleteDeviceName(name);
+          setIsDeleteModalOpen(true);
+        }}
+      />
+
+      {/* Add Device Popup Modal */}
+      <AddDeviceModal
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+        onSuccess={() => {
+          setIsAddModalOpen(false);
+          handleRefresh();
+        }}
+      />
+
+      {/* Delete Confirmation Popup Modal */}
+      <DeleteConfirmModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onSuccess={() => {
+          setIsDeleteModalOpen(false);
+          handleRefresh();
+        }}
+        deviceId={deleteDeviceId}
+        deviceName={deleteDeviceName}
       />
     </div>
   );

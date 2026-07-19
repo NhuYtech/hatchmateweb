@@ -82,30 +82,30 @@ export default function DashboardPage() {
       if (snapshot.exists()) {
         const data = snapshot.val();
         const list: DeviceItem[] = [];
-        
+
         Object.keys(data).forEach((key) => {
           const item = data[key];
           if (typeof item === "object" && item !== null) {
             // Robust mapping to read temperature, humidity, incubating days, remaining days
             // Support both telemetry/cycle nested structure and flat object structure
-            const temperature = item.telemetry?.temp !== undefined 
-              ? Number(item.telemetry.temp) 
+            const temperature = item.telemetry?.temp !== undefined
+              ? Number(item.telemetry.temp)
               : (item.temperature !== undefined ? Number(item.temperature) : Number(item.temp ?? 0));
 
-            const humidity = item.telemetry?.humi !== undefined 
-              ? Number(item.telemetry.humi) 
+            const humidity = item.telemetry?.humi !== undefined
+              ? Number(item.telemetry.humi)
               : (item.humidity !== undefined ? Number(item.humidity) : Number(item.humi ?? 0));
 
-            const incubatingDay = item.telemetry?.day !== undefined 
-              ? Number(item.telemetry.day) 
+            const incubatingDay = item.telemetry?.day !== undefined
+              ? Number(item.telemetry.day)
               : (item.incubatingDay !== undefined ? Number(item.incubatingDay) : Number(item.day ?? 0));
 
-            const totalIncubationDays = item.cycle?.totalDays !== undefined 
-              ? Number(item.cycle.totalDays) 
+            const totalIncubationDays = item.cycle?.totalDays !== undefined
+              ? Number(item.cycle.totalDays)
               : Number(item.totalIncubationDays ?? 21);
 
-            const remainingDays = item.remainingDays !== undefined 
-              ? Number(item.remainingDays) 
+            const remainingDays = item.remainingDays !== undefined
+              ? Number(item.remainingDays)
               : Math.max(0, totalIncubationDays - incubatingDay);
 
             list.push({
@@ -135,10 +135,10 @@ export default function DashboardPage() {
         const incubating = list.filter((d) => d.incubatingDay > 0).length;
 
         const activeForMetrics = list.filter(d => d.status === "online" || d.status === "warning");
-        const avgTemp = activeForMetrics.length > 0 
+        const avgTemp = activeForMetrics.length > 0
           ? Number((activeForMetrics.reduce((sum, d) => sum + d.temperature, 0) / activeForMetrics.length).toFixed(1))
           : 0;
-        const avgHumi = activeForMetrics.length > 0 
+        const avgHumi = activeForMetrics.length > 0
           ? Math.round(activeForMetrics.reduce((sum, d) => sum + d.humidity, 0) / activeForMetrics.length)
           : 0;
 
@@ -180,7 +180,7 @@ export default function DashboardPage() {
 
       <section className="grid gap-4 xl:grid-cols-3">
         <StatCard
-          label="Tổng thiết bị"
+          label="Tổng số thiết bị"
           value={`${kpi.totalDevices}`}
           description="Tổng số trạm ấp đang quản lý"
           accent="default"

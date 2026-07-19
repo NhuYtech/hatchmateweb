@@ -3,9 +3,10 @@ import { Plus, Bell, UserCircle2, Cpu } from "lucide-react";
 
 interface DevicePageHeaderProps {
   totalDevices: number;
+  onAddDevice?: () => void;
 }
 
-export default function DevicePageHeader({ totalDevices }: DevicePageHeaderProps) {
+export default function DevicePageHeader({ totalDevices, onAddDevice }: DevicePageHeaderProps) {
   return (
     <div className="flex flex-col gap-6 rounded-[24px] border border-sky-100/80 bg-white/90 backdrop-blur-md px-6 py-5 shadow-sm shadow-sky-100/30 sm:flex-row sm:items-center sm:justify-between">
       <div className="space-y-1">
@@ -29,7 +30,8 @@ export default function DevicePageHeader({ totalDevices }: DevicePageHeaderProps
       <div className="flex flex-wrap items-center gap-4">
         <button
           type="button"
-          className="inline-flex h-12 items-center justify-center gap-2 rounded-[20px] bg-gradient-to-r from-amber-500 to-orange-500 px-6 text-sm font-semibold text-white shadow-md shadow-orange-200/50 transition duration-200 hover:from-amber-600 hover:to-orange-600 active:scale-95 hover:shadow-lg"
+          onClick={onAddDevice}
+          className="inline-flex h-12 items-center justify-center gap-2 rounded-[20px] bg-gradient-to-r from-amber-500 to-orange-500 px-6 text-sm font-semibold text-white shadow-md shadow-orange-200/50 transition duration-200 hover:from-amber-600 hover:to-orange-600 active:scale-95 hover:shadow-lg cursor-pointer"
         >
           <Plus className="h-5 w-5 stroke-[2.5]" />
           <span>Thêm thiết bị</span>

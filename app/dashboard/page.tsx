@@ -135,10 +135,10 @@ export default function DashboardPage() {
         const incubating = list.filter((d) => d.incubatingDay > 0).length;
 
         const activeForMetrics = list.filter(d => d.status === "online" || d.status === "warning");
-        const avgTemp = activeForMetrics.length > 0 
+        const avgTemp = activeForMetrics.length > 0
           ? Number((activeForMetrics.reduce((sum, d) => sum + d.temperature, 0) / activeForMetrics.length).toFixed(1))
           : 0;
-        const avgHumi = activeForMetrics.length > 0 
+        const avgHumi = activeForMetrics.length > 0
           ? Math.round(activeForMetrics.reduce((sum, d) => sum + d.humidity, 0) / activeForMetrics.length)
           : 0;
 
@@ -180,7 +180,7 @@ export default function DashboardPage() {
 
       <section className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
         <StatCard
-          label="Tổng thiết bị"
+          label="Tổng số thiết bị"
           value={`${kpi.totalDevices}`}
           description="Tổng số trạm ấp đang quản lý"
           accent="default"

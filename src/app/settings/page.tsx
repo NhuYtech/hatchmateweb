@@ -111,7 +111,7 @@ const UnitInput = ({
           min={min}
           max={max}
           step={step}
-          className={`h-11 w-full rounded-xl border border-slate-200 bg-slate-50/30 pl-4 pr-12 text-sm font-medium text-slate-800 outline-none transition-all duration-200 focus:border-sky-400 focus:bg-white focus:ring-4 focus:ring-sky-50 ${
+          className={`h-11 w-full rounded-xl border border-slate-200 bg-white pl-4 pr-12 text-sm font-medium text-slate-800 outline-none transition-all duration-200 focus:border-sky-400 focus:bg-white focus:ring-4 focus:ring-sky-50 ${
             disabled ? "opacity-60 bg-slate-100 cursor-not-allowed" : ""
           }`}
         />
@@ -459,7 +459,7 @@ function DeviceConfigurationContent() {
                     value={startDate}
                     onChange={(e) => setStartDate(e.target.value)}
                     disabled={opMode === "auto"}
-                    className={`h-11 rounded-xl border border-slate-200 bg-slate-50/30 px-4 text-sm font-medium text-slate-800 outline-none transition duration-200 focus:border-sky-400 focus:bg-white focus:ring-4 focus:ring-sky-50 ${
+                    className={`h-11 rounded-xl border border-slate-200 bg-white px-4 text-sm font-medium text-slate-800 outline-none transition duration-200 focus:border-sky-400 focus:bg-white focus:ring-4 focus:ring-sky-50 ${
                       opMode === "auto" ? "opacity-60 bg-slate-100 cursor-not-allowed" : ""
                     }`}
                   />
@@ -696,7 +696,7 @@ function DeviceConfigurationContent() {
                   <select
                     value={resolution}
                     onChange={(e) => setResolution(e.target.value)}
-                    className="h-11 rounded-xl border border-slate-200 bg-slate-50/30 px-4 text-sm font-semibold text-slate-700 outline-none transition duration-200 focus:border-sky-400 focus:bg-white"
+                    className="h-11 rounded-xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-700 outline-none transition duration-200 focus:border-sky-400 focus:bg-white"
                   >
                     <option value="720p">720p (HD)</option>
                     <option value="1080p">1080p (Full HD)</option>

@@ -10,7 +10,8 @@ import {
   RotateCw,
   Cpu,
   Plus,
-  ArrowRight
+  ArrowRight,
+  Trash2
 } from "lucide-react";
 import { DeviceItem } from "@/src/types/device";
 import DataTablePagination from "@/src/components/common/DataTablePagination";
@@ -20,9 +21,10 @@ interface DeviceTableProps {
   devices: DeviceItem[];
   onAddDevice?: () => void;
   onRefresh?: () => void | Promise<void>;
+  onDeleteDevice?: (id: string, name: string) => void;
 }
 
-export default function DeviceTable({ devices, onAddDevice, onRefresh }: DeviceTableProps) {
+export default function DeviceTable({ devices, onAddDevice, onRefresh, onDeleteDevice }: DeviceTableProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -219,7 +221,6 @@ export default function DeviceTable({ devices, onAddDevice, onRefresh }: DeviceT
                   <div className="font-bold text-sky-950 group-hover:text-sky-600 transition-colors">
                     {device.name}
                   </div>
-                  <p className="text-[11px] text-slate-400 font-medium mt-0.5">Model: HM-Smart-v2</p>
                 </td>
 
                 {/* Chủ sở hữu */}
@@ -283,10 +284,20 @@ export default function DeviceTable({ devices, onAddDevice, onRefresh }: DeviceT
 
                 {/* Hành động */}
                 <td className="px-6 py-4 align-middle text-center">
-                  <Link href={`/settings?id=${device.id}`} className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 hover:bg-amber-100 border border-amber-200/60 px-3.5 py-1.5 text-xs font-semibold text-amber-800 transition active:scale-95 duration-100 cursor-pointer">
-                    Xem chi tiết
-                    <ArrowRight className="h-3 w-3" />
-                  </Link>
+                  <div className="flex items-center justify-center gap-2">
+                    <Link href={`/settings?id=${device.id}`} className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 hover:bg-amber-100 border border-amber-200/60 px-3.5 py-1.5 text-xs font-semibold text-amber-800 transition active:scale-95 duration-100 cursor-pointer">
+                      Xem chi tiết
+                      <ArrowRight className="h-3 w-3" />
+                    </Link>
+                    <button
+                      type="button"
+                      onClick={() => onDeleteDevice && onDeleteDevice(device.id, device.name)}
+                      className="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-rose-50 hover:bg-rose-100 border border-rose-200/40 text-rose-600 hover:text-rose-700 transition active:scale-95 duration-100 cursor-pointer"
+                      title="Xóa máy ấp"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}

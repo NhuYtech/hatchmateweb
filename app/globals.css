@@ -99,7 +99,7 @@ tr.border-b {
 }
 
 /* Đồng bộ kính mờ cho ô nhập liệu, bộ chọn và nút bấm phụ */
-input, 
+input:not(.bg-transparent), 
 select,
 button.bg-slate-50,
 a.bg-slate-50 {
@@ -149,6 +149,27 @@ html body header {
   border: none !important;
   border-width: 0 !important;
   box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Ép buộc làm sạch viền và nền cho các ô nhập liệu dạng trong suốt */
+html body input.bg-transparent,
+html body input[type="search"].bg-transparent {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  border-width: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Cho phép các ô nhập liệu/lựa chọn có class bg-white hiển thị đúng màu trắng tinh */
+html body input.bg-white,
+html body select.bg-white {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
 }
