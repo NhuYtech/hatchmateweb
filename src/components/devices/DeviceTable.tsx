@@ -10,12 +10,14 @@ import {
   RotateCw,
   Cpu,
   Plus,
-  ArrowRight,
-  Trash2
+  Trash2,
+  Settings,
+  MoreHorizontal
 } from "lucide-react";
 import { DeviceItem } from "@/src/types/device";
 import DataTablePagination from "@/src/components/common/DataTablePagination";
 import Link from "next/link";
+import DeviceControlModal from "./DeviceControlModal";
 
 interface DeviceTableProps {
   devices: DeviceItem[];
@@ -28,6 +30,7 @@ export default function DeviceTable({ devices, onAddDevice, onRefresh, onDeleteD
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [controlModalDevice, setControlModalDevice] = useState<{ id: string; name: string } | null>(null);
 
   // Reset to page 1 if devices list changes (e.g. filtered)
   const [prevDevices, setPrevDevices] = useState(devices);
@@ -285,10 +288,21 @@ export default function DeviceTable({ devices, onAddDevice, onRefresh, onDeleteD
                 {/* Hành động */}
                 <td className="px-6 py-4 align-middle text-center">
                   <div className="flex items-center justify-center gap-2">
-                    <Link href={`/settings?id=${device.id}`} className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 hover:bg-amber-100 border border-amber-200/60 px-3.5 py-1.5 text-xs font-semibold text-amber-800 transition active:scale-95 duration-100 cursor-pointer">
-                      Xem chi tiết
-                      <ArrowRight className="h-3 w-3" />
+                    <Link
+                      href={`/settings?id=${device.id}`}
+                      className="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-amber-50 hover:bg-amber-100 border border-amber-200/40 text-amber-600 hover:text-amber-700 transition active:scale-95 duration-100 cursor-pointer"
+                      title="Cấu hình ấp"
+                    >
+                      <MoreHorizontal className="h-4 w-4" />
                     </Link>
+                    <button
+                      type="button"
+                      onClick={() => setControlModalDevice({ id: device.id, name: device.name })}
+                      className="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-sky-50 hover:bg-sky-100 border border-sky-200/40 text-sky-600 hover:text-sky-700 transition active:scale-95 duration-100 cursor-pointer"
+                      title="Điều khiển thiết bị"
+                    >
+                      <Settings className="h-4 w-4" />
+                    </button>
                     <button
                       type="button"
                       onClick={() => onDeleteDevice && onDeleteDevice(device.id, device.name)}
@@ -314,6 +328,15 @@ export default function DeviceTable({ devices, onAddDevice, onRefresh, onDeleteD
         onPageSizeChange={setPageSize}
         itemLabel="thiết bị"
       />
+
+      {controlModalDevice && (
+        <DeviceControlModal
+          isOpen={!!controlModalDevice}
+          onClose={() => setControlModalDevice(null)}
+          deviceId={controlModalDevice.id}
+          deviceName={controlModalDevice.name}
+        />
+      )}
     </div>
   );
 }
