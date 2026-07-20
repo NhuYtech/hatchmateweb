@@ -137,6 +137,17 @@ function DeviceConfigurationContent() {
   const [currentPhase, setCurrentPhase] = useState("Giai đoạn 1");
   const [stopTurningDay, setStopTurningDay] = useState(18);
 
+  // Synchronize currentPhase with currentDay
+  useEffect(() => {
+    if (currentDay >= 1 && currentDay <= 7) {
+      setCurrentPhase("Giai đoạn 1");
+    } else if (currentDay >= 8 && currentDay <= 17) {
+      setCurrentPhase("Giai đoạn 2");
+    } else if (currentDay >= 18 && currentDay <= 21) {
+      setCurrentPhase("Giai đoạn 3");
+    }
+  }, [currentDay]);
+
   // 3. Temp state
   const [tempMin, setTempMin] = useState(37.5);
   const [tempMax, setTempMax] = useState(38.1);
@@ -145,20 +156,20 @@ function DeviceConfigurationContent() {
   const [tempHysteresis, setTempHysteresis] = useState(0.2);
 
   // 4. Humi state
-  const [humiMin, setHumiMin] = useState(55);
-  const [humiMax, setHumiMax] = useState(65);
-  const [humiAlert, setHumiAlert] = useState(70);
+  const [humiMin, setHumiMin] = useState(58);
+  const [humiMax, setHumiMax] = useState(68);
+  const [humiAlert, setHumiAlert] = useState(48);
   const [humiOffset, setHumiOffset] = useState(0);
 
   // 5. Turning state
   const [enableTurning, setEnableTurning] = useState(true);
   const [turnInterval, setTurnInterval] = useState(2);
   const [servoAngle, setServoAngle] = useState(45);
-  const [turnDuration, setTurnDuration] = useState(15);
+  const [turnDuration, setTurnDuration] = useState(60);
 
   // 6. Camera state
   const [enableAI, setEnableAI] = useState(true);
-  const [captureInterval, setCaptureInterval] = useState(30);
+  const [captureInterval, setCaptureInterval] = useState(3);
   const [resolution, setResolution] = useState("1080p");
   const [autoUpload, setAutoUpload] = useState(true);
 
@@ -225,6 +236,62 @@ function DeviceConfigurationContent() {
     return () => unsubscribe();
   }, [machineId]);
 
+  // Automatically calculate settings for Auto mode matching microcontroller & Flutter app logic
+  useEffect(() => {
+    if (opMode === "auto") {
+      let tMin = 37.5;
+      let tMax = 38.1;
+      let hMin = 58;
+      let hMax = 68;
+      let hAlert = 48;
+      let tInterval = 2;
+      let tDuration = 60;
+
+      if (currentDay >= 1 && currentDay <= 7) {
+        tMin = 37.5;
+        tMax = 38.1;
+        hMin = 58;
+        hMax = 68;
+        hAlert = 48;
+        tInterval = 2;
+        tDuration = 60;
+      } else if (currentDay >= 8 && currentDay <= 17) {
+        tMin = 37.2;
+        tMax = 37.8;
+        hMin = 55;
+        hMax = 65;
+        hAlert = 45;
+        tInterval = 2;
+        tDuration = 60;
+      } else if (currentDay >= 18 && currentDay <= 21) {
+        tMin = 36.9;
+        tMax = 37.5;
+        hMin = 72;
+        hMax = 82;
+        hAlert = 62;
+        tInterval = 0;
+        tDuration = 0;
+      } else if (currentDay > 21) {
+        tMin = 0.0;
+        tMax = 0.0;
+        hMin = 0;
+        hMax = 0;
+        hAlert = 0;
+        tInterval = 0;
+        tDuration = 0;
+      }
+
+      setTempMin(tMin);
+      setTempMax(tMax);
+      setTempAlert(39.0);
+      setHumiMin(hMin);
+      setHumiMax(hMax);
+      setHumiAlert(hAlert);
+      setTurnInterval(tInterval);
+      setTurnDuration(tDuration);
+    }
+  }, [opMode, currentDay]);
+
   const handleSave = async () => {
     setPopupAlert({
       type: "loading",
@@ -260,6 +327,15 @@ function DeviceConfigurationContent() {
         isActive: rawDbData?.cycle?.isActive ?? true,
         startDate: startDate + (rawDbData?.cycle?.startDate ? rawDbData.cycle.startDate.substring(10) : "T12:22:02.200783"),
         totalDays
+      });
+
+      // 4. Save telemetry (to sync the user-selected stage/day back to the device)
+      const telemetryRef = ref(rtdb, `incubators/${machineId}/telemetry`);
+      const phaseVal = currentPhase.includes("1") ? 1 : currentPhase.includes("2") ? 2 : 3;
+      await set(telemetryRef, {
+        ...(rawDbData?.telemetry || {}),
+        day: currentDay,
+        phase: phaseVal
       });
 
       setPopupAlert({
@@ -300,6 +376,10 @@ function DeviceConfigurationContent() {
       actionTitle = "Khôi phục cài đặt gốc";
       actionMessage = "Đang tiến hành khôi phục cài đặt ban đầu cho lò ấp...";
       successMessage = "Khôi phục cài đặt gốc hoàn tất!";
+    } else if (action === "capture") {
+      actionTitle = "Yêu cầu chụp ảnh";
+      actionMessage = `Đang gửi lệnh yêu cầu chụp ảnh tới máy ấp ${machineId}...`;
+      successMessage = "Yêu cầu chụp ảnh thành công! Hình ảnh mới sẽ sớm được tải lên.";
     }
 
     setPopupAlert({
@@ -492,8 +572,39 @@ function DeviceConfigurationContent() {
 
                 <div className="flex flex-col gap-2 sm:col-span-2">
                   <label className="text-xs font-semibold text-slate-500 tracking-wider uppercase">Giai đoạn hiện tại</label>
-                  <div className="h-11 rounded-xl border border-slate-200 bg-slate-100 flex items-center px-4 text-sm font-semibold text-slate-500 select-none">
-                    {currentPhase} (Ấp trứng giai đoạn đầu)
+                  <div className="relative">
+                    <select
+                      value={currentPhase}
+                      onChange={(e) => {
+                        const newPhase = e.target.value;
+                        setCurrentPhase(newPhase);
+                        let newDay = currentDay;
+                        if (newPhase === "Giai đoạn 1") {
+                          newDay = 1;
+                        } else if (newPhase === "Giai đoạn 2") {
+                          newDay = 8;
+                        } else if (newPhase === "Giai đoạn 3") {
+                          newDay = 18;
+                        }
+                        setCurrentDay(newDay);
+                        
+                        // Automatically adjust startDate to align with the new day
+                        const today = new Date();
+                        today.setDate(today.getDate() - (newDay - 1));
+                        const yyyy = today.getFullYear();
+                        const mm = String(today.getMonth() + 1).padStart(2, '0');
+                        const dd = String(today.getDate()).padStart(2, '0');
+                        setStartDate(`${yyyy}-${mm}-${dd}`);
+                      }}
+                      disabled={opMode === "auto"}
+                      className={`h-11 w-full rounded-xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-700 outline-none transition duration-200 focus:border-sky-400 focus:bg-white focus:ring-4 focus:ring-sky-50 ${
+                        opMode === "auto" ? "opacity-60 bg-slate-100 cursor-not-allowed" : ""
+                      }`}
+                    >
+                      <option value="Giai đoạn 1">Giai đoạn 1 (Ấp trứng giai đoạn đầu - Ngày 1–7)</option>
+                      <option value="Giai đoạn 2">Giai đoạn 2 (Ấp trứng giai đoạn giữa - Ngày 8–17)</option>
+                      <option value="Giai đoạn 3">Giai đoạn 3 (Ấp trứng giai đoạn cuối - Ngày 18–21)</option>
+                    </select>
                   </div>
                 </div>
               </div>
@@ -620,33 +731,26 @@ function DeviceConfigurationContent() {
                     <p className="text-xs text-slate-400 font-semibold mt-0.5">Thiết lập chu kỳ và thông số góc xoay đảo trứng</p>
                   </div>
                 </div>
-                
-                <div className={`flex items-center gap-3 ${opMode === "auto" ? "opacity-50 pointer-events-none" : ""}`}>
-                  <span className="text-xs font-bold text-slate-400 uppercase tracking-wide">
-                    {enableTurning ? "Tự động bật" : "Tự động tắt"}
-                  </span>
-                  <Toggle checked={enableTurning} onChange={setEnableTurning} />
-                </div>
               </div>
 
               <div className="grid gap-6 sm:grid-cols-2">
-                <div className={`${(!enableTurning || opMode === "auto") && "opacity-50 pointer-events-none"}`}>
+                <div className={`${opMode === "auto" && "opacity-50 pointer-events-none"}`}>
                   <UnitInput
                     label="Chu kỳ đảo trứng"
                     value={turnInterval}
                     onChange={setTurnInterval}
                     unit="giờ"
-                    disabled={!enableTurning || opMode === "auto"}
+                    disabled={opMode === "auto"}
                   />
                 </div>
 
-                <div className={`${(!enableTurning || opMode === "auto") && "opacity-50 pointer-events-none"}`}>
+                <div className={`${opMode === "auto" && "opacity-50 pointer-events-none"}`}>
                   <UnitInput
                     label="Thời gian mỗi lần đảo"
                     value={turnDuration}
                     onChange={setTurnDuration}
                     unit="giây"
-                    disabled={!enableTurning || opMode === "auto"}
+                    disabled={opMode === "auto"}
                   />
                 </div>
               </div>
@@ -664,25 +768,19 @@ function DeviceConfigurationContent() {
                     <p className="text-xs text-slate-400 font-semibold mt-0.5">Kiểm soát chụp ảnh & Trí tuệ nhân tạo (AI) phát hiện phôi</p>
                   </div>
                 </div>
-                
-                <div className="flex items-center gap-3">
-                  <span className="text-xs font-bold text-slate-400 uppercase tracking-wide">
-                    {enableAI ? "AI đang bật" : "AI đang tắt"}
-                  </span>
-                  <Toggle checked={enableAI} onChange={setEnableAI} />
-                </div>
               </div>
 
               <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
                 <UnitInput
-                  label="Tần suất chụp ảnh"
+                  label="Tần suất chụp"
                   value={captureInterval}
                   onChange={setCaptureInterval}
-                  unit="phút"
+                  unit="giờ"
+                  disabled={opMode === "auto"}
                 />
 
                 <div className="flex flex-col gap-2">
-                  <label className="text-xs font-semibold text-slate-500 tracking-wider uppercase">Độ phân giải hình ảnh</label>
+                  <label className="text-xs font-semibold text-slate-500 tracking-wider uppercase">Độ phân giải</label>
                   <select
                     value={resolution}
                     onChange={(e) => setResolution(e.target.value)}
@@ -694,11 +792,16 @@ function DeviceConfigurationContent() {
                   </select>
                 </div>
 
-                <div className="flex flex-col justify-end gap-2.5 sm:col-span-2 md:col-span-1">
-                  <div className="flex items-center justify-between h-11 border border-slate-100 bg-slate-50/20 rounded-xl px-4">
-                    <span className="text-xs font-bold text-slate-500 uppercase">Tự động tải ảnh lên</span>
-                    <Toggle checked={autoUpload} onChange={setAutoUpload} />
-                  </div>
+                <div className="flex flex-col justify-end">
+                  <button
+                    type="button"
+                    onClick={() => triggerMaintenance("capture")}
+                    disabled={popupAlert?.type === "loading"}
+                    className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-sky-50 text-sky-700 hover:bg-sky-100 border border-sky-100/80 px-5 text-sm font-bold shadow-sm transition active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer duration-150"
+                  >
+                    <Camera className="h-4 w-4 text-sky-500" />
+                    Chụp 1 ảnh
+                  </button>
                 </div>
               </div>
             </section>
@@ -735,16 +838,6 @@ function DeviceConfigurationContent() {
                 >
                   <Clock className="h-4 w-4" />
                   Đồng bộ thời gian
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => triggerMaintenance("firmware")}
-                  disabled={popupAlert?.type === "loading"}
-                  className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-5 text-sm font-bold text-slate-700 shadow-sm transition hover:bg-slate-50 hover:border-slate-300 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-                >
-                  <HardDriveDownload className="h-4 w-4" />
-                  Kiểm tra Firmware
                 </button>
 
                 <div className="sm:ml-auto">

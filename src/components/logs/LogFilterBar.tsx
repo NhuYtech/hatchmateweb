@@ -46,9 +46,6 @@ export default function LogFilterBar({
           <h3 className="text-xs font-bold uppercase tracking-[0.15em] text-slate-400">
             Bộ lọc & Tìm kiếm Nhật ký
           </h3>
-          <p className="text-xs text-slate-500 mt-1">
-            Tra cứu log theo thời gian, thiết bị, mức độ hoặc phân loại sự kiện
-          </p>
         </div>
 
         <button

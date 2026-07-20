@@ -143,9 +143,6 @@ export default function LogsTable({ logs, onRefresh }: LogsTableProps) {
           <h3 className="text-xs font-bold uppercase tracking-[0.15em] text-slate-400">
             Danh sách nhật ký hệ thống
           </h3>
-          <p className="text-xs text-slate-500">
-            Tổng cộng <span className="font-semibold text-sky-600">{logs.length}</span> bản ghi
-          </p>
         </div>
 
         <div className="flex items-center gap-2.5">
