@@ -1,8 +1,8 @@
 export interface CameraSummary {
   totalCameras: number;
-  onlineCameras: number;
-  analyzedToday: number;
-  aiAlerts: number;
+  totalEggs: number;
+  analyzedImages: number;
+  variationAlerts: number;
 }
 
 export type CameraStatus = "online" | "offline";
