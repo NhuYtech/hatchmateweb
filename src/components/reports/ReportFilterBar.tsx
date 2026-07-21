@@ -21,12 +21,9 @@ export default function ReportFilterBar({
   return (
     <div className="rounded-[24px] border border-sky-100/80 bg-white p-6 shadow-sm shadow-sky-100/20 w-full min-w-0">
       <div className="mb-5 w-full min-w-0">
-        <h3 className="text-xs font-bold uppercase tracking-[0.15em] text-slate-400 truncate">
+        <h3 className="text-xs font-bold uppercase tracking-[0.15em] text-slate-400">
           Cấu hình thời gian & Phạm vi Báo cáo
         </h3>
-        <p className="text-xs text-slate-500 mt-1 truncate sm:whitespace-normal">
-          Thiết lập khoảng thời gian và đối tượng để kết xuất dữ liệu phân tích hệ thống
-        </p>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-12">

@@ -164,7 +164,7 @@ export default function LogsTable({ logs, onRefresh }: LogsTableProps) {
   const paginatedLogs = logs.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
   return (
-    <div className="rounded-[24px] border border-sky-100/80 bg-white shadow-sm shadow-sky-100/10 overflow-hidden">
+    <div className="rounded-[24px] border border-sky-100/80 bg-white shadow-sm shadow-sky-100/10 overflow-hidden w-full min-w-0">
       
       {/* Table Toolbar */}
       <div className="border-b border-slate-100 bg-white px-6 py-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -183,20 +183,11 @@ export default function LogsTable({ logs, onRefresh }: LogsTableProps) {
             <Download className="h-4 w-4 text-white" />
             <span>Xuất file Excel</span>
           </button>
-          
-          <button
-            type="button"
-            onClick={onRefresh}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-[16px] border border-sky-100 bg-sky-50/20 text-sky-700 shadow-sm transition hover:bg-sky-50 hover:text-sky-800 active:scale-95 duration-150"
-            title="Làm mới bảng"
-          >
-            <RotateCw className="h-4 w-4 text-sky-600" />
-          </button>
         </div>
       </div>
 
       {/* Responsive Table Wrapper */}
-      <div className="overflow-x-auto relative min-h-[300px]">
+      <div className="overflow-x-auto relative min-h-[300px] w-full min-w-0">
         <table className="w-full min-w-[1200px] border-collapse text-left text-sm">
           <thead>
             <tr className="border-b border-slate-100 bg-slate-50/40 text-[11px] font-bold uppercase tracking-wider text-slate-400">

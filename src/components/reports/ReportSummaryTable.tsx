@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Cpu, Eye, Thermometer, Droplet, AlertTriangle, ShieldCheck } from "lucide-react";
+import { Eye, Thermometer, Droplet } from "lucide-react";
 import { ReportSummaryItem } from "@/src/types/report";
 import DataTablePagination from "@/src/components/common/DataTablePagination";
 
@@ -25,19 +25,17 @@ export default function ReportSummaryTable({ items }: ReportSummaryTableProps) {
   const getAlertBadge = (count: number) => {
     if (count === 0) {
       return (
-        <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-bold text-emerald-700 border border-emerald-100">
-          <ShieldCheck className="h-3.5 w-3.5" />
+        <span className="text-xs font-bold text-emerald-600">
           0 cảnh báo
         </span>
       );
     }
     const color = count > 5 
-      ? "bg-rose-50 text-rose-700 border-rose-200" 
-      : "bg-amber-50 text-amber-700 border-amber-200";
+      ? "text-rose-600" 
+      : "text-amber-600";
 
     return (
-      <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-bold border ${color}`}>
-        <AlertTriangle className="h-3.5 w-3.5 animate-bounce" />
+      <span className={`text-xs font-bold ${color}`}>
         {count} sự cố
       </span>
     );
@@ -50,14 +48,13 @@ export default function ReportSummaryTable({ items }: ReportSummaryTableProps) {
   };
 
   return (
-    <div className="rounded-[24px] border border-sky-100/80 bg-white shadow-sm shadow-sky-100/10 overflow-hidden flex-1">
+    <div className="rounded-[24px] border border-sky-100/80 bg-white shadow-sm shadow-sky-100/10 overflow-hidden w-full min-w-0 flex-1">
       {/* Table Title Header */}
       <div className="border-b border-slate-100 bg-white px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-0.5 min-w-0 flex-1">
-          <h3 className="text-xs font-bold uppercase tracking-[0.15em] text-slate-400 truncate">
+          <h3 className="text-xs font-bold uppercase tracking-[0.15em] text-slate-400">
             Tổng hợp hiệu suất
           </h3>
-          <p className="text-xs text-slate-500 truncate sm:whitespace-normal">Thống kê trung bình của từng buồng máy ấp</p>
         </div>
         <span className="text-xs font-semibold text-sky-600 bg-sky-50 px-2 py-1 rounded-lg self-start sm:self-auto shrink-0">
           30 ngày qua
@@ -65,7 +62,7 @@ export default function ReportSummaryTable({ items }: ReportSummaryTableProps) {
       </div>
 
       {/* Table Wrapper */}
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto w-full min-w-0">
         <table className="w-full min-w-[800px] border-collapse text-left text-sm">
           <thead>
             <tr className="border-b border-slate-100 bg-slate-50/40 text-[11px] font-bold uppercase tracking-wider text-slate-400">
@@ -87,16 +84,11 @@ export default function ReportSummaryTable({ items }: ReportSummaryTableProps) {
               >
                 {/* Thiết bị */}
                 <td className="px-6 py-4">
-                  <div className="flex items-center gap-2.5">
-                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-sky-50 text-sky-600 border border-sky-100/50">
-                      <Cpu className="h-4.5 w-4.5" />
+                  <div>
+                    <div className="font-bold text-sky-950 group-hover:text-sky-600 transition-colors">
+                      {item.deviceName}
                     </div>
-                    <div>
-                      <div className="font-bold text-sky-950 group-hover:text-sky-600 transition-colors">
-                        {item.deviceName}
-                      </div>
-                      <p className="text-[10px] text-slate-400 font-semibold font-mono mt-0.5">{item.deviceId}</p>
-                    </div>
+                    <p className="text-[10px] text-slate-400 font-semibold font-mono mt-0.5">{item.deviceId}</p>
                   </div>
                 </td>
 

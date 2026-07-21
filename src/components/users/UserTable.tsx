@@ -201,20 +201,10 @@ export default function UserTable({ users, onAddUser, onRefresh }: UserTableProp
           <button
             type="button"
             onClick={handleExportExcel}
-            className="inline-flex h-10 items-center justify-center gap-2 rounded-[16px] border border-sky-100 bg-sky-50/20 px-4 text-xs font-bold text-sky-700 shadow-sm transition hover:bg-sky-50 hover:text-sky-800 active:scale-95 duration-150 cursor-pointer"
+            className="inline-flex h-10 items-center justify-center gap-2 rounded-[16px] bg-gradient-to-r from-sky-500 to-blue-600 px-4 text-xs font-bold text-white shadow-md shadow-blue-100/50 transition hover:from-sky-600 hover:to-blue-700 active:scale-95 duration-150 cursor-pointer"
           >
-            <Download className="h-4 w-4 text-sky-600" />
-            <span>Xuất Excel</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={handleRefreshClick}
-            disabled={isRefreshing}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-[16px] border border-sky-100 bg-sky-50/20 text-sky-700 shadow-sm transition hover:bg-sky-50 hover:text-sky-800 active:scale-95 duration-150 cursor-pointer disabled:opacity-50"
-            title="Làm mới bảng"
-          >
-            <RotateCw className={`h-4 w-4 text-sky-600 ${isRefreshing ? "animate-spin" : ""}`} />
+            <Download className="h-4 w-4 text-white" />
+            <span>Xuất file Excel</span>
           </button>
         </div>
       </div>

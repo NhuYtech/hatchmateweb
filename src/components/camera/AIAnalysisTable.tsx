@@ -110,15 +110,6 @@ export default function AIAnalysisTable({ records, onRefresh }: AIAnalysisTableP
             <Download className="h-4 w-4 text-sky-600" />
             <span>Xuất báo cáo AI</span>
           </button>
-          
-          <button
-            type="button"
-            onClick={onRefresh}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-[16px] border border-sky-100 bg-sky-50/20 text-sky-700 shadow-sm transition hover:bg-sky-50 hover:text-sky-800 active:scale-95 duration-150"
-            title="Làm mới bảng"
-          >
-            <RotateCw className="h-4 w-4 text-sky-600" />
-          </button>
         </div>
       </div>
 

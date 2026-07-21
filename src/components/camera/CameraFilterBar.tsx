@@ -43,15 +43,6 @@ export default function CameraFilterBar({
             Bộ lọc & Tìm kiếm Camera
           </h3>
         </div>
-
-        <button
-          type="button"
-          onClick={handleReset}
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-sky-600 hover:text-sky-700 transition duration-150 self-start md:self-auto hover:-translate-y-0.5"
-        >
-          <RotateCcw className="h-3.5 w-3.5" />
-          <span>Đặt lại bộ lọc</span>
-        </button>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-12">

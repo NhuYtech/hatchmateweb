@@ -109,9 +109,9 @@ export default function CameraPage() {
         setAiRecords([]);
         setStats({
           totalCameras: 0,
-          onlineCameras: 0,
-          analyzedToday: 0,
-          aiAlerts: 0,
+          totalEggs: 0,
+          analyzedImages: 0,
+          variationAlerts: 0,
         });
       }
       setLoading(false);

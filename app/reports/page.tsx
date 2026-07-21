@@ -231,9 +231,8 @@ export default function ReportsPage() {
         setReportChartData([]);
         setReportStats({
           trackedDevices: 0,
-          avgOnlineRate: 0,
-          totalAlerts: 0,
-          avgTemperature: 0,
+          activeIncubatingCount: 0,
+          maintenanceCount: 0,
         });
         setLogs([]);
         setLogsStats({
@@ -267,10 +266,10 @@ export default function ReportsPage() {
   });
 
   return (
-    <div className="grid gap-4">
+    <div className="grid gap-4 w-full min-w-0">
       {/* Header Info */}
-      <div className="flex flex-col gap-4 py-3 sm:flex-row sm:items-center sm:justify-between">
-        <div className="space-y-1">
+      <div className="flex flex-col gap-4 py-3 sm:flex-row sm:items-center sm:justify-between w-full min-w-0">
+        <div className="space-y-1 min-w-0 flex-1">
           <h5 className="text-1xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
             BÁO CÁO & NHẬT KÝ
           </h5>
@@ -281,10 +280,10 @@ export default function ReportsPage() {
       </div>
 
       {/* Tabs Selector */}
-      <div className="flex border-b border-slate-200 mb-2">
+      <div className="flex border-b border-slate-200 mb-2 overflow-x-auto w-full min-w-0">
         <button
           onClick={() => setActiveTab("reports")}
-          className={`px-6 py-3 text-xs sm:text-sm font-extrabold tracking-wider border-b-2 transition-all cursor-pointer ${
+          className={`px-6 py-3 text-xs sm:text-sm font-extrabold tracking-wider border-b-2 transition-all cursor-pointer whitespace-nowrap shrink-0 ${
             activeTab === "reports"
               ? "border-sky-500 text-sky-600"
               : "border-transparent text-slate-500 hover:text-slate-700"
@@ -294,7 +293,7 @@ export default function ReportsPage() {
         </button>
         <button
           onClick={() => setActiveTab("logs")}
-          className={`px-6 py-3 text-xs sm:text-sm font-extrabold tracking-wider border-b-2 transition-all cursor-pointer ${
+          className={`px-6 py-3 text-xs sm:text-sm font-extrabold tracking-wider border-b-2 transition-all cursor-pointer whitespace-nowrap shrink-0 ${
             activeTab === "logs"
               ? "border-sky-500 text-sky-600"
               : "border-transparent text-slate-500 hover:text-slate-700"
@@ -306,8 +305,8 @@ export default function ReportsPage() {
 
       {activeTab === "reports" ? (
         // ── Tab 1: Reports & Charts ──
-        <div className="grid gap-4">
-          <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 w-full min-w-0">
+          <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 w-full min-w-0">
             <ReportsMiniStatCard
               label="Tổng thiết bị quản lý"
               value={reportStats.trackedDevices}
@@ -328,26 +327,32 @@ export default function ReportsPage() {
             />
           </section>
 
-          <ReportFilterBar />
+          <div className="w-full min-w-0">
+            <ReportFilterBar />
+          </div>
+
+          {!loading && (
+            <div className="flex flex-col lg:flex-row gap-4 lg:items-start w-full min-w-0">
+              <div className="w-full min-w-0 flex-1">
+                <ReportSummaryTable items={reportSummaryList} />
+              </div>
+              <ReportExportCard items={reportSummaryList} stats={reportStats} />
+            </div>
+          )}
 
           {loading ? (
-            <div className="flex h-32 items-center justify-center text-xs text-slate-400 font-semibold">
+            <div className="flex h-32 items-center justify-center text-xs text-slate-400 font-semibold w-full min-w-0">
               Đang tải biểu đồ hiệu suất...
             </div>
           ) : (
-            <ReportsChartsSection data={reportChartData} />
-          )}
-
-          {!loading && (
-            <div className="flex flex-col lg:flex-row gap-4 items-start">
-              <ReportSummaryTable items={reportSummaryList} />
-              <ReportExportCard items={reportSummaryList} stats={reportStats} />
+            <div className="w-full min-w-0">
+              <ReportsChartsSection data={reportChartData} />
             </div>
           )}
         </div>
       ) : (
         // ── Tab 2: Logs & Audit Trail ──
-        <div className="grid gap-4">
+        <div className="grid gap-4 w-full min-w-0">
           <section className="grid gap-4 sm:grid-cols-2">
             <LogsMiniStatCard
               label="Tổng log hôm nay"
@@ -364,12 +369,12 @@ export default function ReportsPage() {
           </section>
 
           <LogFilterBar
-            onSearchChange={setLogSearch}
-            onDeviceChange={setLogDevice}
-            onReset={() => {
-              setLogSearch("");
-              setLogDevice("all");
-            }}
+              onSearchChange={setLogSearch}
+              onDeviceChange={setLogDevice}
+              onReset={() => {
+                setLogSearch("");
+                setLogDevice("all");
+              }}
           />
 
           {loading ? (

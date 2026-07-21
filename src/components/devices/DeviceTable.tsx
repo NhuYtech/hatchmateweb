@@ -179,15 +179,6 @@ export default function DeviceTable({ devices, onAddDevice, onRefresh, onDeleteD
             <Download className="h-4 w-4 text-white" />
             <span>Xuất file Excel</span>
           </button>
-
-          <button
-            type="button"
-            onClick={handleRefresh}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-[16px] border border-sky-100 bg-sky-50/20 text-sky-700 shadow-sm transition hover:bg-sky-50 hover:text-sky-800 active:scale-95 duration-150 cursor-pointer"
-            title="Làm mới bảng"
-          >
-            <RotateCw className={`h-4 w-4 text-sky-600 ${isRefreshing ? "animate-spin" : ""}`} />
-          </button>
         </div>
       </div>
 

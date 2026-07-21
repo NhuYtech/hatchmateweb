@@ -231,9 +231,8 @@ export default function ReportsPage() {
         setReportChartData([]);
         setReportStats({
           trackedDevices: 0,
-          avgOnlineRate: 0,
-          totalAlerts: 0,
-          avgTemperature: 0,
+          activeIncubatingCount: 0,
+          maintenanceCount: 0,
         });
         setLogs([]);
         setLogsStats({
@@ -267,15 +266,15 @@ export default function ReportsPage() {
   });
 
   return (
-    <div className="grid gap-4">
+    <div className="grid gap-4 w-full min-w-0">
       {/* Top Header Section */}
       <header className="flex flex-col gap-6 rounded-[24px] border border-sky-100/80 bg-white/90 backdrop-blur-md px-6 py-5 shadow-sm shadow-sky-100/30 w-full min-w-0 overflow-hidden">
         <div className="flex flex-col gap-4 py-1 sm:flex-row sm:items-center sm:justify-between w-full min-w-0">
           <div className="space-y-1.5 min-w-0 flex-1">
-            <h5 className="text-1xl sm:text-2xl font-extrabold text-slate-900 tracking-tight truncate">
+            <h5 className="text-1xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
               BÁO CÁO & NHẬT KÝ
             </h5>
-            <p className="text-sm font-medium text-slate-500 max-w-xl truncate sm:whitespace-normal">
+            <p className="text-sm font-medium text-slate-500 max-w-xl">
               Xem phân tích hiệu suất thiết bị, biểu đồ xu hướng và theo dõi lịch sử hoạt động hệ thống HatchMate
             </p>
           </div>
@@ -334,6 +333,15 @@ export default function ReportsPage() {
             <ReportFilterBar />
           </div>
 
+          {!loading && (
+            <div className="flex flex-col lg:flex-row gap-4 lg:items-start w-full min-w-0">
+              <div className="w-full min-w-0 flex-1">
+                <ReportSummaryTable items={reportSummaryList} />
+              </div>
+              <ReportExportCard items={reportSummaryList} stats={reportStats} />
+            </div>
+          )}
+
           {loading ? (
             <div className="flex h-32 items-center justify-center text-xs text-slate-400 font-semibold w-full min-w-0">
               Đang tải biểu đồ hiệu suất...
@@ -343,19 +351,10 @@ export default function ReportsPage() {
               <ReportsChartsSection data={reportChartData} />
             </div>
           )}
-
-          {!loading && (
-            <div className="flex flex-col lg:flex-row gap-4 lg:items-start w-full min-w-0">
-              <div className="w-full min-w-0 flex-1">
-                <ReportSummaryTable items={reportSummaryList} />
-              </div>
-              <ReportExportCard items={reportSummaryList} stats={reportStats} />
-            </div>
-          )}
         </div>
       ) : (
         // ── Tab 2: Logs & Audit Trail ──
-        <div className="grid gap-4">
+        <div className="grid gap-4 w-full min-w-0">
           <section className="grid gap-4 sm:grid-cols-2">
             <LogsMiniStatCard
               label="Tổng log hôm nay"

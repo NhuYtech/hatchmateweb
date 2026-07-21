@@ -24,22 +24,13 @@ export default function LogFilterBar({
   };
 
   return (
-    <div className="rounded-[24px] border border-sky-100/80 bg-white p-6 shadow-sm shadow-sky-100/20">
+    <div className="rounded-[24px] border border-sky-100/80 bg-white p-6 shadow-sm shadow-sky-100/20 w-full min-w-0">
       <div className="mb-5 flex flex-col justify-between gap-4 md:flex-row md:items-center">
         <div>
           <h3 className="text-xs font-bold uppercase tracking-[0.15em] text-slate-400">
             Bộ lọc & Tìm kiếm Nhật ký
           </h3>
         </div>
-
-        <button
-          type="button"
-          onClick={handleReset}
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-sky-600 hover:text-sky-700 transition duration-150 self-start md:self-auto hover:-translate-y-0.5"
-        >
-          <RotateCcw className="h-3.5 w-3.5" />
-          <span>Đặt lại bộ lọc</span>
-        </button>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-12">

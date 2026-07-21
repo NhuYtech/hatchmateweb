@@ -51,9 +51,9 @@ export default function LogsMiniStatCard({
 
   return (
     <div
-      className={`group flex items-center justify-between rounded-[24px] border bg-white p-5 shadow-sm shadow-sky-100/10 transition-all duration-300 ${activeStyles.border} ${activeStyles.hover} hover:-translate-y-1 hover:shadow-lg`}
+      className={`group flex items-center justify-between rounded-[24px] border bg-white p-5 shadow-sm shadow-sky-100/10 transition-all duration-300 ${activeStyles.border} ${activeStyles.hover} hover:-translate-y-1 hover:shadow-lg w-full min-w-0`}
     >
-      <div className="space-y-1">
+      <div className="space-y-1 min-w-0 flex-1 pr-2">
         <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-slate-400">
           {label}
         </p>
