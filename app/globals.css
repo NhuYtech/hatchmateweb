@@ -77,8 +77,6 @@ body {
    ========================================== */
 
 /* Áp dụng kính mờ cho Sidebar, Topbar, Thẻ Card và Khung nội dung trắng */
-aside,
-header,
 .bg-white,
 .bg-white\/95,
 div[class*="bg-gradient-to-br"] {
