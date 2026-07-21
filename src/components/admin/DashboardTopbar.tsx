@@ -41,10 +41,25 @@ export default function DashboardTopbar({ onMenuToggle }: DashboardTopbarProps) 
 
       {/* ── Left: Logo + Hamburger ── */}
       <div className="flex items-center gap-4 sm:gap-6">
-        {/* Logo */}
-        <span className="text-sm sm:text-base md:text-lg font-bold tracking-tight text-gray-900 select-none truncate max-w-[160px] sm:max-w-none">
-          Hệ thống ấp trứng HatchMate
-        </span>
+        {/* Logo + Brand Name */}
+        <div className="flex items-center gap-3 select-none">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-sky-50 text-sky-700 font-extrabold text-sm border border-sky-100 overflow-hidden">
+            <img
+              src="/logov2.png"
+              alt="Logo"
+              className="h-full w-full object-cover"
+            />
+          </div>
+          <div className="min-w-0">
+            <p className="text-base sm:text-lg font-extrabold tracking-wider leading-none">
+              <span className="text-[#f97316]">HATCH</span>
+              <span className="text-[#0284c7]">MATE</span>
+            </p>
+            <p className="text-xs font-medium text-slate-400 mt-1 hidden sm:block truncate">
+              Hệ thống ấp trứng gà thông minh
+            </p>
+          </div>
+        </div>
 
         {/* Hamburger */}
         <button

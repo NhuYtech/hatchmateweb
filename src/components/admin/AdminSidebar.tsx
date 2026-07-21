@@ -21,14 +21,13 @@ interface MenuItem {
 }
 
 const menus: MenuItem[] = [
-  { label: "Dashboard", icon: Home, href: "/dashboard" },
+  { label: "Trang chủ", icon: Home, href: "/dashboard" },
   { label: "Thiết bị", icon: Cpu, href: "/devices" },
   { label: "Người dùng", icon: Users, href: "/users" },
   { label: "Camera & AI", icon: Camera, href: "/camera" },
   { label: "Cấu hình ấp", icon: SlidersHorizontal, href: "/settings" },
   // { label: "Cảnh báo", icon: BellRing, href: "/alerts" },
-  { label: "Nhật ký", icon: ClipboardList, href: "/logs" },
-  { label: "Báo cáo", icon: BarChart3, href: "/reports" },
+  { label: "Báo cáo & Nhật ký", icon: BarChart3, href: "/reports" },
 ];
 
 interface SidebarNavItemProps {
@@ -53,7 +52,7 @@ function SidebarNavItem({
       <Link
         href={href}
         onClick={onClick}
-        className={`flex w-full items-center gap-3 rounded-[20px] px-4 py-3 text-left text-sm transition ${collapsed ? "justify-center px-0" : ""
+        className={`flex w-full items-center gap-3 rounded-[20px] px-4 py-3.5 text-left text-[15px] md:text-base transition ${collapsed ? "justify-center px-0" : ""
           } ${active
             ? "bg-amber-100 text-slate-950 font-bold shadow-sm"
             : "text-slate-900 font-semibold hover:bg-amber-50/60 hover:text-black"
@@ -88,26 +87,7 @@ export default function AdminSidebar({ collapsed, onItemClick }: AdminSidebarPro
         : "translate-x-0 md:w-[260px] md:px-4"
         } w-[260px] px-4 overflow-y-auto`}
     >
-      {/* Header Info (Optional/Simplified) */}
-      <div className="mb-6 px-2">
-        <div className="flex items-center gap-3">
-          {/* Thay thế cụm div HM cũ: */}
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-sky-50 text-sky-700 font-extrabold text-sm border border-sky-100 overflow-hidden">
-            <img
-              src="/logov2.png" // Đường dẫn đến ảnh logo của bạn trong thư mục public
-              alt="Logo"
-              className="h-full w-full object-cover"
-            />
-          </div>
 
-          {!collapsed && (
-            <div className="min-w-0 flex-1">
-              <p className="text-xs font-bold text-sky-950 truncate">HatchMate</p>
-              <p className="text-[10px] font-medium text-slate-400 truncate">Hệ thống ấp trứng gà thông minh</p>
-            </div>
-          )}
-        </div>
-      </div>
 
 
 

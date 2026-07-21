@@ -5,8 +5,11 @@ import AdminLayoutWrapper from "@/src/components/admin/AdminLayoutWrapper";
 import { AuthProvider } from "@/src/components/AuthProvider";
 
 export const metadata: Metadata = {
-  title: "Đăng nhập",
+  title: "Trang chủ",
   description: "Hệ thống giám sát và quản lý máy ấp trứng HatchMate",
+  icons: {
+    icon: "/logov2.png",
+  },
 };
 
 export default function RootLayout({
@@ -16,6 +19,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="vi" suppressHydrationWarning>
+      <head>
+        <link rel="icon" href="/logov2.png?v=3" type="image/png" />
+      </head>
       <body
         className="font-times h-screen overflow-hidden flex flex-col text-slate-900"
       >

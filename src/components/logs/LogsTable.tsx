@@ -8,9 +8,6 @@ import {
   Download,
   RotateCw,
   ClipboardList,
-  Info,
-  AlertTriangle,
-  XCircle,
   Database,
   Cpu,
   Settings,
@@ -60,6 +57,39 @@ export default function LogsTable({ logs, onRefresh }: LogsTableProps) {
     setTimeout(() => setCopiedId(null), 1500);
   };
 
+  const handleExport = () => {
+    const headers = ["Thời gian", "Loại log", "Mức độ", "Thiết bị", "Người thực hiện", "Tiêu đề", "Nội dung"];
+    const rows = logs.map(log => {
+      const categoryLabels = {
+        device: "Thiết bị",
+        alert: "Cảnh báo",
+        control: "Điều khiển",
+        admin: "Quản trị",
+      };
+      const actorLabel = log.actorName || "Hệ thống";
+      const deviceLabel = log.deviceId ? `${log.deviceName} (${log.deviceId})` : "Không có";
+      return [
+        log.timestamp,
+        categoryLabels[log.category] || log.category,
+        log.level.toUpperCase(),
+        deviceLabel,
+        actorLabel,
+        log.title,
+        log.message
+      ];
+    });
+
+    const csvContent = "\ufeff" + [headers.join(","), ...rows.map(e => e.map(val => `"${val.replace(/"/g, '""')}"`).join(","))].join("\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `nhat_ky_he_thong_${new Date().toISOString().slice(0, 10)}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const getCategoryBadge = (category: LogItem["category"]) => {
     const configs = {
       device: "bg-sky-50 text-sky-700 border-sky-100",
@@ -86,15 +116,14 @@ export default function LogsTable({ logs, onRefresh }: LogsTableProps) {
       warning: "bg-amber-50 text-amber-700 border-amber-200/60",
       danger: "bg-rose-50 text-rose-700 border-rose-200/60",
     };
-    const icons = {
-      info: <Info className="h-3 w-3" />,
-      warning: <AlertTriangle className="h-3 w-3" />,
-      danger: <XCircle className="h-3 w-3 animate-pulse" />,
+    const labels = {
+      info: "Thông tin",
+      warning: "Cảnh báo",
+      danger: "Nguy hiểm",
     };
     return (
-      <span className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-xs font-semibold ${configs[level]}`}>
-        {icons[level]}
-        <span className="capitalize">{level}</span>
+      <span className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold ${configs[level]}`}>
+        <span>{labels[level]}</span>
       </span>
     );
   };
@@ -148,10 +177,11 @@ export default function LogsTable({ logs, onRefresh }: LogsTableProps) {
         <div className="flex items-center gap-2.5">
           <button
             type="button"
-            className="inline-flex h-10 items-center justify-center gap-2 rounded-[16px] border border-sky-100 bg-sky-50/20 px-4 text-xs font-bold text-sky-700 shadow-sm transition hover:bg-sky-50 hover:text-sky-800 active:scale-95 duration-150"
+            onClick={handleExport}
+            className="inline-flex h-10 items-center justify-center gap-2 rounded-[16px] bg-gradient-to-r from-sky-500 to-blue-600 px-4 text-xs font-bold text-white shadow-md shadow-blue-100/50 transition hover:from-sky-600 hover:to-blue-700 active:scale-95 duration-150 cursor-pointer"
           >
-            <Download className="h-4 w-4 text-sky-600" />
-            <span>Xuất nhật ký</span>
+            <Download className="h-4 w-4 text-white" />
+            <span>Xuất file Excel</span>
           </button>
           
           <button

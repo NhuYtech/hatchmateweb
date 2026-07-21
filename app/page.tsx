@@ -120,7 +120,7 @@ export default function LoginPage() {
         {/* Logo Image */}
         <div className="relative mb-6 w-24 h-24 rounded-full overflow-hidden border-4 border-amber-50 shadow-[0_8px_20px_rgba(245,176,0,0.18)] bg-white flex items-center justify-center transition-transform duration-500 hover:scale-105 select-none pointer-events-none">
           <img
-            src="/logo.png"
+            src="/logov2.png"
             alt="Logo"
             className="w-full h-full object-cover"
           />
@@ -128,8 +128,8 @@ export default function LoginPage() {
 
         {/* Brand Titles */}
         <div className="flex flex-col items-center mb-1">
-          <h3 className="text-xl sm:text-2xl font-bold text-[#1F2937] tracking-wide text-center">
-            HỆ THỐNG ẤP TRỨNG GÀ
+          <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-[#1F2937] tracking-wide text-center whitespace-nowrap">
+            HỆ THỐNG ẤP TRỨNG <span className="text-[#f97316]">HATCH</span><span className="text-[#0284c7]">MATE</span>
           </h3>
           <span className="text-[11px] sm:text-xs font-bold text-[#F5B000] tracking-widest uppercase mt-1">
             Smart Incubation Management System
