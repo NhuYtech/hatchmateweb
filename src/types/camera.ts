@@ -22,6 +22,9 @@ export interface CameraItem {
   lastAiSummary: string;
   lastAiConfidence?: number;
   streamEnabled: boolean;
+  eggCount?: number;
+  previousEggCount?: number;
+  lastCountChangedAt?: string;
 }
 
 export type AiResultStatus = "normal" | "warning" | "danger";

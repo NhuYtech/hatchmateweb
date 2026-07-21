@@ -169,18 +169,45 @@ export default function CameraCard({ camera, onRefreshCapture }: CameraCardProps
         </div>
 
         {/* AI Analytics Status */}
-        <div className="mt-4 pt-4 border-t border-slate-100 space-y-2">
+        <div className="mt-4 pt-4 border-t border-slate-100 space-y-3">
           <div className="flex items-center justify-between">
             {getAiBadge(camera.aiStatus)}
             {camera.aiAlertCount > 0 && (
               <span className="text-[10px] font-extrabold text-rose-600 bg-rose-50 px-2 py-0.5 rounded-md border border-rose-100 animate-bounce">
-                {camera.aiAlertCount} lỗi phân tích
+                {camera.aiAlertCount} cảnh báo AI
               </span>
             )}
           </div>
 
+          {/* Egg Detection Stats grid */}
+          {camera.eggCount !== undefined && (
+            <div className="grid grid-cols-3 gap-2 bg-slate-50/60 rounded-[16px] p-3 border border-slate-100/50 text-center">
+              <div className="space-y-0.5">
+                <span className="text-[10px] font-bold text-slate-400 block uppercase">Hiện tại</span>
+                <span className="text-base font-extrabold text-sky-950 font-mono">{camera.eggCount}</span>
+              </div>
+              <div className="space-y-0.5 border-x border-slate-200/50">
+                <span className="text-[10px] font-bold text-slate-400 block uppercase">Ban đầu</span>
+                <span className="text-base font-extrabold text-slate-500 font-mono">
+                  {camera.previousEggCount ?? camera.eggCount}
+                </span>
+              </div>
+              <div className="space-y-0.5">
+                <span className="text-[10px] font-bold text-slate-400 block uppercase">Biến động</span>
+                {camera.previousEggCount !== undefined && camera.eggCount !== camera.previousEggCount ? (
+                  <span className="text-xs font-extrabold text-rose-600 animate-pulse block mt-1">
+                    {camera.eggCount > camera.previousEggCount ? "+" : ""}
+                    {camera.eggCount - camera.previousEggCount} quả
+                  </span>
+                ) : (
+                  <span className="text-xs font-bold text-emerald-600 block mt-1">Ổn định</span>
+                )}
+              </div>
+            </div>
+          )}
+
           <div className="bg-slate-50/60 rounded-[14px] p-3 text-xs border border-slate-100/50">
-            <span className="font-bold text-sky-950 block mb-0.5">Nhận diện AI gần nhất:</span>
+            <span className="font-bold text-sky-950 block mb-0.5">Phân tích AI:</span>
             <span className="text-slate-500 font-semibold">{camera.lastAiSummary}</span>
           </div>
         </div>

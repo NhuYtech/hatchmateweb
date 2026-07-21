@@ -403,6 +403,8 @@ function DeviceConfigurationContent() {
   const liveHumi = rawDbData?.telemetry?.humi !== undefined ? Number(rawDbData.telemetry.humi) : 61;
   const liveStatus = rawDbData?.status || "Online";
   const liveFirmware = rawDbData?.firmware || "v1.2.0";
+  const liveWifi = rawDbData?.wifi !== undefined ? Number(rawDbData.wifi) : 5;
+  const liveLastSeen = rawDbData?.lastSeen || "Vừa xong";
 
   return (
     <div className="grid gap-4">
@@ -420,10 +422,16 @@ function DeviceConfigurationContent() {
                 <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold ${
                   liveStatus.toLowerCase() === "online" 
                     ? "bg-emerald-50 border border-emerald-200 text-emerald-700" 
+                    : liveStatus.toLowerCase() === "warning"
+                    ? "bg-amber-50 border border-amber-200 text-amber-700"
                     : "bg-slate-50 border border-slate-200 text-slate-500"
                 }`}>
                   <span className={`h-2 w-2 rounded-full ${
-                    liveStatus.toLowerCase() === "online" ? "bg-emerald-500 animate-pulse" : "bg-slate-400"
+                    liveStatus.toLowerCase() === "online" 
+                      ? "bg-emerald-500 animate-pulse" 
+                      : liveStatus.toLowerCase() === "warning"
+                      ? "bg-amber-500 animate-pulse"
+                      : "bg-slate-400"
                   }`} />
                   {liveStatus}
                 </span>
@@ -867,8 +875,20 @@ function DeviceConfigurationContent() {
                 {/* Device Status */}
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-bold text-slate-500">Trạng thái máy</span>
-                  <span className="inline-flex items-center gap-1.5 font-extrabold text-sm text-emerald-600">
-                    <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+                  <span className={`inline-flex items-center gap-1.5 font-extrabold text-sm ${
+                    liveStatus.toLowerCase() === "online" 
+                      ? "text-emerald-600" 
+                      : liveStatus.toLowerCase() === "warning"
+                      ? "text-amber-600"
+                      : "text-slate-500"
+                  }`}>
+                    <span className={`h-2 w-2 rounded-full ${
+                      liveStatus.toLowerCase() === "online" 
+                        ? "bg-emerald-500 animate-pulse" 
+                        : liveStatus.toLowerCase() === "warning"
+                        ? "bg-amber-500 animate-pulse"
+                        : "bg-slate-400"
+                    }`} />
                     {liveStatus}
                   </span>
                 </div>
@@ -886,7 +906,7 @@ function DeviceConfigurationContent() {
                   <span className="text-sm font-bold text-slate-500">Tín hiệu Wi-Fi</span>
                   <span className="inline-flex items-center gap-1 text-sm font-extrabold text-sky-600">
                     <Wifi className="h-4 w-4" />
-                    Cực tốt
+                    {liveWifi >= 4 ? "Cực tốt" : liveWifi === 3 ? "Tốt" : liveWifi === 2 ? "Trung bình" : "Yếu"}
                   </span>
                 </div>
 
@@ -895,15 +915,15 @@ function DeviceConfigurationContent() {
                   <span className="text-sm font-bold text-slate-500">Đồng bộ cuối</span>
                   <span className="text-sm font-bold text-slate-600 flex items-center gap-1">
                     <Clock className="h-3.5 w-3.5 text-slate-400" />
-                    2 phút trước
+                    {liveLastSeen}
                   </span>
                 </div>
 
                 {/* Temperature */}
                 <div className="flex items-center justify-between pt-4">
                   <span className="text-sm font-bold text-slate-500">Nhiệt độ hiện tại</span>
-                  <span className="text-lg font-extrabold text-[#0EA5E9] flex items-center gap-0.5">
-                    <Thermometer className="h-4.5 w-4.5 text-sky-400" />
+                  <span className="text-lg font-extrabold text-red-500 flex items-center gap-0.5">
+                    <Thermometer className="h-4.5 w-4.5 text-red-400" />
                     {liveTemp}°C
                   </span>
                 </div>
