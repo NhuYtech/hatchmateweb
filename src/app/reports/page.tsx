@@ -268,46 +268,48 @@ export default function ReportsPage() {
 
   return (
     <div className="grid gap-4">
-      {/* Header Info */}
-      <div className="flex flex-col gap-4 py-3 sm:flex-row sm:items-center sm:justify-between">
-        <div className="space-y-1">
-          <h5 className="text-1xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
-            BÁO CÁO & NHẬT KÝ
-          </h5>
-          <p className="text-sm text-slate-500">
-            Xem phân tích hiệu suất thiết bị, biểu đồ xu hướng và theo dõi lịch sử hoạt động hệ thống HatchMate
-          </p>
+      {/* Top Header Section */}
+      <header className="flex flex-col gap-6 rounded-[24px] border border-sky-100/80 bg-white/90 backdrop-blur-md px-6 py-5 shadow-sm shadow-sky-100/30 w-full min-w-0 overflow-hidden">
+        <div className="flex flex-col gap-4 py-1 sm:flex-row sm:items-center sm:justify-between w-full min-w-0">
+          <div className="space-y-1.5 min-w-0 flex-1">
+            <h5 className="text-1xl sm:text-2xl font-extrabold text-slate-900 tracking-tight truncate">
+              BÁO CÁO & NHẬT KÝ
+            </h5>
+            <p className="text-sm font-medium text-slate-500 max-w-xl truncate sm:whitespace-normal">
+              Xem phân tích hiệu suất thiết bị, biểu đồ xu hướng và theo dõi lịch sử hoạt động hệ thống HatchMate
+            </p>
+          </div>
         </div>
-      </div>
 
-      {/* Tabs Selector */}
-      <div className="flex border-b border-slate-200 mb-2">
-        <button
-          onClick={() => setActiveTab("reports")}
-          className={`px-6 py-3 text-xs sm:text-sm font-extrabold tracking-wider border-b-2 transition-all cursor-pointer ${
-            activeTab === "reports"
-              ? "border-sky-500 text-sky-600"
-              : "border-transparent text-slate-500 hover:text-slate-700"
-          }`}
-        >
-          THỐNG KÊ & BIỂU ĐỒ
-        </button>
-        <button
-          onClick={() => setActiveTab("logs")}
-          className={`px-6 py-3 text-xs sm:text-sm font-extrabold tracking-wider border-b-2 transition-all cursor-pointer ${
-            activeTab === "logs"
-              ? "border-sky-500 text-sky-600"
-              : "border-transparent text-slate-500 hover:text-slate-700"
-          }`}
-        >
-          NHẬT KÝ HOẠT ĐỘNG
-        </button>
-      </div>
+        {/* Tabs Selector */}
+        <div className="flex border-b border-slate-200/60 mt-2 overflow-x-auto custom-scrollbar w-full min-w-0">
+          <button
+            onClick={() => setActiveTab("reports")}
+            className={`px-6 py-3 text-xs sm:text-sm font-extrabold tracking-wider border-b-2 transition-all cursor-pointer whitespace-nowrap shrink-0 ${
+              activeTab === "reports"
+                ? "border-sky-500 text-sky-600"
+                : "border-transparent text-slate-500 hover:text-slate-700"
+            }`}
+          >
+            THỐNG KÊ & BIỂU ĐỒ
+          </button>
+          <button
+            onClick={() => setActiveTab("logs")}
+            className={`px-6 py-3 text-xs sm:text-sm font-extrabold tracking-wider border-b-2 transition-all cursor-pointer whitespace-nowrap shrink-0 ${
+              activeTab === "logs"
+                ? "border-sky-500 text-sky-600"
+                : "border-transparent text-slate-500 hover:text-slate-700"
+            }`}
+          >
+            NHẬT KÝ HOẠT ĐỘNG
+          </button>
+        </div>
+      </header>
 
       {activeTab === "reports" ? (
         // ── Tab 1: Reports & Charts ──
-        <div className="grid gap-4">
-          <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 w-full min-w-0">
+          <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 w-full min-w-0">
             <ReportsMiniStatCard
               label="Tổng thiết bị quản lý"
               value={reportStats.trackedDevices}
@@ -328,19 +330,25 @@ export default function ReportsPage() {
             />
           </section>
 
-          <ReportFilterBar />
+          <div className="w-full min-w-0">
+            <ReportFilterBar />
+          </div>
 
           {loading ? (
-            <div className="flex h-32 items-center justify-center text-xs text-slate-400 font-semibold">
+            <div className="flex h-32 items-center justify-center text-xs text-slate-400 font-semibold w-full min-w-0">
               Đang tải biểu đồ hiệu suất...
             </div>
           ) : (
-            <ReportsChartsSection data={reportChartData} />
+            <div className="w-full min-w-0">
+              <ReportsChartsSection data={reportChartData} />
+            </div>
           )}
 
           {!loading && (
-            <div className="flex flex-col lg:flex-row gap-4 items-start">
-              <ReportSummaryTable items={reportSummaryList} />
+            <div className="flex flex-col lg:flex-row gap-4 lg:items-start w-full min-w-0">
+              <div className="w-full min-w-0 flex-1">
+                <ReportSummaryTable items={reportSummaryList} />
+              </div>
               <ReportExportCard items={reportSummaryList} stats={reportStats} />
             </div>
           )}

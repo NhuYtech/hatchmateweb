@@ -239,7 +239,7 @@ export default function ReportExportCard({ items, stats }: ReportExportCardProps
   };
 
   return (
-    <div className="w-full lg:w-[380px] shrink-0 flex flex-col gap-6">
+    <div className="w-full lg:w-[380px] shrink-0 flex flex-col gap-6 min-w-0">
       
       {/* 1. Report Export Form Card */}
       <div className="rounded-[24px] border border-sky-100/80 bg-white p-6 shadow-sm shadow-sky-100/10">

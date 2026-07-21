@@ -52,14 +52,14 @@ export default function ReportSummaryTable({ items }: ReportSummaryTableProps) {
   return (
     <div className="rounded-[24px] border border-sky-100/80 bg-white shadow-sm shadow-sky-100/10 overflow-hidden flex-1">
       {/* Table Title Header */}
-      <div className="border-b border-slate-100 bg-white px-6 py-4 flex items-center justify-between">
-        <div className="space-y-0.5">
-          <h3 className="text-xs font-bold uppercase tracking-[0.15em] text-slate-400">
+      <div className="border-b border-slate-100 bg-white px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="space-y-0.5 min-w-0 flex-1">
+          <h3 className="text-xs font-bold uppercase tracking-[0.15em] text-slate-400 truncate">
             Tổng hợp hiệu suất
           </h3>
-          <p className="text-xs text-slate-500">Thống kê trung bình của từng buồng máy ấp</p>
+          <p className="text-xs text-slate-500 truncate sm:whitespace-normal">Thống kê trung bình của từng buồng máy ấp</p>
         </div>
-        <span className="text-xs font-semibold text-sky-600 bg-sky-50 px-2 py-1 rounded-lg">
+        <span className="text-xs font-semibold text-sky-600 bg-sky-50 px-2 py-1 rounded-lg self-start sm:self-auto shrink-0">
           30 ngày qua
         </span>
       </div>

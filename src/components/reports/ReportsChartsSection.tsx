@@ -41,14 +41,14 @@ export default function ReportsChartsSection({ data }: ReportsChartsSectionProps
     <div className="grid gap-6 md:grid-cols-2">
       {/* 1. Temperature Trend Area Chart */}
       <div className="rounded-[24px] border border-sky-100 bg-white p-6 shadow-sm shadow-sky-100/10 min-w-0 overflow-hidden">
-        <div className="mb-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-orange-50 text-orange-500">
+        <div className="mb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div className="flex items-center gap-2 min-w-0 flex-1">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-orange-50 text-orange-500">
               <Thermometer className="h-4.5 w-4.5" />
             </div>
-            <h4 className="font-bold text-sky-950 text-sm">Nhiệt độ trung bình (°C)</h4>
+            <h4 className="font-bold text-sky-950 text-sm truncate">Nhiệt độ trung bình (°C)</h4>
           </div>
-          <span className="text-xs font-semibold text-slate-400">7 ngày gần nhất</span>
+          <span className="text-xs font-semibold text-slate-400 shrink-0">7 ngày gần nhất</span>
         </div>
 
         <div className="h-[280px] w-full">
@@ -79,14 +79,14 @@ export default function ReportsChartsSection({ data }: ReportsChartsSectionProps
 
       {/* 2. Humidity Trend Area Chart */}
       <div className="rounded-[24px] border border-sky-100 bg-white p-6 shadow-sm shadow-sky-100/10 min-w-0 overflow-hidden">
-        <div className="mb-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-blue-50 text-blue-500">
+        <div className="mb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div className="flex items-center gap-2 min-w-0 flex-1">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-500">
               <Droplet className="h-4.5 w-4.5" />
             </div>
-            <h4 className="font-bold text-sky-950 text-sm">Độ ẩm trung bình (%)</h4>
+            <h4 className="font-bold text-sky-950 text-sm truncate">Độ ẩm trung bình (%)</h4>
           </div>
-          <span className="text-xs font-semibold text-slate-400">7 ngày gần nhất</span>
+          <span className="text-xs font-semibold text-slate-400 shrink-0">7 ngày gần nhất</span>
         </div>
 
         <div className="h-[280px] w-full">
@@ -117,14 +117,14 @@ export default function ReportsChartsSection({ data }: ReportsChartsSectionProps
 
       {/* 3. Alerts Bar Chart */}
       <div className="rounded-[24px] border border-sky-100 bg-white p-6 shadow-sm shadow-sky-100/10 md:col-span-2 min-w-0 overflow-hidden">
-        <div className="mb-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-rose-50 text-rose-500">
+        <div className="mb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div className="flex items-center gap-2 min-w-0 flex-1">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-rose-50 text-rose-500">
               <AlertTriangle className="h-4.5 w-4.5" />
             </div>
-            <h4 className="font-bold text-sky-950 text-sm">Thống kê cảnh báo phát sinh</h4>
+            <h4 className="font-bold text-sky-950 text-sm truncate">Thống kê cảnh báo phát sinh</h4>
           </div>
-          <span className="text-xs font-semibold text-slate-400">Số vụ theo ngày</span>
+          <span className="text-xs font-semibold text-slate-400 shrink-0">Số vụ theo ngày</span>
         </div>
 
         <div className="h-[280px] w-full">
