@@ -1,8 +1,7 @@
 export interface ReportsSummary {
   trackedDevices: number;
-  avgOnlineRate: number;
-  totalAlerts: number;
-  avgTemperature: number;
+  activeIncubatingCount: number;
+  maintenanceCount: number;
 }
 
 export interface ReportChartPoint {
