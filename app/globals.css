@@ -148,14 +148,12 @@ html body .recharts-label {
   fill: #000000 !important;
 }
 
-/* Làm trong suốt hoàn toàn và xóa bỏ khung bao Sidebar + Header Topbar */
+/* Thiết lập màu trắng đục cho Sidebar + Header Topbar */
 html body aside,
 html body header {
-  background: transparent !important;
-  background-color: transparent !important;
-  border: none !important;
-  border-width: 0 !important;
-  box-shadow: none !important;
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
 }
@@ -210,8 +208,15 @@ html.dark body {
   color: #e2e8f0;
 }
 
-html.dark aside,
-html.dark header,
+html.dark body aside,
+html.dark body header {
+  background: #0f172a !important;
+  background-color: #0f172a !important;
+  border-color: #1e293b !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
 html.dark .bg-white,
 html.dark .bg-white\/95,
 html.dark div[class*="bg-gradient-to-br"] {
