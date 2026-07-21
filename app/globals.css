@@ -202,3 +202,109 @@ html body select.bg-white {
   color: #1e293b !important;
 }
 
+/* ==========================================
+   DARK THEME OVERRIDES
+   ========================================== */
+html.dark body {
+  background: linear-gradient(to bottom, #090d16 0%, #0f172a 45%, #1e293b 100%) fixed;
+  color: #e2e8f0;
+}
+
+html.dark aside,
+html.dark header,
+html.dark .bg-white,
+html.dark .bg-white\/95,
+html.dark div[class*="bg-gradient-to-br"] {
+  background-color: rgba(15, 23, 42, 0.65) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+html.dark .bg-slate-50,
+html.dark .bg-slate-50\/50,
+html.dark .bg-slate-100,
+html.dark tr.border-b {
+  background-color: rgba(15, 23, 42, 0.45) !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+html.dark body input:not(.bg-transparent), 
+html.dark body select,
+html.dark body button.bg-slate-50,
+html.dark body a.bg-slate-50,
+html.dark body label.bg-slate-50\/50,
+html.dark body div.bg-slate-50\/50,
+html.dark body select.bg-slate-50\/50,
+html.dark body select.bg-slate-50\/40,
+html.dark body select.bg-slate-50\/30,
+html.dark body div.bg-slate-100 {
+  background-color: #1e293b !important;
+  background: #1e293b !important;
+  color: #f8fafc !important;
+  border-color: #334155 !important;
+}
+
+html.dark body [class*="text-slate-"],
+html.dark body [class*="text-gray-"],
+html.dark body [class*="text-zinc-"],
+html.dark body [class*="text-neutral-"],
+html.dark body [class*="text-stone-"] {
+  color: #cbd5e1 !important;
+}
+
+html.dark body [class*="text-black/"],
+html.dark body [class*="text-slate-900/"],
+html.dark body [class*="text-slate-800/"] {
+  color: #cbd5e1 !important;
+}
+
+html.dark body .recharts-text,
+html.dark body .recharts-cartesian-axis-tick text,
+html.dark body .recharts-legend-item-text,
+html.dark body .recharts-label {
+  fill: #cbd5e1 !important;
+}
+
+html.dark body input.bg-white,
+html.dark body select.bg-white {
+  background: #1e293b !important;
+  background-color: #1e293b !important;
+  color: #f8fafc !important;
+}
+
+html.dark .bg-pure-white {
+  background: #0f172a !important;
+  background-color: #0f172a !important;
+  color: #f8fafc !important;
+}
+
+html.dark .bg-button-gray {
+  background: #1e293b !important;
+  background-color: #1e293b !important;
+  color: #cbd5e1 !important;
+}
+
+html.dark .bg-button-gray:hover {
+  background: #334155 !important;
+  background-color: #334155 !important;
+  color: #f8fafc !important;
+}
+
+/* Fix dropdown menu background in dark mode */
+html.dark .absolute.right-0.mt-2\.5.w-56.rounded-2xl.bg-white {
+  background-color: #0f172a !important;
+  border-color: #1e293b !important;
+}
+html.dark .absolute.right-0.mt-2\.5.w-56.rounded-2xl.bg-white * {
+  color: #cbd5e1 !important;
+}
+html.dark .absolute.right-0.mt-2\.5.w-56.rounded-2xl.bg-white .text-red-500 {
+  color: #ef4444 !important;
+}
+html.dark .absolute.right-0.mt-2\.5.w-56.rounded-2xl.bg-white .hover\:bg-slate-50:hover {
+  background-color: #1e293b !important;
+}
+html.dark .absolute.right-0.mt-2\.5.w-56.rounded-2xl.bg-white .hover\:bg-red-50:hover {
+  background-color: rgba(239, 68, 68, 0.1) !important;
+}
+
+

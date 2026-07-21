@@ -21,6 +21,18 @@ export default function RootLayout({
     <html lang="vi" suppressHydrationWarning>
       <head>
         <link rel="icon" href="/logov2.png?v=3" type="image/png" />
+        <script dangerouslySetInnerHTML={{
+          __html: `
+            (function() {
+              const savedTheme = localStorage.getItem("theme");
+              if (savedTheme === "dark") {
+                document.documentElement.classList.add("dark");
+              } else {
+                document.documentElement.classList.remove("dark");
+              }
+            })()
+          `
+        }} />
       </head>
       <body
         className="font-times h-screen overflow-hidden flex flex-col text-slate-900"
