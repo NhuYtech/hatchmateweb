@@ -24,7 +24,7 @@ export default function EnvironmentSettingsCard() {
           <Thermometer className="h-4.5 w-4.5 stroke-[2]" />
         </div>
         <div>
-          <h3 className="text-xs font-extrabold uppercase tracking-[0.15em] text-sky-950">
+          <h3 className="text-xs font-bold uppercase tracking-[0.15em] text-slate-400">
             Cấu hình Môi trường
           </h3>
           <p className="text-[11px] text-slate-400 font-medium mt-0.5">

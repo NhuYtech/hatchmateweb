@@ -27,7 +27,7 @@ export default function EnvironmentCharts({ data }: EnvironmentChartsProps) {
       <div className="rounded-[24px] border border-slate-200/80 bg-white/95 p-5 shadow-sm min-w-0 overflow-hidden">
         <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.24em] text-slate-500">
+            <p className="text-xs font-bold uppercase tracking-[0.15em] text-slate-400">
               Nhiệt độ theo thời gian
             </p>
             <p className="mt-2 text-xl font-semibold text-slate-900">Xu hướng môi trường</p>
@@ -80,7 +80,7 @@ export default function EnvironmentCharts({ data }: EnvironmentChartsProps) {
 
       <div className="rounded-[24px] border border-slate-200/80 bg-white/95 p-5 shadow-sm">
         <div className="mb-5">
-          <p className="text-sm font-semibold uppercase tracking-[0.24em] text-slate-500">Nhiệt độ & độ ẩm</p>
+          <p className="text-xs font-bold uppercase tracking-[0.15em] text-slate-400 mb-2">Nhiệt độ & độ ẩm</p>
           <p className="mt-2 text-xl font-semibold text-slate-900">Theo dõi chu kỳ ấp</p>
         </div>
         <div className="space-y-4">

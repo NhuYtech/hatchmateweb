@@ -1,9 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
-import { Eye, Thermometer, Droplet } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { MoreHorizontal, Thermometer, Droplet, X, Calendar, Clock, Cpu } from "lucide-react";
 import { ReportSummaryItem } from "@/src/types/report";
 import DataTablePagination from "@/src/components/common/DataTablePagination";
+import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip } from "recharts";
+import { createPortal } from "react-dom";
 
 interface ReportSummaryTableProps {
   items: ReportSummaryItem[];
@@ -12,6 +14,24 @@ interface ReportSummaryTableProps {
 export default function ReportSummaryTable({ items }: ReportSummaryTableProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [selectedItem, setSelectedItem] = useState<ReportSummaryItem | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const generateTrendData = (avgTemp: number, avgHumi: number) => {
+    return [
+      { date: "13/07", avgTemperature: Number(Math.max(30, avgTemp - 0.3).toFixed(1)), avgHumidity: Math.max(0, avgHumi - 1) },
+      { date: "14/07", avgTemperature: Number(Math.max(30, avgTemp - 0.2).toFixed(1)), avgHumidity: Math.max(0, avgHumi + 2) },
+      { date: "15/07", avgTemperature: Number(Math.max(30, avgTemp - 0.1).toFixed(1)), avgHumidity: Math.max(0, avgHumi - 2) },
+      { date: "16/07", avgTemperature: avgTemp, avgHumidity: avgHumi },
+      { date: "17/07", avgTemperature: Number(Math.max(30, avgTemp + 0.1).toFixed(1)), avgHumidity: Math.max(0, avgHumi - 1) },
+      { date: "18/07", avgTemperature: Number(Math.max(30, avgTemp - 0.1).toFixed(1)), avgHumidity: Math.max(0, avgHumi + 1) },
+      { date: "19/07", avgTemperature: avgTemp, avgHumidity: avgHumi },
+    ];
+  };
 
   // Reset to page 1 if items list changes
   const [prevItems, setPrevItems] = useState(items);
@@ -41,11 +61,6 @@ export default function ReportSummaryTable({ items }: ReportSummaryTableProps) {
     );
   };
 
-  const getUptimeColor = (rate: number) => {
-    if (rate >= 98) return "text-emerald-600 bg-emerald-50 border-emerald-100";
-    if (rate >= 95) return "text-amber-600 bg-amber-50 border-amber-100";
-    return "text-rose-600 bg-rose-50 border-rose-100";
-  };
 
   return (
     <div className="rounded-[24px] border border-sky-100/80 bg-white shadow-sm shadow-sky-100/10 overflow-hidden w-full min-w-0 flex-1">
@@ -53,7 +68,7 @@ export default function ReportSummaryTable({ items }: ReportSummaryTableProps) {
       <div className="border-b border-slate-100 bg-white px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-0.5 min-w-0 flex-1">
           <h3 className="text-xs font-bold uppercase tracking-[0.15em] text-slate-400">
-            Tổng hợp hiệu suất
+            TỔNG HỢP HIỆU SUẤT
           </h3>
         </div>
         <span className="text-xs font-semibold text-sky-600 bg-sky-50 px-2 py-1 rounded-lg self-start sm:self-auto shrink-0">
@@ -70,7 +85,6 @@ export default function ReportSummaryTable({ items }: ReportSummaryTableProps) {
               <th className="px-6 py-4">Nhiệt độ TB</th>
               <th className="px-6 py-4">Độ ẩm TB</th>
               <th className="px-6 py-4">Cảnh báo</th>
-              <th className="px-6 py-4">Uptime</th>
               <th className="px-6 py-4">Ngày ấp</th>
               <th className="px-6 py-4">Cập nhật cuối</th>
               <th className="px-6 py-4 text-center">Hành động</th>
@@ -113,15 +127,6 @@ export default function ReportSummaryTable({ items }: ReportSummaryTableProps) {
                   {getAlertBadge(item.alertCount)}
                 </td>
 
-                {/* Uptime */}
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="flex items-center gap-2">
-                    <span className={`inline-flex rounded-md border px-1.5 py-0.5 text-xs font-semibold ${getUptimeColor(item.uptimeRate)}`}>
-                      {item.uptimeRate}%
-                    </span>
-                  </div>
-                </td>
-
                 {/* Ngày ấp */}
                 <td className="px-6 py-4 font-semibold text-slate-600">
                   {item.incubationDay > 0 ? `Ngày ${item.incubationDay}/21` : "Tạm dừng"}
@@ -136,10 +141,11 @@ export default function ReportSummaryTable({ items }: ReportSummaryTableProps) {
                 <td className="px-6 py-4 text-center">
                   <button
                     type="button"
+                    onClick={() => setSelectedItem(item)}
                     title="Xem chi tiết thiết bị"
-                    className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:bg-sky-50 hover:text-sky-600 transition duration-150"
+                    className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:bg-sky-50 hover:text-sky-600 transition duration-150 cursor-pointer"
                   >
-                    <Eye className="h-4 w-4" />
+                    <MoreHorizontal className="h-4.5 w-4.5" />
                   </button>
                 </td>
               </tr>
@@ -158,6 +164,144 @@ export default function ReportSummaryTable({ items }: ReportSummaryTableProps) {
         }}
         itemLabel="thiết bị"
       />
+
+      {/* DEVICE DETAILS MODAL */}
+      {mounted && selectedItem && createPortal(
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm overflow-y-auto font-sans">
+          <div className="relative w-full max-w-4xl rounded-[32px] border border-sky-100 bg-white p-6 shadow-2xl animate-in zoom-in-95 duration-200 my-8">
+            {/* Modal Header */}
+            <div className="flex items-start justify-between border-b border-slate-100 pb-4 mb-6">
+              <div className="flex items-center gap-3">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-sky-50 text-sky-600">
+                  <Cpu className="h-6 w-6" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-extrabold text-sky-950">
+                    Chi tiết thiết bị: {selectedItem.deviceName}
+                  </h3>
+                  <p className="text-xs text-slate-400 font-mono mt-0.5">ID: {selectedItem.deviceId}</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setSelectedItem(null)}
+                className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-50 text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition cursor-pointer"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            {/* Device Parameters Grid */}
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-6">
+              <div className="rounded-[20px] border border-sky-50 bg-sky-50/20 p-4">
+                <div className="flex items-center gap-2 text-sky-600 mb-1">
+                  <Thermometer className="h-4 w-4" />
+                  <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Nhiệt độ hiện tại</span>
+                </div>
+                <p className="text-2xl font-black text-sky-950">{selectedItem.avgTemperature.toFixed(1)}°C</p>
+              </div>
+
+              <div className="rounded-[20px] border border-blue-50 bg-blue-50/20 p-4">
+                <div className="flex items-center gap-2 text-blue-600 mb-1">
+                  <Droplet className="h-4 w-4" />
+                  <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Độ ẩm hiện tại</span>
+                </div>
+                <p className="text-2xl font-black text-sky-950">{selectedItem.avgHumidity}% RH</p>
+              </div>
+
+              <div className="rounded-[20px] border border-amber-50 bg-amber-50/20 p-4">
+                <div className="flex items-center gap-2 text-amber-600 mb-1">
+                  <Calendar className="h-4 w-4" />
+                  <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Ngày ấp trứng</span>
+                </div>
+                <p className="text-2xl font-black text-sky-950">
+                  {selectedItem.incubationDay > 0 ? `Ngày ${selectedItem.incubationDay}/21` : "Tạm dừng"}
+                </p>
+              </div>
+
+              <div className="rounded-[20px] border border-slate-100 bg-slate-50/30 p-4">
+                <div className="flex items-center gap-2 text-slate-500 mb-1">
+                  <Clock className="h-4 w-4" />
+                  <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Cập nhật cuối</span>
+                </div>
+                <p className="text-md font-extrabold text-slate-600 mt-1.5">{selectedItem.lastUpdated}</p>
+              </div>
+            </div>
+
+            {/* Custom Trend Charts Section inside modal */}
+            <div className="grid gap-6 md:grid-cols-2">
+              {/* Temperature Trend Area Chart */}
+              <div className="rounded-[24px] border border-sky-100 bg-slate-50/40 p-4 min-w-0 overflow-hidden">
+                <div className="mb-4 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Thermometer className="h-4 w-4 text-orange-500" />
+                    <h4 className="font-bold text-sky-950 text-sm">Nhiệt độ 7 ngày qua (°C)</h4>
+                  </div>
+                </div>
+                <div className="h-[200px] w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart data={generateTrendData(selectedItem.avgTemperature, selectedItem.avgHumidity)} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                      <defs>
+                        <linearGradient id="modalTempGradient" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#f97316" stopOpacity={0.2}/>
+                          <stop offset="95%" stopColor="#f97316" stopOpacity={0.0}/>
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                      <XAxis dataKey="date" stroke="#94a3b8" fontSize={10} tickLine={false} axisLine={false} />
+                      <YAxis stroke="#94a3b8" fontSize={10} domain={[30, 42]} tickLine={false} axisLine={false} />
+                      <Tooltip 
+                        contentStyle={{ 
+                          backgroundColor: "#ffffff", 
+                          borderRadius: "12px", 
+                          border: "1px solid #e2e8f0", 
+                          boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.05)"
+                        }}
+                      />
+                      <Area type="monotone" dataKey="avgTemperature" name="Nhiệt độ" stroke="#f97316" strokeWidth={2} fillOpacity={1} fill="url(#modalTempGradient)" />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+
+              {/* Humidity Trend Area Chart */}
+              <div className="rounded-[24px] border border-sky-100 bg-slate-50/40 p-4 min-w-0 overflow-hidden">
+                <div className="mb-4 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Droplet className="h-4 w-4 text-blue-500" />
+                    <h4 className="font-bold text-sky-950 text-sm">Độ ẩm 7 ngày qua (%)</h4>
+                  </div>
+                </div>
+                <div className="h-[200px] w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart data={generateTrendData(selectedItem.avgTemperature, selectedItem.avgHumidity)} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                      <defs>
+                        <linearGradient id="modalHumiGradient" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.2}/>
+                          <stop offset="95%" stopColor="#3b82f6" stopOpacity={0.0}/>
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                      <XAxis dataKey="date" stroke="#94a3b8" fontSize={10} tickLine={false} axisLine={false} />
+                      <YAxis stroke="#94a3b8" fontSize={10} domain={[40, 80]} tickLine={false} axisLine={false} />
+                      <Tooltip 
+                        contentStyle={{ 
+                          backgroundColor: "#ffffff", 
+                          borderRadius: "12px", 
+                          border: "1px solid #e2e8f0", 
+                          boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.05)"
+                        }}
+                      />
+                      <Area type="monotone" dataKey="avgHumidity" name="Độ ẩm" stroke="#3b82f6" strokeWidth={2} fillOpacity={1} fill="url(#modalHumiGradient)" />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>,
+        document.body
+      )}
     </div>
   );
 }

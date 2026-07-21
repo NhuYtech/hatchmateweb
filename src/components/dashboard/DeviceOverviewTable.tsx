@@ -11,7 +11,7 @@ export default function DeviceOverviewTable({ devices }: DeviceOverviewTableProp
     <section className="rounded-[24px] border border-slate-200/80 bg-white/95 p-4 sm:p-6 shadow-sm transition-all duration-300 hover:shadow-md min-w-0 overflow-hidden">
       <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h3 className="text-xl font-bold text-slate-900 tracking-tight">Tổng quan thiết bị</h3>
+          <h3 className="text-xs font-bold uppercase tracking-[0.15em] text-slate-400">Tổng quan thiết bị</h3>
           <p className="text-sm text-slate-500 mt-1">
             Theo dõi trạng thái hoạt động, cảm biến và tiến độ ấp của từng thiết bị
           </p>

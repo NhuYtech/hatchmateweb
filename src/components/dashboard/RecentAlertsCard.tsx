@@ -34,7 +34,7 @@ export default function RecentAlertsCard({ alerts }: RecentAlertsCardProps) {
     <section className="rounded-[24px] border border-slate-200/80 bg-white/95 p-4 sm:p-6 shadow-sm transition-all duration-300 hover:shadow-md flex flex-col h-full">
       <div className="mb-6 flex items-center justify-between gap-3">
         <div>
-          <h3 className="text-xl font-bold text-slate-900 tracking-tight">Cảnh báo mới nhất</h3>
+          <h3 className="text-xs font-bold uppercase tracking-[0.15em] text-slate-400">Cảnh báo mới nhất</h3>
           <p className="text-sm text-slate-500 mt-1">Các sự kiện và cảnh báo hoạt động của hệ thống</p>
         </div>
         <button className="inline-flex items-center gap-1.5 rounded-full bg-slate-50 hover:bg-slate-100 px-3 py-1.5 text-xs font-semibold text-slate-600 transition border border-slate-200/60 cursor-pointer">

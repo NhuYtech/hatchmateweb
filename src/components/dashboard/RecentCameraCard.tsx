@@ -10,7 +10,7 @@ export default function RecentCameraCard({ feeds }: RecentCameraCardProps) {
     <section className="rounded-[24px] border border-slate-200/80 bg-white/95 p-4 sm:p-6 shadow-sm transition-all duration-300 hover:shadow-md flex flex-col h-full">
       <div className="mb-6 flex items-center justify-between gap-3">
         <div>
-          <h3 className="text-xl font-bold text-slate-900 tracking-tight">Ảnh camera mới nhất</h3>
+          <h3 className="text-xs font-bold uppercase tracking-[0.15em] text-slate-400">Ảnh camera mới nhất</h3>
           <p className="text-sm text-slate-500 mt-1">Giám sát hình ảnh thời gian thực từ các trạm ấp</p>
         </div>
         <button className="inline-flex items-center gap-1.5 rounded-full bg-slate-50 hover:bg-slate-100 px-3.5 py-1.5 text-xs font-semibold text-slate-600 transition border border-slate-200/60 cursor-pointer">

@@ -23,7 +23,7 @@ export default function StatCard({ label, value, description, accent, icon, foot
     <div className={`rounded-[24px] border p-4 sm:p-5 shadow-sm transition-all duration-300 hover:scale-[1.01] ${accentStyles[accent]}`}>
       <div className="flex items-start justify-between gap-3 sm:gap-4">
         <div>
-          <p className="text-xs sm:text-sm font-semibold uppercase tracking-[0.08em] text-slate-500">{label}</p>
+          <p className="text-xs font-bold uppercase tracking-[0.15em] text-slate-400">{label}</p>
           <p className="mt-2 sm:mt-4 text-2xl sm:text-3xl font-semibold tracking-tight">{value}</p>
           <p className="mt-1.5 sm:mt-3 text-xs sm:text-sm leading-5 sm:leading-6 text-slate-600/90">{description}</p>
         </div>

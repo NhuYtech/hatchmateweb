@@ -1,18 +1,18 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { 
-  ResponsiveContainer, 
-  AreaChart, 
-  Area, 
-  XAxis, 
-  YAxis, 
-  Tooltip, 
-  BarChart, 
-  Bar, 
-  CartesianGrid 
+import {
+  ResponsiveContainer,
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  Tooltip,
+  BarChart,
+  Bar,
+  CartesianGrid
 } from "recharts";
-import { Thermometer, Droplet, AlertTriangle } from "lucide-react";
+
 import { ReportChartPoint } from "@/src/types/report";
 
 interface ReportsChartsSectionProps {
@@ -41,10 +41,7 @@ export default function ReportsChartsSection({ data }: ReportsChartsSectionProps
       <div className="rounded-[24px] border border-sky-100 bg-white p-6 shadow-sm shadow-sky-100/10 min-w-0 overflow-hidden">
         <div className="mb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div className="flex items-center gap-2 min-w-0 flex-1">
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-rose-50 text-rose-500">
-              <AlertTriangle className="h-4.5 w-4.5" />
-            </div>
-            <h4 className="font-bold text-sky-950 text-sm">Thống kê cảnh báo phát sinh</h4>
+            <h4 className="font-bold text-sky-950 text-sm">THỐNG KÊ CẢNH BÁO</h4>
           </div>
           <span className="text-xs font-semibold text-slate-400 shrink-0">Số vụ theo ngày</span>
         </div>
@@ -55,11 +52,11 @@ export default function ReportsChartsSection({ data }: ReportsChartsSectionProps
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
               <XAxis dataKey="date" stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} />
               <YAxis stroke="#94a3b8" fontSize={11} allowDecimals={false} tickLine={false} axisLine={false} />
-              <Tooltip 
-                contentStyle={{ 
-                  backgroundColor: "#ffffff", 
-                  borderRadius: "16px", 
-                  border: "1px solid #e0f2fe", 
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: "#ffffff",
+                  borderRadius: "16px",
+                  border: "1px solid #e0f2fe",
                   boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.05)"
                 }}
               />

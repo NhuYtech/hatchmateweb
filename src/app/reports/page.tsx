@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import ReportsMiniStatCard from "@/src/components/reports/ReportsMiniStatCard";
-import ReportFilterBar from "@/src/components/reports/ReportFilterBar";
 import ReportsChartsSection from "@/src/components/reports/ReportsChartsSection";
 import ReportSummaryTable from "@/src/components/reports/ReportSummaryTable";
 import ReportExportCard from "@/src/components/reports/ReportExportCard";
@@ -329,9 +328,6 @@ export default function ReportsPage() {
             />
           </section>
 
-          <div className="w-full min-w-0">
-            <ReportFilterBar />
-          </div>
 
           {!loading && (
             <div className="flex flex-col lg:flex-row gap-4 lg:items-start w-full min-w-0">

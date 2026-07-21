@@ -87,7 +87,7 @@ export default function TurningSettingsCard() {
           <RefreshCw className="h-4 w-4 stroke-[2]" />
         </div>
         <div>
-          <h3 className="text-xs font-extrabold uppercase tracking-[0.15em] text-sky-950">
+          <h3 className="text-xs font-bold uppercase tracking-[0.15em] text-slate-400">
             Cấu hình Đảo trứng
           </h3>
           <p className="text-[11px] text-slate-400 font-medium mt-0.5">
