@@ -58,13 +58,6 @@ export default function DashboardTopbar({ onMenuToggle }: DashboardTopbarProps) 
       <div className="flex items-center gap-4 sm:gap-6">
         {/* Logo + Brand Name */}
         <div className="flex items-center gap-3 select-none">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-sky-50 text-sky-700 font-extrabold text-sm border border-sky-100 overflow-hidden">
-            <img
-              src="/logov2.png"
-              alt="Logo"
-              className="h-full w-full object-cover"
-            />
-          </div>
           <div className="min-w-0">
             <p className="text-base sm:text-lg font-extrabold tracking-wider leading-none">
               <span className="text-[#f97316]">HATCH</span>
