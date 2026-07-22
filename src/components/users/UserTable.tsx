@@ -327,21 +327,21 @@ export default function UserTable({ users, onAddUser, onRefresh }: UserTableProp
                         >
                           <button
                             type="button"
-                            className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-xs font-semibold text-sky-950 hover:bg-sky-50 transition"
+                            className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-xs font-semibold text-amber-950 hover:bg-amber-50/70 transition"
                           >
                             <Link className="h-3.5 w-3.5 text-slate-400" />
                             Gán thiết bị
                           </button>
                           <button
                             type="button"
-                            className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-xs font-semibold text-sky-950 hover:bg-sky-50 transition"
+                            className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-xs font-semibold text-amber-950 hover:bg-amber-50/70 transition"
                           >
                             <Lock className="h-3.5 w-3.5 text-slate-400" />
                             Khóa tài khoản
                           </button>
                           <button
                             type="button"
-                            className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-xs font-semibold text-sky-950 hover:bg-sky-50 transition"
+                            className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-xs font-semibold text-amber-950 hover:bg-amber-50/70 transition"
                           >
                             <Shield className="h-3.5 w-3.5 text-slate-400" />
                             Đổi vai trò

@@ -256,7 +256,7 @@ export default function ReportExportCard({ items, stats }: ReportExportCardProps
             onClick={() => setFormat("excel")}
             className={`flex w-full items-center gap-3 rounded-[16px] border p-3.5 text-left transition duration-200 cursor-pointer ${
               format === "excel" 
-                ? "border-sky-300 bg-sky-50/20 text-sky-700 shadow-sm" 
+                ? "border-amber-300 bg-amber-50/20 text-amber-700 shadow-sm" 
                 : "border-slate-100 bg-slate-50/50 text-slate-600 hover:bg-slate-50"
             }`}
           >
@@ -265,7 +265,7 @@ export default function ReportExportCard({ items, stats }: ReportExportCardProps
               <p className="text-xs font-bold text-sky-950">Định dạng Microsoft Excel</p>
               <p className="text-[10px] text-slate-400 mt-0.5">Xuất bảng tính biểu đồ (.xlsx)</p>
             </div>
-            {format === "excel" && <CheckCircle2 className="h-4 w-4 text-sky-600 fill-sky-50" />}
+            {format === "excel" && <CheckCircle2 className="h-4 w-4 text-amber-600 fill-amber-50" />}
           </button>
 
           <button
@@ -273,7 +273,7 @@ export default function ReportExportCard({ items, stats }: ReportExportCardProps
             onClick={() => setFormat("pdf")}
             className={`flex w-full items-center gap-3 rounded-[16px] border p-3.5 text-left transition duration-200 cursor-pointer ${
               format === "pdf" 
-                ? "border-sky-300 bg-sky-50/20 text-sky-700 shadow-sm" 
+                ? "border-amber-300 bg-amber-50/20 text-amber-700 shadow-sm" 
                 : "border-slate-100 bg-slate-50/50 text-slate-600 hover:bg-slate-50"
             }`}
           >
@@ -282,7 +282,7 @@ export default function ReportExportCard({ items, stats }: ReportExportCardProps
               <p className="text-xs font-bold text-sky-950">Định dạng PDF báo cáo</p>
               <p className="text-[10px] text-slate-400 mt-0.5">Thích hợp in ấn & lưu trữ (.pdf)</p>
             </div>
-            {format === "pdf" && <CheckCircle2 className="h-4 w-4 text-sky-600 fill-sky-50" />}
+            {format === "pdf" && <CheckCircle2 className="h-4 w-4 text-amber-600 fill-amber-50" />}
           </button>
 
           <button
@@ -290,7 +290,7 @@ export default function ReportExportCard({ items, stats }: ReportExportCardProps
             onClick={() => setFormat("csv")}
             className={`flex w-full items-center gap-3 rounded-[16px] border p-3.5 text-left transition duration-200 cursor-pointer ${
               format === "csv" 
-                ? "border-sky-300 bg-sky-50/20 text-sky-700 shadow-sm" 
+                ? "border-amber-300 bg-amber-50/20 text-amber-700 shadow-sm" 
                 : "border-slate-100 bg-slate-50/50 text-slate-600 hover:bg-slate-50"
             }`}
           >
@@ -299,7 +299,7 @@ export default function ReportExportCard({ items, stats }: ReportExportCardProps
               <p className="text-xs font-bold text-sky-950">Định dạng CSV dữ liệu</p>
               <p className="text-[10px] text-slate-400 mt-0.5">Dữ liệu thô phân tích nâng cao (.csv)</p>
             </div>
-            {format === "csv" && <CheckCircle2 className="h-4 w-4 text-sky-600 fill-sky-50" />}
+            {format === "csv" && <CheckCircle2 className="h-4 w-4 text-amber-600 fill-amber-50" />}
           </button>
         </div>
 

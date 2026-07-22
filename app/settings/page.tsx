@@ -51,7 +51,7 @@ const SegmentedControl = ({
           type="button"
           onClick={() => onChange(opt.value)}
           className="flex-1 rounded-lg py-2 text-xs font-bold transition-all duration-200 cursor-pointer text-slate-500 hover:text-slate-800"
-          style={value === opt.value ? { backgroundColor: 'white', color: '#0EA5E9', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' } : {}}
+          style={value === opt.value ? { backgroundColor: 'white', color: '#d97706', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' } : {}}
         >
           {opt.label}
         </button>
@@ -66,7 +66,7 @@ const Toggle = ({ checked, onChange }: { checked: boolean; onChange: (val: boole
     <button
       type="button"
       onClick={() => onChange(!checked)}
-      className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${checked ? "bg-[#0EA5E9]" : "bg-slate-200"
+      className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${checked ? "bg-amber-500" : "bg-slate-200"
         }`}
     >
       <span

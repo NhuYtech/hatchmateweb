@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, updateProfile } from "firebase/auth";
 import { auth, isFirebaseConfigured } from "@/src/lib/firebase";
 import { signInWithGoogle as firebaseSignInWithGoogle, logout as firebaseLogout } from "@/src/lib/auth";
 
@@ -17,6 +17,7 @@ interface AuthContextType {
   loading: boolean;
   signInWithGoogle: () => Promise<void>;
   logout: () => Promise<void>;
+  updateUserProfile: (displayName: string, photoURL: string | null) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -66,8 +67,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const updateUserProfile = async (displayName: string, photoURL: string | null) => {
+    if (isFirebaseConfigured && auth.currentUser) {
+      await updateProfile(auth.currentUser, { displayName, photoURL });
+      setCurrentUser({
+        uid: auth.currentUser.uid,
+        email: auth.currentUser.email,
+        displayName: auth.currentUser.displayName,
+        photoURL: auth.currentUser.photoURL,
+      });
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ currentUser, loading, signInWithGoogle, logout }}>
+    <AuthContext.Provider value={{ currentUser, loading, signInWithGoogle, logout, updateUserProfile }}>
       {children}
     </AuthContext.Provider>
   );

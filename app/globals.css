@@ -18,7 +18,12 @@ body {
   margin: 0;
   min-height: 100%;
   font-family: var(--font-times);
-  background: linear-gradient(to bottom, #FCF8EC 0%, #FFF5DC 45%, #E7A124 100%) fixed;
+  background-color: #ffffff;
+  background-image: 
+    radial-gradient(circle at 50% 100%, rgba(253, 224, 71, 0.4) 0%, transparent 60%),
+    radial-gradient(circle at 50% 100%, rgba(251, 191, 36, 0.4) 0%, transparent 70%),
+    radial-gradient(circle at 50% 100%, rgba(244, 114, 182, 0.5) 0%, transparent 80%);
+  background-attachment: fixed;
   color: #0f172a;
 }
 
@@ -259,11 +264,8 @@ html.dark .absolute.right-0.mt-2\.5.w-56.rounded-2xl.bg-white * {
 html.dark .absolute.right-0.mt-2\.5.w-56.rounded-2xl.bg-white .text-red-500 {
   color: #ef4444 !important;
 }
-html.dark .absolute.right-0.mt-2\.5.w-56.rounded-2xl.bg-white .hover\:bg-slate-50:hover {
+html.dark .absolute.right-0.mt-2\.5.w-56.rounded-2xl.bg-white .hover\:bg-amber-50\/70:hover {
   background-color: #1e293b !important;
-}
-html.dark .absolute.right-0.mt-2\.5.w-56.rounded-2xl.bg-white .hover\:bg-red-50:hover {
-  background-color: rgba(239, 68, 68, 0.1) !important;
 }
 
 

@@ -3,9 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
-  Search,
   Bell,
-  Mail,
   Menu,
   UserCircle2,
   LogOut,
@@ -14,6 +12,7 @@ import {
   Moon,
 } from "lucide-react";
 import { useAuth } from "@/src/components/AuthProvider";
+import EditAdminModal from "./EditAdminModal";
 
 interface DashboardTopbarProps {
   onMenuToggle?: () => void;
@@ -21,8 +20,8 @@ interface DashboardTopbarProps {
 
 export default function DashboardTopbar({ onMenuToggle }: DashboardTopbarProps) {
   const router = useRouter();
-  const [searchValue, setSearchValue] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const { currentUser, logout } = useAuth();
   const [theme, setTheme] = useState<"light" | "dark">("light");
 
@@ -82,17 +81,6 @@ export default function DashboardTopbar({ onMenuToggle }: DashboardTopbarProps) 
 
       {/* ── Right: Search + Links + Icons + Avatar ── */}
       <div className="flex items-center gap-4 sm:gap-6">
-        {/* Search */}
-        <label className="hidden sm:flex relative w-[280px] items-center gap-2 rounded-lg bg-gray-100 px-3 py-2 text-gray-400 focus-within:ring-2 focus-within:ring-blue-200 transition">
-          <input
-            type="search"
-            value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
-            placeholder="Search"
-            className="min-w-0 flex-1 bg-transparent text-sm text-gray-800 outline-none placeholder:text-gray-400"
-          />
-          <Search className="h-4 w-4 shrink-0" />
-        </label>
 
         {/* Bell */}
         <button
@@ -101,15 +89,6 @@ export default function DashboardTopbar({ onMenuToggle }: DashboardTopbarProps) 
           aria-label="Notifications"
         >
           <Bell className="h-5 w-5" strokeWidth={1.8} />
-        </button>
-
-        {/* Mail */}
-        <button
-          type="button"
-          className="flex items-center justify-center rounded-md p-1 text-gray-500 transition hover:bg-gray-100 hover:text-gray-700"
-          aria-label="Messages"
-        >
-          <Mail className="h-5 w-5" strokeWidth={1.8} />
         </button>
 
         {/* Avatar with dropdown */}
@@ -149,17 +128,17 @@ export default function DashboardTopbar({ onMenuToggle }: DashboardTopbarProps) 
                   <button
                     onClick={() => {
                       setShowDropdown(false);
-                      router.push("/settings");
+                      setShowEditModal(true);
                     }}
-                    className="w-full flex items-center gap-2.5 px-3 py-2 text-left text-xs font-semibold text-slate-600 rounded-xl hover:bg-slate-50 hover:text-slate-900 transition cursor-pointer"
+                    className="w-full flex items-center gap-2.5 px-3 py-2 text-left text-xs font-semibold text-slate-600 rounded-xl hover:bg-amber-50/70 hover:text-amber-900 transition cursor-pointer"
                   >
                     <Settings className="w-4 h-4 text-slate-400" />
-                    <span>Cấu hình hệ thống</span>
+                    <span>Chỉnh sửa thông tin</span>
                   </button>
 
                   <button
                     onClick={toggleTheme}
-                    className="w-full flex items-center justify-between px-3 py-2 text-left text-xs font-semibold text-slate-600 rounded-xl hover:bg-slate-50 hover:text-slate-900 transition cursor-pointer"
+                    className="w-full flex items-center justify-between px-3 py-2 text-left text-xs font-semibold text-slate-600 rounded-xl hover:bg-amber-50/70 hover:text-amber-900 transition cursor-pointer"
                   >
                     <div className="flex items-center gap-2.5">
                       {theme === "light" ? (
@@ -183,7 +162,7 @@ export default function DashboardTopbar({ onMenuToggle }: DashboardTopbarProps) 
 
                   <button
                     onClick={handleLogout}
-                    className="w-full flex items-center gap-2.5 px-3 py-2 text-left text-xs font-bold text-red-500 rounded-xl hover:bg-red-50 transition"
+                    className="w-full flex items-center gap-2.5 px-3 py-2 text-left text-xs font-bold text-red-500 rounded-xl hover:bg-amber-50/70 hover:text-red-600 transition"
                   >
                     <LogOut className="w-4 h-4" />
                     <span>Đăng xuất</span>
@@ -194,6 +173,8 @@ export default function DashboardTopbar({ onMenuToggle }: DashboardTopbarProps) 
           )}
         </div>
       </div>
+
+      {showEditModal && <EditAdminModal onClose={() => setShowEditModal(false)} />}
     </header>
   );
 }

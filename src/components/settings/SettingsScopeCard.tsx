@@ -85,7 +85,7 @@ export default function SettingsScopeCard({
                 onClick={() => handleScopeChange("all")}
                 className={`flex h-11 items-center justify-center gap-2 rounded-xl text-xs font-bold border transition duration-150 ${
                   scope === "all"
-                    ? "border-sky-500 bg-sky-50/40 text-sky-700 font-extrabold"
+                    ? "border-amber-500 bg-amber-50/40 text-amber-700 font-extrabold"
                     : "border-slate-200 hover:bg-slate-50 text-slate-600"
                 }`}
               >
@@ -98,7 +98,7 @@ export default function SettingsScopeCard({
                 onClick={() => handleScopeChange("device")}
                 className={`flex h-11 items-center justify-center gap-2 rounded-xl text-xs font-bold border transition duration-150 ${
                   scope === "device"
-                    ? "border-sky-500 bg-sky-50/40 text-sky-700 font-extrabold"
+                    ? "border-amber-500 bg-amber-50/40 text-amber-700 font-extrabold"
                     : "border-slate-200 hover:bg-slate-50 text-slate-600"
                 }`}
               >

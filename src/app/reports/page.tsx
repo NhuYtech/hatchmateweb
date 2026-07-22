@@ -285,7 +285,7 @@ export default function ReportsPage() {
             onClick={() => setActiveTab("reports")}
             className={`px-6 py-3 text-xs sm:text-sm font-extrabold tracking-wider border-b-2 transition-all cursor-pointer whitespace-nowrap shrink-0 ${
               activeTab === "reports"
-                ? "border-sky-500 text-sky-600"
+                ? "border-amber-500 text-amber-600"
                 : "border-transparent text-slate-500 hover:text-slate-700"
             }`}
           >
@@ -295,7 +295,7 @@ export default function ReportsPage() {
             onClick={() => setActiveTab("logs")}
             className={`px-6 py-3 text-xs sm:text-sm font-extrabold tracking-wider border-b-2 transition-all cursor-pointer whitespace-nowrap shrink-0 ${
               activeTab === "logs"
-                ? "border-sky-500 text-sky-600"
+                ? "border-amber-500 text-amber-600"
                 : "border-transparent text-slate-500 hover:text-slate-700"
             }`}
           >
