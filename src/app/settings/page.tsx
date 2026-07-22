@@ -478,7 +478,7 @@ function DeviceConfigurationContent() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
           
           {/* Left Column - 8 configuration cards */}
-          <div className="lg:col-span-8 xl:col-span-9 flex flex-col gap-4">
+          <div className="lg:col-span-8 xl:col-span-8 flex flex-col gap-4">
             
             {/* Card 1 — General Information */}
             <section className="bg-white rounded-[24px] border border-slate-200/70 p-6 md:p-8 shadow-[0_8px_30px_rgb(0,0,0,0.02)] transition-all duration-300 hover:shadow-[0_8px_35px_rgb(0,0,0,0.03)] flex flex-col gap-6">
@@ -865,88 +865,98 @@ function DeviceConfigurationContent() {
           </div>
 
           {/* Right Column - Sticky summary card */}
-          <aside className="lg:col-span-4 xl:col-span-3 lg:sticky lg:top-8 flex flex-col gap-4">
-            <div className="bg-white rounded-[24px] border border-slate-200/70 p-6 shadow-[0_8px_30px_rgb(0,0,0,0.02)] transition-all duration-300 hover:shadow-[0_8px_35px_rgb(0,0,0,0.03)] flex flex-col gap-6">
-              <h3 className="text-xs font-bold uppercase tracking-[0.18em] text-slate-400 border-b border-slate-100 pb-3">
-                Tổng quan trực tiếp
-              </h3>
+          <div className="lg:col-span-4 xl:col-span-4 lg:sticky lg:top-8 flex flex-col gap-4 font-sans">
+            <div className="rounded-[24px] border border-sky-100/80 bg-white p-6 shadow-sm shadow-sky-100/10">
+              {/* Header section matching ReportExportCard */}
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="text-xs font-bold uppercase tracking-[0.15em] text-slate-400">
+                  TỔNG QUAN TRỰC TIẾP
+                </h3>
+                <span className="text-[11px] font-bold text-slate-600 bg-slate-100/80 px-2.5 py-0.5 rounded-md border border-slate-200/60 font-mono">
+                  {machineId}
+                </span>
+              </div>
+              
+              <h4 className="text-base font-bold text-sky-950 mb-1">Trạng thái vận hành</h4>
+              <p className="text-xs text-slate-500 mb-6">Theo dõi tức thời các thông số môi trường và cảm biến của thiết bị.</p>
 
-              <div className="flex flex-col gap-5 divide-y divide-slate-100">
+              {/* List of Status Items formatted like ReportExportCard option items */}
+              <div className="space-y-3 mb-6">
                 {/* Device Status */}
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-bold text-slate-500">Trạng thái máy</span>
-                  <span className={`inline-flex items-center gap-1.5 font-extrabold text-sm ${
+                <div className="flex items-center justify-between rounded-[16px] border border-slate-100 bg-slate-50/50 p-3.5">
+                  <span className="text-xs font-semibold text-slate-600">Trạng thái máy</span>
+                  <span className={`inline-flex items-center gap-1.5 font-bold text-xs px-2.5 py-1 rounded-full border ${
                     liveStatus.toLowerCase() === "online" 
-                      ? "text-emerald-600" 
+                      ? "bg-emerald-50 text-emerald-700 border-emerald-200/80" 
                       : liveStatus.toLowerCase() === "warning"
-                      ? "text-amber-600"
-                      : "text-slate-500"
+                      ? "bg-amber-50 text-amber-700 border-amber-200/80"
+                      : "bg-rose-50 text-rose-700 border-rose-200/80"
                   }`}>
-                    <span className={`h-2 w-2 rounded-full ${
+                    <span className={`h-1.5 w-1.5 rounded-full ${
                       liveStatus.toLowerCase() === "online" 
                         ? "bg-emerald-500 animate-pulse" 
                         : liveStatus.toLowerCase() === "warning"
                         ? "bg-amber-500 animate-pulse"
-                        : "bg-slate-400"
+                        : "bg-rose-500"
                     }`} />
                     {liveStatus}
                   </span>
                 </div>
 
                 {/* Firmware */}
-                <div className="flex items-center justify-between pt-4">
-                  <span className="text-sm font-bold text-slate-500">Phiên bản Firmware</span>
-                  <span className="font-mono text-sm font-bold text-slate-700 bg-slate-50 px-2 py-0.5 rounded-lg border border-slate-100">
+                <div className="flex items-center justify-between rounded-[16px] border border-slate-100 bg-slate-50/50 p-3.5">
+                  <span className="text-xs font-semibold text-slate-600">Phiên bản Firmware</span>
+                  <span className="font-mono text-xs font-semibold text-slate-700 bg-white px-2.5 py-0.5 rounded-md border border-slate-200/60">
                     {liveFirmware}
                   </span>
                 </div>
 
-                {/* Wi-Fi */}
-                <div className="flex items-center justify-between pt-4">
-                  <span className="text-sm font-bold text-slate-500">Tín hiệu Wi-Fi</span>
-                  <span className="inline-flex items-center gap-1 text-sm font-extrabold text-sky-600">
-                    <Wifi className="h-4 w-4" />
-                    {liveWifi >= 4 ? "Cực tốt" : liveWifi === 3 ? "Tốt" : liveWifi === 2 ? "Trung bình" : "Yếu"}
+                {/* Wi-Fi Signal */}
+                <div className="flex items-center justify-between rounded-[16px] border border-slate-100 bg-slate-50/50 p-3.5">
+                  <span className="text-xs font-semibold text-slate-600">Tín hiệu Wi-Fi</span>
+                  <span className="inline-flex items-center gap-1.5 font-bold text-xs text-sky-600">
+                    <Wifi className="h-3.5 w-3.5 text-sky-500 shrink-0" />
+                    <span>{liveWifi >= 4 ? "Cực tốt" : liveWifi === 3 ? "Tốt" : liveWifi === 2 ? "Trung bình" : "Yếu"}</span>
                   </span>
                 </div>
 
                 {/* Last Sync */}
-                <div className="flex items-center justify-between pt-4">
-                  <span className="text-sm font-bold text-slate-500">Đồng bộ cuối</span>
-                  <span className="text-sm font-bold text-slate-600 flex items-center gap-1">
-                    <Clock className="h-3.5 w-3.5 text-slate-400" />
-                    {liveLastSeen}
+                <div className="flex items-center justify-between rounded-[16px] border border-slate-100 bg-slate-50/50 p-3.5">
+                  <span className="text-xs font-semibold text-slate-600">Đồng bộ cuối</span>
+                  <span className="inline-flex items-center gap-1.5 font-semibold text-xs text-slate-600">
+                    <Clock className="h-3.5 w-3.5 text-slate-400 shrink-0" />
+                    <span>{liveLastSeen}</span>
                   </span>
                 </div>
 
                 {/* Temperature */}
-                <div className="flex items-center justify-between pt-4">
-                  <span className="text-sm font-bold text-slate-500">Nhiệt độ hiện tại</span>
-                  <span className="text-lg font-extrabold text-red-500 flex items-center gap-0.5">
-                    <Thermometer className="h-4.5 w-4.5 text-red-400" />
-                    {liveTemp}°C
+                <div className="flex items-center justify-between rounded-[16px] border border-slate-100 bg-slate-50/50 p-3.5">
+                  <span className="text-xs font-semibold text-slate-600">Nhiệt độ hiện tại</span>
+                  <span className="inline-flex items-center gap-1 text-sm font-extrabold text-rose-600">
+                    <Thermometer className="h-4 w-4 text-rose-500 shrink-0" />
+                    <span>{liveTemp}°C</span>
                   </span>
                 </div>
 
                 {/* Humidity */}
-                <div className="flex items-center justify-between pt-4">
-                  <span className="text-sm font-bold text-slate-500">Độ ẩm hiện tại</span>
-                  <span className="text-lg font-extrabold text-emerald-600 flex items-center gap-0.5">
-                    <Droplets className="h-4.5 w-4.5 text-emerald-400" />
-                    {liveHumi}%
+                <div className="flex items-center justify-between rounded-[16px] border border-slate-100 bg-slate-50/50 p-3.5">
+                  <span className="text-xs font-semibold text-slate-600">Độ ẩm hiện tại</span>
+                  <span className="inline-flex items-center gap-1 text-sm font-extrabold text-sky-600">
+                    <Droplets className="h-4 w-4 text-sky-500 shrink-0" />
+                    <span>{liveHumi}%</span>
                   </span>
                 </div>
               </div>
-            </div>
 
-            {/* Quick Profile Summary Tip */}
-            <div className="bg-slate-50 border border-slate-200/50 rounded-[20px] p-5 flex gap-3 text-xs text-slate-500 leading-relaxed font-semibold">
-              <Info className="h-5 w-5 text-sky-500 shrink-0 mt-0.5" />
-              <p>
-                Giao diện này dùng để cấu hình trực tiếp trạm ấp <strong>{machineId}</strong>. Các thay đổi sẽ được gửi và áp dụng xuống thiết bị IoT ngay khi bấm <strong>Lưu thay đổi</strong>.
-              </p>
+              {/* Quick Summary Note matching ReportExportCard tip */}
+              <div className="rounded-[16px] bg-sky-50/50 border border-sky-100/80 p-3.5 flex gap-2.5 items-start text-xs text-slate-600 leading-relaxed">
+                <Info className="h-4 w-4 text-sky-500 shrink-0 mt-0.5" />
+                <p className="m-0">
+                  Giao diện này dùng để cấu hình trực tiếp trạm ấp <strong className="font-bold text-sky-950">{machineId}</strong>. Các thay đổi sẽ được đồng bộ xuống thiết bị ngay khi bấm <strong className="font-bold text-sky-950">Lưu thay đổi</strong>.
+                </p>
+              </div>
             </div>
-          </aside>
+          </div>
 
         </div>
 
