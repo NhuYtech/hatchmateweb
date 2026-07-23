@@ -82,7 +82,7 @@ export default function AdminSidebar({ collapsed, onItemClick }: AdminSidebarPro
 
   return (
     <aside
-      className={`fixed inset-y-0 left-0 z-50 flex h-full flex-col border-r border-slate-200 bg-white py-6 transition-all duration-300 md:static md:h-[calc(100vh-64px)] shrink-0 ${collapsed
+      className={`fixed inset-y-0 left-0 z-50 flex h-full flex-col border-r border-slate-200 bg-[#fff8f0] dark:bg-[#0f172a] py-6 transition-all duration-300 md:static md:h-[calc(100vh-64px)] shrink-0 ${collapsed
         ? "-translate-x-full md:translate-x-0 md:w-[76px] md:px-2"
         : "translate-x-0 md:w-[260px] md:px-4"
         } w-[260px] px-4 overflow-y-auto`}

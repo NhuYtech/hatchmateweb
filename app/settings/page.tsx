@@ -407,7 +407,7 @@ function DeviceConfigurationContent() {
     <div className="grid gap-4">
 
       {/* Top Header Section */}
-      <header className="flex flex-col gap-6 rounded-[24px] border border-sky-100/80 bg-white/90 backdrop-blur-md px-6 py-5 shadow-sm shadow-sky-100/30 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-6 py-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-col gap-2.5">
           {/* Large Title & Subtitle */}
           <div className="flex items-center gap-4 mt-1 flex-wrap">
@@ -431,9 +431,6 @@ function DeviceConfigurationContent() {
                     : "bg-slate-400"
                   }`} />
                 {liveStatus}
-              </span>
-              <span className="inline-flex items-center rounded-full bg-slate-50 border border-slate-200 px-3 py-1 text-xs font-bold text-slate-600 tracking-wider">
-                {machineId}
               </span>
             </div>
           </div>
@@ -469,7 +466,7 @@ function DeviceConfigurationContent() {
             )}
           </button>
         </div>
-      </header>
+      </div>
 
       {/* Main Content Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
@@ -859,7 +856,7 @@ disabled={popupAlert?.type === "loading"}
 
         {/* Right Column - Sticky summary card */}
         <div className="lg:col-span-4 xl:col-span-4 lg:sticky lg:top-8 flex flex-col gap-4 font-sans">
-          <div className="rounded-[24px] border border-sky-100/80 bg-white p-6 shadow-sm shadow-sky-100/10">
+          <div className="rounded-[24px] border border-sky-100/80 bg-warm-pastel p-6 shadow-sm shadow-sky-100/10">
             {/* Header section matching ReportExportCard */}
             <div className="flex items-center justify-between mb-2">
               <h3 className="text-xs font-bold uppercase tracking-[0.15em] text-slate-400">

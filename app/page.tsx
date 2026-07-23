@@ -128,8 +128,11 @@ export default function LoginPage() {
 
         {/* Brand Titles */}
         <div className="flex flex-col items-center mb-1">
-          <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-[#1F2937] tracking-wide text-center whitespace-nowrap">
-            HỆ THỐNG ẤP TRỨNG <span className="text-[#f97316]">HATCH</span><span className="text-[#0284c7]">MATE</span>
+          <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-[#1F2937] tracking-wide text-center">
+            HỆ THỐNG ẤP TRỨNG
+          </h3>
+          <h3 className="text-lg sm:text-xl md:text-2xl font-bold tracking-wide text-center">
+            <span className="text-[#f97316]">HATCH</span><span className="text-[#0284c7]">MATE</span>
           </h3>
           <span className="text-[11px] sm:text-xs font-bold text-[#F5B000] tracking-widest uppercase mt-1">
             Smart Incubation Management System

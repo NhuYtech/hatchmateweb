@@ -27,6 +27,11 @@ export default function ReportsPage() {
   const [activeTab, setActiveTab] = useState<"reports" | "logs">("reports");
   const [loading, setLoading] = useState(true);
 
+  // Update browser tab title when switching tabs
+  useEffect(() => {
+    document.title = activeTab === "reports" ? "Thống kê & Biểu đồ" : "Nhật ký hoạt động";
+  }, [activeTab]);
+
   // Reports State
   const [reportSummaryList, setReportSummaryList] = useState<ReportSummaryItem[]>([]);
   const [reportChartData, setReportChartData] = useState<ReportChartPoint[]>([]);
@@ -212,8 +217,20 @@ export default function ReportsPage() {
           }
         });
 
-        // Sort logs by id to make order deterministic
-        generatedLogs.sort((a, b) => b.id.localeCompare(a.id));
+        // Sort logs by priority (danger > warning > info) and then by id to keep deterministic order
+        const levelPriority: Record<string, number> = {
+          danger: 3,
+          warning: 2,
+          info: 1,
+        };
+        generatedLogs.sort((a, b) => {
+          const priorityA = levelPriority[a.level] || 0;
+          const priorityB = levelPriority[b.level] || 0;
+          if (priorityB !== priorityA) {
+            return priorityB - priorityA;
+          }
+          return b.id.localeCompare(a.id);
+        });
 
         setLogs(generatedLogs);
         setLogsStats({
@@ -338,12 +355,14 @@ export default function ReportsPage() {
               value={logsStats.totalToday}
               icon={Database}
               accent="indigo"
+              className="bg-teal-glow-right"
             />
             <LogsMiniStatCard
               label="Log cảnh báo"
               value={logsStats.alertLogs}
               icon={ShieldAlert}
               accent="rose"
+              className="bg-orange-glow-left"
             />
           </section>
 

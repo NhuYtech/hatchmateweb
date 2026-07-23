@@ -5,7 +5,10 @@ import AdminLayoutWrapper from "@/src/components/admin/AdminLayoutWrapper";
 import { AuthProvider } from "@/src/components/AuthProvider";
 
 export const metadata: Metadata = {
-  title: "Trang chủ",
+  title: {
+    default: "Đăng nhập",
+    template: "%s",
+  },
   description: "Hệ thống giám sát và quản lý máy ấp trứng HatchMate",
   icons: {
     icon: "/logov2.png",

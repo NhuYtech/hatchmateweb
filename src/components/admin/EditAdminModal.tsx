@@ -20,9 +20,12 @@ export default function EditAdminModal({ onClose }: EditAdminModalProps) {
   const [showSuccess, setShowSuccess] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
+  const [isInitialized, setIsInitialized] = useState(false);
+
   useEffect(() => {
-    if (currentUser) {
+    if (currentUser && !isInitialized) {
       setDisplayName(currentUser.displayName || "");
+      setIsInitialized(true);
       
       const loadProfile = async () => {
         try {
@@ -34,6 +37,9 @@ export default function EditAdminModal({ onClose }: EditAdminModalProps) {
             setUserDocId(userDoc.id);
             const data = userDoc.data();
             setPhoneNumber(data.phone || data.phoneNumber || "");
+            if (data.fullName) {
+              setDisplayName(data.fullName);
+            }
           }
         } catch (err) {
           console.error("Failed to load user profile from Firestore:", err);
@@ -42,7 +48,7 @@ export default function EditAdminModal({ onClose }: EditAdminModalProps) {
       
       loadProfile();
     }
-  }, [currentUser]);
+  }, [currentUser, isInitialized]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

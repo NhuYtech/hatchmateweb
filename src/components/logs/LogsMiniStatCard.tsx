@@ -6,6 +6,7 @@ interface LogsMiniStatCardProps {
   value: number | string;
   icon: LucideIcon;
   accent: "sky" | "emerald" | "rose" | "amber" | "indigo";
+  className?: string;
 }
 
 export default function LogsMiniStatCard({
@@ -13,6 +14,7 @@ export default function LogsMiniStatCard({
   value,
   icon: Icon,
   accent,
+  className = "",
 }: LogsMiniStatCardProps) {
   const accentClasses = {
     sky: {
@@ -51,7 +53,7 @@ export default function LogsMiniStatCard({
 
   return (
     <div
-      className={`group flex items-center justify-between rounded-[24px] border bg-white p-5 shadow-sm shadow-sky-100/10 transition-all duration-300 ${activeStyles.border} ${activeStyles.hover} hover:-translate-y-1 hover:shadow-lg w-full min-w-0`}
+      className={`group flex items-center justify-between rounded-[24px] border p-5 shadow-sm shadow-sky-100/10 transition-all duration-300 ${activeStyles.border} ${activeStyles.hover} hover:-translate-y-1 hover:shadow-lg w-full min-w-0 ${className || "bg-white"}`}
     >
       <div className="space-y-1 min-w-0 flex-1 pr-2">
         <h3 className="text-xs font-bold uppercase tracking-[0.15em] text-slate-400">

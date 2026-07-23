@@ -42,22 +42,19 @@ export default function DeviceTable({ devices, onAddDevice, onRefresh, onDeleteD
   const getStatusBadge = (status: DeviceItem["status"]) => {
     if (status === "online") {
       return (
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 border border-emerald-200/40 px-2.5 py-1 text-xs font-medium text-emerald-700">
-          <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+        <span className="text-xs font-bold text-emerald-600">
           Online
         </span>
       );
     } else if (status === "warning") {
       return (
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 border border-amber-200/40 px-2.5 py-1 text-xs font-medium text-amber-700">
-          <span className="h-1.5 w-1.5 rounded-full bg-amber-500 animate-pulse" />
+        <span className="text-xs font-bold text-amber-600">
           Warning
         </span>
       );
     } else {
       return (
-        <span className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-500">
-          <span className="h-1.5 w-1.5 rounded-full bg-slate-400" />
+        <span className="text-xs font-bold text-slate-500">
           Offline
         </span>
       );
@@ -239,8 +236,8 @@ export default function DeviceTable({ devices, onAddDevice, onRefresh, onDeleteD
                   {device.temperature <= 0 ? (
                     <span className="text-slate-300 font-semibold">--</span>
                   ) : (
-                    <div className="flex items-center gap-1 font-bold text-sky-950">
-                      <Thermometer className={`h-4 w-4 ${device.temperature >= 38.0 ? "text-amber-500" : "text-sky-500"}`} />
+                    <div className="flex items-center gap-1 font-bold text-red-600">
+                      <Thermometer className="h-4 w-4 text-red-500" />
                       <span>{device.temperature.toFixed(1)}°C</span>
                     </div>
                   )}
@@ -251,7 +248,7 @@ export default function DeviceTable({ devices, onAddDevice, onRefresh, onDeleteD
                   {device.humidity <= 0 ? (
                     <span className="text-slate-300 font-semibold">--</span>
                   ) : (
-                    <div className="flex items-center gap-1 font-bold text-sky-950">
+                    <div className="flex items-center gap-1 font-bold text-blue-600">
                       <Droplet className="h-4 w-4 text-blue-500" />
                       <span>{device.humidity}%</span>
                     </div>

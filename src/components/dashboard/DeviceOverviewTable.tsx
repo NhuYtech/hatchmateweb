@@ -9,17 +9,11 @@ interface DeviceOverviewTableProps {
 export default function DeviceOverviewTable({ devices }: DeviceOverviewTableProps) {
   return (
     <section className="rounded-[24px] border border-slate-200/80 bg-white/95 p-4 sm:p-6 shadow-sm transition-all duration-300 hover:shadow-md min-w-0 overflow-hidden">
-      <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h3 className="text-xs font-bold uppercase tracking-[0.15em] text-slate-400">Tổng quan thiết bị</h3>
-          <p className="text-sm text-slate-500 mt-1">
-            Theo dõi trạng thái hoạt động, cảm biến và tiến độ ấp của từng thiết bị
-          </p>
-        </div>
-        <Link href="/devices" className="self-start sm:self-center inline-flex items-center gap-2 rounded-full bg-slate-50 hover:bg-slate-100 px-4 py-2 text-xs font-semibold text-slate-700 transition border border-slate-200/60">
-          Xem tất cả
-          <ArrowRight className="h-3.5 w-3.5" />
-        </Link>
+      <div className="mb-6">
+        <h3 className="text-xs font-bold uppercase tracking-[0.15em] text-slate-400">Tổng quan thiết bị</h3>
+        <p className="text-sm text-slate-500 mt-1">
+          Theo dõi trạng thái hoạt động, cảm biến và tiến độ ấp của từng thiết bị
+        </p>
       </div>
 
       <div className="overflow-x-auto -mx-4 px-4 sm:-mx-6 sm:px-6">
@@ -36,7 +30,7 @@ export default function DeviceOverviewTable({ devices }: DeviceOverviewTableProp
               <th className="pb-4 pt-2 font-semibold text-center">Còn lại</th>
               <th className="pb-4 pt-2 font-semibold text-center">Trạng thái Camera</th>
               <th className="pb-4 pt-2 font-semibold text-center">Cập nhật cuối</th>
-              <th className="pb-4 pt-2 font-semibold text-right">Hành động</th>
+              <th className="pb-4 pt-2 font-semibold text-center">Hành động</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100/80">
@@ -45,22 +39,19 @@ export default function DeviceOverviewTable({ devices }: DeviceOverviewTableProp
               let statusBadge = null;
               if (device.status === "online") {
                 statusBadge = (
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 border border-emerald-200/40 px-2.5 py-1 text-xs font-medium text-emerald-700">
-                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  <span className="text-xs font-bold text-emerald-600">
                     Online
                   </span>
                 );
               } else if (device.status === "warning") {
                 statusBadge = (
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 border border-amber-200/40 px-2.5 py-1 text-xs font-medium text-amber-700">
-                    <span className="h-1.5 w-1.5 rounded-full bg-amber-500 animate-pulse" />
+                  <span className="text-xs font-bold text-amber-600">
                     Warning
                   </span>
                 );
               } else {
                 statusBadge = (
-                  <span className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-500">
-                    <span className="h-1.5 w-1.5 rounded-full bg-slate-400" />
+                  <span className="text-xs font-bold text-slate-500">
                     Offline
                   </span>
                 );
@@ -90,11 +81,11 @@ export default function DeviceOverviewTable({ devices }: DeviceOverviewTableProp
                     {statusBadge}
                   </td>
                   {/* Temp */}
-                  <td className="py-4 align-middle text-center text-sm font-semibold text-slate-900">
+                  <td className="py-4 align-middle text-center text-sm font-semibold text-red-600">
                     {device.temperature > 0 ? `${device.temperature.toFixed(1)}°C` : "—"}
                   </td>
                   {/* Humidity */}
-                  <td className="py-4 align-middle text-center text-sm font-semibold text-slate-900">
+                  <td className="py-4 align-middle text-center text-sm font-semibold text-blue-600">
                     {device.humidity > 0 ? `${device.humidity}%` : "—"}
                   </td>
                   {/* Incubating Days */}
@@ -135,7 +126,7 @@ export default function DeviceOverviewTable({ devices }: DeviceOverviewTableProp
                     {device.lastSeen}
                   </td>
                   {/* Action */}
-                  <td className="py-4 align-middle text-right">
+                  <td className="py-4 align-middle text-center">
                     <Link href={`/settings?id=${device.id}`} className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 hover:bg-amber-100 border border-amber-200/60 px-3.5 py-1.5 text-xs font-semibold text-amber-800 transition active:scale-95 cursor-pointer">
                       Xem chi tiết
                       <ArrowRight className="h-3 w-3 group-hover:translate-x-0.5 transition-transform duration-200" />

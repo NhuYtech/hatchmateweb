@@ -107,8 +107,19 @@ html body .recharts-label {
   fill: #000000 !important;
 }
 
-/* Thiết lập màu trắng đục cho Sidebar + Header Topbar */
-html body aside,
+/* Thiết lập màu cho Sidebar (Warm pastel texture) */
+html body aside {
+  background-color: #fff8f0 !important;
+  background-image: 
+    radial-gradient(circle at 20% 80%, rgba(255, 182, 153, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255, 244, 214, 0.5) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(255, 182, 153, 0.1) 0%, transparent 50%) !important;
+  border-color: #e2e8f0 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Thiết lập màu trắng đục cho Header Topbar */
 html body header {
   background: #ffffff !important;
   background-color: #ffffff !important;
@@ -266,6 +277,95 @@ html.dark .absolute.right-0.mt-2\.5.w-56.rounded-2xl.bg-white .text-red-500 {
 }
 html.dark .absolute.right-0.mt-2\.5.w-56.rounded-2xl.bg-white .hover\:bg-amber-50\/70:hover {
   background-color: #1e293b !important;
+}
+
+/* Custom utility for Warm Pastel Card Background */
+.bg-warm-pastel {
+  position: relative;
+  background-color: #ffffff !important;
+  overflow: hidden;
+}
+
+.bg-warm-pastel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image: radial-gradient(circle at center, #FF7112, transparent) !important;
+  opacity: 0.3 !important;
+  mix-blend-mode: multiply !important;
+  pointer-events: none;
+}
+
+.bg-warm-pastel > * {
+  position: relative;
+  z-index: 1;
+}
+
+html.dark .bg-warm-pastel {
+  background-color: #0f172a !important;
+}
+
+html.dark .bg-warm-pastel::before {
+  display: none !important;
+}
+
+/* Custom utility for Teal Glow Right Background */
+.bg-teal-glow-right {
+  position: relative;
+  background-color: #ffffff !important;
+  overflow: hidden;
+}
+
+.bg-teal-glow-right::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: #ffffff;
+  background-image: radial-gradient(circle at top right, rgba(56, 193, 182, 0.5), transparent 70%) !important;
+  filter: blur(80px) !important;
+  background-repeat: no-repeat !important;
+  pointer-events: none;
+}
+
+.bg-teal-glow-right > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Custom utility for Orange Glow Left Background */
+.bg-orange-glow-left {
+  position: relative;
+  background-color: #ffffff !important;
+  overflow: hidden;
+}
+
+.bg-orange-glow-left::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: #ffffff;
+  background-image: radial-gradient(circle at top left, rgba(255, 140, 60, 0.5), transparent 70%) !important;
+  filter: blur(80px) !important;
+  background-repeat: no-repeat !important;
+  pointer-events: none;
+}
+
+.bg-orange-glow-left > * {
+  position: relative;
+  z-index: 1;
+}
+
+html.dark .bg-teal-glow-right,
+html.dark .bg-orange-glow-left {
+  background-color: #0f172a !important;
+}
+
+html.dark .bg-teal-glow-right::before,
+html.dark .bg-orange-glow-left::before {
+  display: none !important;
 }
 
 
