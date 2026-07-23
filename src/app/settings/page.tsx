@@ -5,21 +5,21 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { ref, onValue, set } from "firebase/database";
 import { rtdb } from "@/src/lib/firebase";
-import { 
-  ChevronRight, 
-  Settings, 
-  Cpu, 
-  Wifi, 
-  Thermometer, 
-  Droplets, 
-  RotateCw, 
-  Camera, 
-  Bell, 
-  Wrench, 
+import {
+  ChevronRight,
+  Settings,
+  Cpu,
+  Wifi,
+  Thermometer,
+  Droplets,
+  RotateCw,
+  Camera,
+  Bell,
+  Wrench,
   AlertTriangle,
-  RefreshCw, 
-  Check, 
-  X, 
+  RefreshCw,
+  Check,
+  X,
   Save,
   Info,
   Calendar,
@@ -66,14 +66,12 @@ const Toggle = ({ checked, onChange }: { checked: boolean; onChange: (val: boole
     <button
       type="button"
       onClick={() => onChange(!checked)}
-      className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-        checked ? "bg-amber-500" : "bg-slate-200"
-      }`}
+      className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${checked ? "bg-amber-500" : "bg-slate-200"
+        }`}
     >
       <span
-        className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-          checked ? "translate-x-5" : "translate-x-0"
-        }`}
+        className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${checked ? "translate-x-5" : "translate-x-0"
+          }`}
       />
     </button>
   );
@@ -111,9 +109,8 @@ const UnitInput = ({
           min={min}
           max={max}
           step={step}
-          className={`h-11 w-full rounded-xl border border-slate-200 bg-white pl-4 pr-12 text-sm font-medium text-slate-800 outline-none transition-all duration-200 focus:border-sky-400 focus:bg-white focus:ring-4 focus:ring-sky-50 ${
-            disabled ? "opacity-60 bg-slate-100 cursor-not-allowed" : ""
-          }`}
+          className={`h-11 w-full rounded-xl border border-slate-200 bg-white pl-4 pr-12 text-sm font-medium text-slate-800 outline-none transition-all duration-200 focus:border-sky-400 focus:bg-white focus:ring-4 focus:ring-sky-50 ${disabled ? "opacity-60 bg-slate-100 cursor-not-allowed" : ""
+            }`}
         />
         <span className="absolute right-4 text-xs font-bold text-slate-400 select-none">{unit}</span>
       </div>
@@ -198,7 +195,7 @@ function DeviceConfigurationContent() {
       if (snapshot.exists()) {
         const item = snapshot.val();
         setRawDbData(item);
-        
+
         if (item.name) setDeviceName(item.name);
         if (item.mode) setOpMode(item.mode);
         if (item.cycle?.startDate) {
@@ -213,7 +210,7 @@ function DeviceConfigurationContent() {
         if (item.telemetry?.phase !== undefined) {
           setCurrentPhase(`Giai đoạn ${item.telemetry.phase}`);
         }
-        
+
         // Settings
         if (item.settings) {
           const s = item.settings;
@@ -221,18 +218,18 @@ function DeviceConfigurationContent() {
           if (s.tempMax !== undefined) setTempMax(s.tempMax);
           if (s.tempAlert !== undefined) setTempAlert(s.tempAlert);
           if (s.tempAdjustment !== undefined) setTempOffset(s.tempAdjustment);
-          
+
           if (s.humidityMin !== undefined) setHumiMin(s.humidityMin);
           if (s.humidityMax !== undefined) setHumiMax(s.humidityMax);
           if (s.humidityAlert !== undefined) setHumiAlert(s.humidityAlert);
-          
+
           if (s.turnInterval !== undefined) setTurnInterval(s.turnInterval);
           if (s.servoAngle !== undefined) setServoAngle(s.servoAngle);
           if (s.turnDuration !== undefined) setTurnDuration(s.turnDuration);
         }
       }
     });
-    
+
     return () => unsubscribe();
   }, [machineId]);
 
@@ -408,597 +405,589 @@ function DeviceConfigurationContent() {
 
   return (
     <div className="grid gap-4">
-        
-        {/* Top Header Section */}
-        <div className="flex flex-col gap-6 py-3 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex flex-col gap-2.5">
-            {/* Large Title & Subtitle */}
-            <div className="flex items-center gap-4 mt-1 flex-wrap">
-              <h5 className="text-1xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
-                Cấu hình máy {machineId}
-              </h5>
-              
-              <div className="flex gap-2">
-                <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold ${
-                  liveStatus.toLowerCase() === "online" 
-                    ? "bg-emerald-50 border border-emerald-200 text-emerald-700" 
-                    : liveStatus.toLowerCase() === "warning"
-                    ? "bg-amber-50 border border-amber-200 text-amber-700"
-                    : "bg-slate-50 border border-slate-200 text-slate-500"
+
+      {/* Top Header Section */}
+      <div className="flex flex-col gap-6 py-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-2.5">
+          {/* Large Title & Subtitle */}
+          <div className="flex items-center gap-4 mt-1 flex-wrap">
+            <h5 className="text-1xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
+              Cấu hình máy {machineId}
+            </h5>
+
+            <div className="flex gap-2">
+              <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold ${liveStatus.toLowerCase() === "online"
+                ? "bg-emerald-50 border border-emerald-200 text-emerald-700"
+                : liveStatus.toLowerCase() === "warning"
+                  ? "bg-amber-50 border border-amber-200 text-amber-700"
+                  : "bg-slate-50 border border-slate-200 text-slate-500"
                 }`}>
-                  <span className={`h-2 w-2 rounded-full ${
-                    liveStatus.toLowerCase() === "online" 
-                      ? "bg-emerald-500 animate-pulse" 
-                      : liveStatus.toLowerCase() === "warning"
-                      ? "bg-amber-500 animate-pulse"
-                      : "bg-slate-400"
+                <span className={`h-2 w-2 rounded-full ${liveStatus.toLowerCase() === "online"
+                  ? "bg-emerald-500 animate-pulse"
+                  : liveStatus.toLowerCase() === "warning"
+                    ? "bg-amber-500 animate-pulse"
+                    : "bg-slate-400"
                   }`} />
-                  {liveStatus}
-                </span>
-              </div>
+                {liveStatus}
+              </span>
             </div>
-            
-            <p className="text-sm font-medium text-slate-500 max-w-xl">
-              Thiết lập các ngưỡng vận hành, thông số chu kỳ ấp, vòng quay đảo trứng và cấu hình cảnh báo cho trạm ấp này.
-            </p>
           </div>
 
-          {/* Action Buttons */}
-          <div className="flex items-center gap-3.5 shrink-0">
-            {/* <button
+          <p className="text-sm font-medium text-slate-500 max-w-xl">
+            Thiết lập các ngưỡng vận hành, thông số chu kỳ ấp, vòng quay đảo trứng và cấu hình cảnh báo cho trạm ấp này.
+          </p>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="flex items-center gap-3.5 shrink-0">
+          {/* <button
               onClick={() => window.history.back()}
               className="inline-flex h-11 items-center justify-center rounded-xl border border-slate-200 bg-white px-5 text-sm font-bold text-slate-600 shadow-sm transition hover:bg-slate-50 active:scale-[0.98] duration-150 cursor-pointer"
             >
               Hủy
             </button> */}
-            <button
-              onClick={handleSave}
-              disabled={popupAlert?.type === "loading"}
-              className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-sky-500 px-6 text-sm font-bold text-white shadow-md shadow-sky-100 hover:bg-sky-600 active:scale-[0.98] transition disabled:opacity-75 disabled:cursor-not-allowed duration-150 cursor-pointer"
-            >
-              {popupAlert?.type === "loading" && popupAlert?.title === "Đang lưu cấu hình" ? (
-                <>
-                  <RotateCw className="h-4 w-4 animate-spin" />
-                  <span>Đang lưu...</span>
-                </>
-              ) : (
-                <>
-                  <Save className="h-4 w-4" />
-                  <span>Lưu thay đổi</span>
-                </>
-              )}
-            </button>
-          </div>
+          <button
+            onClick={handleSave}
+            disabled={popupAlert?.type === "loading"}
+            className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-sky-500 px-6 text-sm font-bold text-white shadow-md shadow-sky-100 hover:bg-sky-600 active:scale-[0.98] transition disabled:opacity-75 disabled:cursor-not-allowed duration-150 cursor-pointer"
+          >
+            {popupAlert?.type === "loading" && popupAlert?.title === "Đang lưu cấu hình" ? (
+              <>
+                <RotateCw className="h-4 w-4 animate-spin" />
+                <span>Đang lưu...</span>
+              </>
+            ) : (
+              <>
+                <Save className="h-4 w-4" />
+                <span>Lưu thay đổi</span>
+              </>
+            )}
+          </button>
         </div>
+      </div>
 
-        {/* Main Content Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
-          
-          {/* Left Column - 8 configuration cards */}
-          <div className="lg:col-span-8 xl:col-span-8 flex flex-col gap-4">
-            
-            {/* Card 1 — General Information */}
-            <section className="bg-white rounded-[24px] border border-slate-200/70 p-6 md:p-8 shadow-[0_8px_30px_rgb(0,0,0,0.02)] transition-all duration-300 hover:shadow-[0_8px_35px_rgb(0,0,0,0.03)] flex flex-col gap-6">
-              <div className="flex items-center gap-3 pb-4 border-b border-slate-100">
-                <div className="p-2.5 rounded-xl bg-sky-50 text-sky-500">
-                  <Info className="h-5 w-5" />
-                </div>
-                <div>
-                  <h2 className="text-lg font-extrabold text-slate-800">Thông tin chung</h2>
-                  <p className="text-xs text-slate-400 font-semibold mt-0.5">Nhận diện cơ bản và chế độ vận hành</p>
-                </div>
+      {/* Main Content Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+
+        {/* Left Column - 8 configuration cards */}
+        <div className="lg:col-span-8 xl:col-span-8 flex flex-col gap-4">
+
+          {/* Card 1 — General Information */}
+          <section className="bg-white rounded-[24px] border border-slate-200/70 p-6 md:p-8 shadow-[0_8px_30px_rgb(0,0,0,0.02)] transition-all duration-300 hover:shadow-[0_8px_35px_rgb(0,0,0,0.03)] flex flex-col gap-6">
+            <div className="flex items-center gap-3 pb-4 border-b border-slate-100">
+              <div className="p-2.5 rounded-xl bg-sky-50 text-sky-500">
+                <Info className="h-5 w-5" />
+              </div>
+              <div>
+                <h2 className="text-lg font-extrabold text-slate-800">Thông tin chung</h2>
+
+              </div>
+            </div>
+
+            <div className="grid gap-6 sm:grid-cols-2">
+              <div className="flex flex-col gap-2">
+                <label className="text-xs font-semibold text-slate-500 tracking-wider uppercase">Tên thiết bị</label>
+                <input
+                  type="text"
+                  value={deviceName}
+                  disabled
+                  className="h-11 rounded-xl border border-slate-200 bg-slate-100 px-4 text-sm font-semibold text-slate-400 outline-none cursor-not-allowed select-none"
+                />
               </div>
 
-              <div className="grid gap-6 sm:grid-cols-2">
-                <div className="flex flex-col gap-2">
-                  <label className="text-xs font-semibold text-slate-500 tracking-wider uppercase">Tên thiết bị</label>
-                  <input
-                    type="text"
-                    value={deviceName}
-                    disabled
-                    className="h-11 rounded-xl border border-slate-200 bg-slate-100 px-4 text-sm font-semibold text-slate-400 outline-none cursor-not-allowed select-none"
-                  />
-                </div>
-
-                <div className="flex flex-col gap-2">
-                  <label className="text-xs font-semibold text-slate-500 tracking-wider uppercase">Mã thiết bị</label>
-                  <input
-                    type="text"
-                    value={machineId}
-                    disabled
-                    className="h-11 rounded-xl border border-slate-200 bg-slate-100 px-4 text-sm font-semibold text-slate-400 outline-none cursor-not-allowed select-none"
-                  />
-                </div>
-
-                <div className="flex flex-col gap-2 sm:col-span-2">
-                  <label className="text-xs font-semibold text-slate-500 tracking-wider uppercase">Chế độ hoạt động</label>
-                  <SegmentedControl
-                    options={[
-                      { label: "Tự động", value: "auto" },
-                      { label: "Thủ công", value: "manual" }
-                    ]}
-                    value={opMode}
-                    onChange={setOpMode}
-                  />
-                </div>
-              </div>
-            </section>
-
-            {/* Card 2 — Incubation Cycle */}
-            <section className="bg-white rounded-[24px] border border-slate-200/70 p-6 md:p-8 shadow-[0_8px_30px_rgb(0,0,0,0.02)] transition-all duration-300 hover:shadow-[0_8px_35px_rgb(0,0,0,0.03)] flex flex-col gap-6">
-              <div className="flex items-center gap-3 pb-4 border-b border-slate-100">
-                <div className="p-2.5 rounded-xl bg-sky-50 text-sky-500">
-                  <Calendar className="h-5 w-5" />
-                </div>
-                <div>
-                  <h2 className="text-lg font-extrabold text-slate-800">Chu kỳ ấp trứng</h2>
-                  <p className="text-xs text-slate-400 font-semibold mt-0.5">Theo dõi tiến độ và thời gian chu kỳ</p>
-                </div>
+              <div className="flex flex-col gap-2">
+                <label className="text-xs font-semibold text-slate-500 tracking-wider uppercase">Mã thiết bị</label>
+                <input
+                  type="text"
+                  value={machineId}
+                  disabled
+                  className="h-11 rounded-xl border border-slate-200 bg-slate-100 px-4 text-sm font-semibold text-slate-400 outline-none cursor-not-allowed select-none"
+                />
               </div>
 
-              <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
-                <div className="flex flex-col gap-2">
-                  <label className="text-xs font-semibold text-slate-500 tracking-wider uppercase">Ngày bắt đầu</label>
-                  <input
-                    type="date"
-                    value={startDate}
-                    onChange={(e) => setStartDate(e.target.value)}
-                    disabled={opMode === "auto"}
-                    className={`h-11 rounded-xl border border-slate-200 bg-white px-4 text-sm font-medium text-slate-800 outline-none transition duration-200 focus:border-sky-400 focus:bg-white focus:ring-4 focus:ring-sky-50 ${
-                      opMode === "auto" ? "opacity-60 bg-slate-100 cursor-not-allowed" : ""
+              <div className="flex flex-col gap-2 sm:col-span-2">
+                <label className="text-xs font-semibold text-slate-500 tracking-wider uppercase">Chế độ hoạt động</label>
+                <SegmentedControl
+                  options={[
+                    { label: "Tự động", value: "auto" },
+                    { label: "Thủ công", value: "manual" }
+                  ]}
+                  value={opMode}
+                  onChange={setOpMode}
+                />
+              </div>
+            </div>
+          </section>
+
+          {/* Card 2 — Incubation Cycle */}
+          <section className="bg-white rounded-[24px] border border-slate-200/70 p-6 md:p-8 shadow-[0_8px_30px_rgb(0,0,0,0.02)] transition-all duration-300 hover:shadow-[0_8px_35px_rgb(0,0,0,0.03)] flex flex-col gap-6">
+            <div className="flex items-center gap-3 pb-4 border-b border-slate-100">
+              <div className="p-2.5 rounded-xl bg-sky-50 text-sky-500">
+                <Calendar className="h-5 w-5" />
+              </div>
+              <div>
+                <h2 className="text-lg font-extrabold text-slate-800">Chu kỳ ấp trứng</h2>
+
+              </div>
+            </div>
+
+            <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
+              <div className="flex flex-col gap-2">
+                <label className="text-xs font-semibold text-slate-500 tracking-wider uppercase">Ngày bắt đầu</label>
+                <input
+                  type="date"
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                  disabled={opMode === "auto"}
+                  className={`h-11 rounded-xl border border-slate-200 bg-white px-4 text-sm font-medium text-slate-800 outline-none transition duration-200 focus:border-sky-400 focus:bg-white focus:ring-4 focus:ring-sky-50 ${opMode === "auto" ? "opacity-60 bg-slate-100 cursor-not-allowed" : ""
                     }`}
-                  />
-                </div>
-
-                <UnitInput
-                  label="Tổng số ngày ấp"
-                  value={totalDays}
-                  onChange={setTotalDays}
-                  unit="ngày"
-                  min={1}
-                  disabled={opMode === "auto"}
                 />
+              </div>
 
-                <UnitInput
-                  label="Ngày dừng đảo trứng"
-                  value={stopTurningDay}
-                  onChange={setStopTurningDay}
-                  unit="ngày"
-                  min={1}
-                  disabled={opMode === "auto"}
-                />
+              <UnitInput
+                label="Tổng số ngày ấp"
+                value={totalDays}
+                onChange={setTotalDays}
+                unit="ngày"
+                min={1}
+                disabled={opMode === "auto"}
+              />
 
-                <div className="flex flex-col gap-2">
-                  <label className="text-xs font-semibold text-slate-500 tracking-wider uppercase">Ngày thứ hiện tại</label>
-                  <div className="h-11 rounded-xl border border-slate-200 bg-slate-100 flex items-center px-4 text-sm font-semibold text-slate-500 select-none">
-                    Ngày {currentDay}
-                  </div>
+              <UnitInput
+                label="Ngày dừng đảo trứng"
+                value={stopTurningDay}
+                onChange={setStopTurningDay}
+                unit="ngày"
+                min={1}
+                disabled={opMode === "auto"}
+              />
+
+              <div className="flex flex-col gap-2">
+                <label className="text-xs font-semibold text-slate-500 tracking-wider uppercase">Ngày thứ hiện tại</label>
+                <div className="h-11 rounded-xl border border-slate-200 bg-slate-100 flex items-center px-4 text-sm font-semibold text-slate-500 select-none">
+                  Ngày {currentDay}
                 </div>
+              </div>
 
-                <div className="flex flex-col gap-2 sm:col-span-2">
-                  <label className="text-xs font-semibold text-slate-500 tracking-wider uppercase">Giai đoạn hiện tại</label>
-                  <div className="relative">
-                    <select
-                      value={currentPhase}
-                      onChange={(e) => {
-                        const newPhase = e.target.value;
-                        setCurrentPhase(newPhase);
-                        let newDay = currentDay;
-                        if (newPhase === "Giai đoạn 1") {
-                          newDay = 1;
-                        } else if (newPhase === "Giai đoạn 2") {
-                          newDay = 8;
-                        } else if (newPhase === "Giai đoạn 3") {
-                          newDay = 18;
-                        }
-                        setCurrentDay(newDay);
-                        
-                        // Automatically adjust startDate to align with the new day
-                        const today = new Date();
-                        today.setDate(today.getDate() - (newDay - 1));
-                        const yyyy = today.getFullYear();
-                        const mm = String(today.getMonth() + 1).padStart(2, '0');
-                        const dd = String(today.getDate()).padStart(2, '0');
-                        setStartDate(`${yyyy}-${mm}-${dd}`);
-                      }}
-                      disabled={opMode === "auto"}
-                      className={`h-11 w-full rounded-xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-700 outline-none transition duration-200 focus:border-sky-400 focus:bg-white focus:ring-4 focus:ring-sky-50 ${
-                        opMode === "auto" ? "opacity-60 bg-slate-100 cursor-not-allowed" : ""
+              <div className="flex flex-col gap-2 sm:col-span-2">
+                <label className="text-xs font-semibold text-slate-500 tracking-wider uppercase">Giai đoạn hiện tại</label>
+                <div className="relative">
+                  <select
+                    value={currentPhase}
+                    onChange={(e) => {
+                      const newPhase = e.target.value;
+                      setCurrentPhase(newPhase);
+                      let newDay = currentDay;
+                      if (newPhase === "Giai đoạn 1") {
+                        newDay = 1;
+                      } else if (newPhase === "Giai đoạn 2") {
+                        newDay = 8;
+                      } else if (newPhase === "Giai đoạn 3") {
+                        newDay = 18;
+                      }
+                      setCurrentDay(newDay);
+
+                      // Automatically adjust startDate to align with the new day
+                      const today = new Date();
+                      today.setDate(today.getDate() - (newDay - 1));
+                      const yyyy = today.getFullYear();
+                      const mm = String(today.getMonth() + 1).padStart(2, '0');
+                      const dd = String(today.getDate()).padStart(2, '0');
+                      setStartDate(`${yyyy}-${mm}-${dd}`);
+                    }}
+                    disabled={opMode === "auto"}
+                    className={`h-11 w-full rounded-xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-700 outline-none transition duration-200 focus:border-sky-400 focus:bg-white focus:ring-4 focus:ring-sky-50 ${opMode === "auto" ? "opacity-60 bg-slate-100 cursor-not-allowed" : ""
                       }`}
-                    >
-                      <option value="Giai đoạn 1">Giai đoạn 1 (Ấp trứng giai đoạn đầu - Ngày 1–7)</option>
-                      <option value="Giai đoạn 2">Giai đoạn 2 (Ấp trứng giai đoạn giữa - Ngày 8–17)</option>
-                      <option value="Giai đoạn 3">Giai đoạn 3 (Ấp trứng giai đoạn cuối - Ngày 18–21)</option>
-                    </select>
-                  </div>
+                  >
+                    <option value="Giai đoạn 1">Giai đoạn 1 (Ấp trứng giai đoạn đầu - Ngày 1–7)</option>
+                    <option value="Giai đoạn 2">Giai đoạn 2 (Ấp trứng giai đoạn giữa - Ngày 8–17)</option>
+                    <option value="Giai đoạn 3">Giai đoạn 3 (Ấp trứng giai đoạn cuối - Ngày 18–21)</option>
+                  </select>
                 </div>
               </div>
-            </section>
+            </div>
+          </section>
 
-            {/* Card 3 — Temperature Settings */}
-            <section className="bg-white rounded-[24px] border border-slate-200/70 p-6 md:p-8 shadow-[0_8px_30px_rgb(0,0,0,0.02)] transition-all duration-300 hover:shadow-[0_8px_35px_rgb(0,0,0,0.03)] flex flex-col gap-6">
-              <div className="flex items-center gap-3 pb-4 border-b border-slate-100">
+          {/* Card 3 — Temperature Settings */}
+          <section className="bg-white rounded-[24px] border border-slate-200/70 p-6 md:p-8 shadow-[0_8px_30px_rgb(0,0,0,0.02)] transition-all duration-300 hover:shadow-[0_8px_35px_rgb(0,0,0,0.03)] flex flex-col gap-6">
+            <div className="flex items-center gap-3 pb-4 border-b border-slate-100">
+              <div className="p-2.5 rounded-xl bg-sky-50 text-sky-500">
+                <Thermometer className="h-5 w-5" />
+              </div>
+              <div>
+                <h2 className="text-lg font-extrabold text-slate-800">Cài đặt nhiệt độ</h2>
+
+              </div>
+            </div>
+
+            <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
+              <UnitInput
+                label="Nhiệt độ tối thiểu"
+                value={tempMin}
+                onChange={setTempMin}
+                unit="°C"
+                step={0.1}
+                disabled={opMode === "auto"}
+              />
+
+              <UnitInput
+                label="Nhiệt độ tối đa"
+                value={tempMax}
+                onChange={setTempMax}
+                unit="°C"
+                step={0.1}
+                disabled={opMode === "auto"}
+              />
+
+              <UnitInput
+                label="Ngưỡng cảnh báo"
+                value={tempAlert}
+                onChange={setTempAlert}
+                unit="°C"
+                step={0.1}
+                disabled={opMode === "auto"}
+              />
+
+              <UnitInput
+                label="Độ lệch hiệu chuẩn"
+                value={tempOffset}
+                onChange={setTempOffset}
+                unit="°C"
+                step={0.1}
+                disabled={opMode === "auto"}
+              />
+
+              <div className="sm:col-span-2">
+                <UnitInput
+                  label="Sai số (Hysteresis)"
+                  value={tempHysteresis}
+                  onChange={setTempHysteresis}
+                  unit="°C"
+                  step={0.05}
+                  disabled={opMode === "auto"}
+                />
+              </div>
+            </div>
+          </section>
+
+          {/* Card 4 — Humidity Settings */}
+          <section className="bg-white rounded-[24px] border border-slate-200/70 p-6 md:p-8 shadow-[0_8px_30px_rgb(0,0,0,0.02)] transition-all duration-300 hover:shadow-[0_8px_35px_rgb(0,0,0,0.03)] flex flex-col gap-6">
+            <div className="flex items-center gap-3 pb-4 border-b border-slate-100">
+              <div className="p-2.5 rounded-xl bg-sky-50 text-sky-500">
+                <Droplets className="h-5 w-5" />
+              </div>
+              <div>
+                <h2 className="text-lg font-extrabold text-slate-800">Cài đặt độ ẩm</h2>
+
+              </div>
+            </div>
+
+            <div className="grid gap-6 sm:grid-cols-2">
+              <UnitInput
+                label="Độ ẩm tối thiểu"
+                value={humiMin}
+                onChange={setHumiMin}
+                unit="%"
+                disabled={opMode === "auto"}
+              />
+
+              <UnitInput
+                label="Độ ẩm tối đa"
+                value={humiMax}
+                onChange={setHumiMax}
+                unit="%"
+                disabled={opMode === "auto"}
+              />
+
+              <UnitInput
+                label="Ngưỡng cảnh báo"
+                value={humiAlert}
+                onChange={setHumiAlert}
+                unit="%"
+                disabled={opMode === "auto"}
+              />
+
+              <UnitInput
+                label="Độ lệch hiệu chuẩn"
+                value={humiOffset}
+                onChange={setHumiOffset}
+                unit="%"
+                disabled={opMode === "auto"}
+              />
+            </div>
+          </section>
+
+          {/* Card 5 — Egg Turning */}
+          <section className="bg-white rounded-[24px] border border-slate-200/70 p-6 md:p-8 shadow-[0_8px_30px_rgb(0,0,0,0.02)] transition-all duration-300 hover:shadow-[0_8px_35px_rgb(0,0,0,0.03)] flex flex-col gap-6">
+            <div className="flex items-center justify-between pb-4 border-b border-slate-100">
+              <div className="flex items-center gap-3">
                 <div className="p-2.5 rounded-xl bg-sky-50 text-sky-500">
-                  <Thermometer className="h-5 w-5" />
+                  <RefreshCw className="h-5 w-5" />
                 </div>
                 <div>
-                  <h2 className="text-lg font-extrabold text-slate-800">Cài đặt nhiệt độ</h2>
-                  <p className="text-xs text-slate-400 font-semibold mt-0.5">Kiểm soát các ngưỡng nhiệt độ của lò ấp</p>
+                  <h2 className="text-lg font-extrabold text-slate-800">Đảo trứng tự động</h2>
+
                 </div>
               </div>
+            </div>
 
-              <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
+            <div className="grid gap-6 sm:grid-cols-2">
+              <div className={`${opMode === "auto" && "opacity-50 pointer-events-none"}`}>
                 <UnitInput
-                  label="Nhiệt độ tối thiểu"
-                  value={tempMin}
-                  onChange={setTempMin}
-                  unit="°C"
-                  step={0.1}
-                  disabled={opMode === "auto"}
-                />
-                
-                <UnitInput
-                  label="Nhiệt độ tối đa"
-                  value={tempMax}
-                  onChange={setTempMax}
-                  unit="°C"
-                  step={0.1}
-                  disabled={opMode === "auto"}
-                />
-
-                <UnitInput
-                  label="Ngưỡng cảnh báo"
-                  value={tempAlert}
-                  onChange={setTempAlert}
-                  unit="°C"
-                  step={0.1}
-                  disabled={opMode === "auto"}
-                />
-
-                <UnitInput
-                  label="Độ lệch hiệu chuẩn"
-                  value={tempOffset}
-                  onChange={setTempOffset}
-                  unit="°C"
-                  step={0.1}
-                  disabled={opMode === "auto"}
-                />
-
-                <div className="sm:col-span-2">
-                  <UnitInput
-                    label="Sai số (Hysteresis)"
-                    value={tempHysteresis}
-                    onChange={setTempHysteresis}
-                    unit="°C"
-                    step={0.05}
-                    disabled={opMode === "auto"}
-                  />
-                </div>
-              </div>
-            </section>
-
-            {/* Card 4 — Humidity Settings */}
-            <section className="bg-white rounded-[24px] border border-slate-200/70 p-6 md:p-8 shadow-[0_8px_30px_rgb(0,0,0,0.02)] transition-all duration-300 hover:shadow-[0_8px_35px_rgb(0,0,0,0.03)] flex flex-col gap-6">
-              <div className="flex items-center gap-3 pb-4 border-b border-slate-100">
-                <div className="p-2.5 rounded-xl bg-sky-50 text-sky-500">
-                  <Droplets className="h-5 w-5" />
-                </div>
-                <div>
-                  <h2 className="text-lg font-extrabold text-slate-800">Cài đặt độ ẩm</h2>
-                  <p className="text-xs text-slate-400 font-semibold mt-0.5">Kiểm soát dải độ ẩm hoạt động</p>
-                </div>
-              </div>
-
-              <div className="grid gap-6 sm:grid-cols-2">
-                <UnitInput
-                  label="Độ ẩm tối thiểu"
-                  value={humiMin}
-                  onChange={setHumiMin}
-                  unit="%"
-                  disabled={opMode === "auto"}
-                />
-                
-                <UnitInput
-                  label="Độ ẩm tối đa"
-                  value={humiMax}
-                  onChange={setHumiMax}
-                  unit="%"
-                  disabled={opMode === "auto"}
-                />
-
-                <UnitInput
-                  label="Ngưỡng cảnh báo"
-                  value={humiAlert}
-                  onChange={setHumiAlert}
-                  unit="%"
-                  disabled={opMode === "auto"}
-                />
-
-                <UnitInput
-                  label="Độ lệch hiệu chuẩn"
-                  value={humiOffset}
-                  onChange={setHumiOffset}
-                  unit="%"
-                  disabled={opMode === "auto"}
-                />
-              </div>
-            </section>
-
-            {/* Card 5 — Egg Turning */}
-            <section className="bg-white rounded-[24px] border border-slate-200/70 p-6 md:p-8 shadow-[0_8px_30px_rgb(0,0,0,0.02)] transition-all duration-300 hover:shadow-[0_8px_35px_rgb(0,0,0,0.03)] flex flex-col gap-6">
-              <div className="flex items-center justify-between pb-4 border-b border-slate-100">
-                <div className="flex items-center gap-3">
-                  <div className="p-2.5 rounded-xl bg-sky-50 text-sky-500">
-                    <RefreshCw className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <h2 className="text-lg font-extrabold text-slate-800">Đảo trứng tự động</h2>
-                    <p className="text-xs text-slate-400 font-semibold mt-0.5">Thiết lập chu kỳ và thông số góc xoay đảo trứng</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="grid gap-6 sm:grid-cols-2">
-                <div className={`${opMode === "auto" && "opacity-50 pointer-events-none"}`}>
-                  <UnitInput
-                    label="Chu kỳ đảo trứng"
-                    value={turnInterval}
-                    onChange={setTurnInterval}
-                    unit="giờ"
-                    disabled={opMode === "auto"}
-                  />
-                </div>
-
-                <div className={`${opMode === "auto" && "opacity-50 pointer-events-none"}`}>
-                  <UnitInput
-                    label="Thời gian mỗi lần đảo"
-                    value={turnDuration}
-                    onChange={setTurnDuration}
-                    unit="giây"
-                    disabled={opMode === "auto"}
-                  />
-                </div>
-              </div>
-            </section>
-
-            {/* Card 6 — Camera & AI */}
-            <section className="bg-white rounded-[24px] border border-slate-200/70 p-6 md:p-8 shadow-[0_8px_30px_rgb(0,0,0,0.02)] transition-all duration-300 hover:shadow-[0_8px_35px_rgb(0,0,0,0.03)] flex flex-col gap-6">
-              <div className="flex items-center justify-between pb-4 border-b border-slate-100">
-                <div className="flex items-center gap-3">
-                  <div className="p-2.5 rounded-xl bg-sky-50 text-sky-500">
-                    <Camera className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <h2 className="text-lg font-extrabold text-slate-800">Camera & AI</h2>
-                    <p className="text-xs text-slate-400 font-semibold mt-0.5">Kiểm soát chụp ảnh & Trí tuệ nhân tạo (AI) phát hiện phôi</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
-                <UnitInput
-                  label="Tần suất chụp"
-                  value={captureInterval}
-                  onChange={setCaptureInterval}
+                  label="Chu kỳ đảo trứng"
+                  value={turnInterval}
+                  onChange={setTurnInterval}
                   unit="giờ"
                   disabled={opMode === "auto"}
                 />
-
-                <div className="flex flex-col gap-2">
-                  <label className="text-xs font-semibold text-slate-500 tracking-wider uppercase">Độ phân giải</label>
-                  <select
-                    value={resolution}
-                    onChange={(e) => setResolution(e.target.value)}
-                    className="h-11 rounded-xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-700 outline-none transition duration-200 focus:border-sky-400 focus:bg-white"
-                  >
-                    <option value="720p">720p (HD)</option>
-                    <option value="1080p">1080p (Full HD)</option>
-                    <option value="4K">4K (Ultra HD)</option>
-                  </select>
-                </div>
-
-                <div className="flex flex-col justify-end">
-                  <button
-                    type="button"
-                    onClick={() => triggerMaintenance("capture")}
-                    disabled={popupAlert?.type === "loading"}
-                    className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-sky-50 text-sky-700 hover:bg-sky-100 border border-sky-100/80 px-5 text-sm font-bold shadow-sm transition active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer duration-150"
-                  >
-                    <Camera className="h-4 w-4 text-sky-500" />
-                    Chụp 1 ảnh
-                  </button>
-                </div>
-              </div>
-            </section>
-
-
-            {/* Card 8 — Maintenance */}
-            <section className="bg-white rounded-[24px] border border-slate-200/70 p-6 md:p-8 shadow-[0_8px_30px_rgb(0,0,0,0.02)] transition-all duration-300 hover:shadow-[0_8px_35px_rgb(0,0,0,0.03)] flex flex-col gap-6">
-              <div className="flex items-center gap-3 pb-4 border-b border-slate-100">
-                <div className="p-2.5 rounded-xl bg-sky-50 text-sky-500">
-                  <Wrench className="h-5 w-5" />
-                </div>
-                <div>
-                  <h2 className="text-lg font-extrabold text-slate-800">Bảo trì & Đặt lại thiết bị</h2>
-                  <p className="text-xs text-slate-400 font-semibold mt-0.5">Kiểm soát các lệnh kỹ thuật và hiệu chuẩn linh kiện</p>
-                </div>
               </div>
 
-              <div className="flex flex-wrap gap-4 items-center justify-between sm:justify-start">
-                <button
-                  type="button"
-                  onClick={() => triggerMaintenance("restart")}
-                  disabled={popupAlert?.type === "loading"}
-                  className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-5 text-sm font-bold text-slate-700 shadow-sm transition hover:bg-slate-50 hover:border-slate-300 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-                >
-                  <RefreshCcw className="h-4 w-4" />
-                  Khởi động lại máy
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => triggerMaintenance("synctime")}
-                  disabled={popupAlert?.type === "loading"}
-                  className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-5 text-sm font-bold text-slate-700 shadow-sm transition hover:bg-slate-50 hover:border-slate-300 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-                >
-                  <Clock className="h-4 w-4" />
-                  Đồng bộ thời gian
-                </button>
-
-                <div className="sm:ml-auto">
-                  <button
-                    type="button"
-                    onClick={() => triggerMaintenance("factoryreset")}
-                    disabled={popupAlert?.type === "loading"}
-                    className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border-2 border-rose-200 hover:border-rose-300 bg-white hover:bg-rose-50 px-5 text-sm font-bold text-rose-600 shadow-sm transition active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-                  >
-                    <AlertCircle className="h-4 w-4" />
-                    Khôi phục cài đặt gốc
-                  </button>
-                </div>
-              </div>
-            </section>
-
-          </div>
-
-          {/* Right Column - Sticky summary card */}
-          <div className="lg:col-span-4 xl:col-span-4 lg:sticky lg:top-8 flex flex-col gap-4 font-sans">
-            <div className="rounded-[24px] border border-sky-100/80 bg-warm-pastel p-6 shadow-sm shadow-sky-100/10">
-              {/* Header section matching ReportExportCard */}
-              <div className="flex items-center justify-between mb-2">
-                <h3 className="text-xs font-bold uppercase tracking-[0.15em] text-slate-400">
-                  TỔNG QUAN TRỰC TIẾP
-                </h3>
-                <span className="text-[11px] font-bold text-slate-600 bg-slate-100/80 px-2.5 py-0.5 rounded-md border border-slate-200/60 font-mono">
-                  {machineId}
-                </span>
-              </div>
-              
-              <h4 className="text-base font-bold text-sky-950 mb-1">Trạng thái vận hành</h4>
-              <p className="text-xs text-slate-500 mb-6">Theo dõi tức thời các thông số môi trường và cảm biến của thiết bị.</p>
-
-              {/* List of Status Items formatted like ReportExportCard option items */}
-              <div className="space-y-3 mb-6">
-                {/* Device Status */}
-                <div className="flex items-center justify-between rounded-[16px] border border-slate-100 bg-slate-50/50 p-3.5">
-                  <span className="text-xs font-semibold text-slate-600">Trạng thái máy</span>
-                  <span className={`inline-flex items-center gap-1.5 font-bold text-xs px-2.5 py-1 rounded-full border ${
-                    liveStatus.toLowerCase() === "online" 
-                      ? "bg-emerald-50 text-emerald-700 border-emerald-200/80" 
-                      : liveStatus.toLowerCase() === "warning"
-                      ? "bg-amber-50 text-amber-700 border-amber-200/80"
-                      : "bg-rose-50 text-rose-700 border-rose-200/80"
-                  }`}>
-                    <span className={`h-1.5 w-1.5 rounded-full ${
-                      liveStatus.toLowerCase() === "online" 
-                        ? "bg-emerald-500 animate-pulse" 
-                        : liveStatus.toLowerCase() === "warning"
-                        ? "bg-amber-500 animate-pulse"
-                        : "bg-rose-500"
-                    }`} />
-                    {liveStatus}
-                  </span>
-                </div>
-
-                {/* Firmware */}
-                <div className="flex items-center justify-between rounded-[16px] border border-slate-100 bg-slate-50/50 p-3.5">
-                  <span className="text-xs font-semibold text-slate-600">Phiên bản Firmware</span>
-                  <span className="font-mono text-xs font-semibold text-slate-700 bg-white px-2.5 py-0.5 rounded-md border border-slate-200/60">
-                    {liveFirmware}
-                  </span>
-                </div>
-
-                {/* Wi-Fi Signal */}
-                <div className="flex items-center justify-between rounded-[16px] border border-slate-100 bg-slate-50/50 p-3.5">
-                  <span className="text-xs font-semibold text-slate-600">Tín hiệu Wi-Fi</span>
-                  <span className="inline-flex items-center gap-1.5 font-bold text-xs text-sky-600">
-                    <Wifi className="h-3.5 w-3.5 text-sky-500 shrink-0" />
-                    <span>{liveWifi >= 4 ? "Cực tốt" : liveWifi === 3 ? "Tốt" : liveWifi === 2 ? "Trung bình" : "Yếu"}</span>
-                  </span>
-                </div>
-
-                {/* Last Sync */}
-                <div className="flex items-center justify-between rounded-[16px] border border-slate-100 bg-slate-50/50 p-3.5">
-                  <span className="text-xs font-semibold text-slate-600">Đồng bộ cuối</span>
-                  <span className="inline-flex items-center gap-1.5 font-semibold text-xs text-slate-600">
-                    <Clock className="h-3.5 w-3.5 text-slate-400 shrink-0" />
-                    <span>{liveLastSeen}</span>
-                  </span>
-                </div>
-
-                {/* Temperature */}
-                <div className="flex items-center justify-between rounded-[16px] border border-slate-100 bg-slate-50/50 p-3.5">
-                  <span className="text-xs font-semibold text-slate-600">Nhiệt độ hiện tại</span>
-                  <span className="inline-flex items-center gap-1 text-sm font-extrabold text-rose-600">
-                    <Thermometer className="h-4 w-4 text-rose-500 shrink-0" />
-                    <span>{liveTemp}°C</span>
-                  </span>
-                </div>
-
-                {/* Humidity */}
-                <div className="flex items-center justify-between rounded-[16px] border border-slate-100 bg-slate-50/50 p-3.5">
-                  <span className="text-xs font-semibold text-slate-600">Độ ẩm hiện tại</span>
-                  <span className="inline-flex items-center gap-1 text-sm font-extrabold text-sky-600">
-                    <Droplets className="h-4 w-4 text-sky-500 shrink-0" />
-                    <span>{liveHumi}%</span>
-                  </span>
-                </div>
-              </div>
-
-              {/* Quick Summary Note matching ReportExportCard tip */}
-              <div className="rounded-[16px] bg-sky-50/50 border border-sky-100/80 p-3.5 flex gap-2.5 items-start text-xs text-slate-600 leading-relaxed">
-                <Info className="h-4 w-4 text-sky-500 shrink-0 mt-0.5" />
-                <p className="m-0">
-                  Giao diện này dùng để cấu hình trực tiếp trạm ấp <strong className="font-bold text-sky-950">{machineId}</strong>. Các thay đổi sẽ được đồng bộ xuống thiết bị ngay khi bấm <strong className="font-bold text-sky-950">Lưu thay đổi</strong>.
-                </p>
+              <div className={`${opMode === "auto" && "opacity-50 pointer-events-none"}`}>
+                <UnitInput
+                  label="Thời gian mỗi lần đảo"
+                  value={turnDuration}
+                  onChange={setTurnDuration}
+                  unit="giây"
+                  disabled={opMode === "auto"}
+                />
               </div>
             </div>
-          </div>
+          </section>
+
+          {/* Card 6 — Camera & AI */}
+          <section className="bg-white rounded-[24px] border border-slate-200/70 p-6 md:p-8 shadow-[0_8px_30px_rgb(0,0,0,0.02)] transition-all duration-300 hover:shadow-[0_8px_35px_rgb(0,0,0,0.03)] flex flex-col gap-6">
+            <div className="flex items-center justify-between pb-4 border-b border-slate-100">
+              <div className="flex items-center gap-3">
+                <div className="p-2.5 rounded-xl bg-sky-50 text-sky-500">
+                  <Camera className="h-5 w-5" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-extrabold text-slate-800">Camera</h2>
+
+                </div>
+              </div>
+            </div>
+
+            <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
+              <UnitInput
+                label="Tần suất chụp"
+                value={captureInterval}
+                onChange={setCaptureInterval}
+                unit="giờ"
+                disabled={opMode === "auto"}
+              />
+
+              <div className="flex flex-col gap-2">
+                <label className="text-xs font-semibold text-slate-500 tracking-wider uppercase">Độ phân giải</label>
+                <select
+                  value={resolution}
+                  onChange={(e) => setResolution(e.target.value)}
+                  className="h-11 rounded-xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-700 outline-none transition duration-200 focus:border-sky-400 focus:bg-white"
+                >
+                  <option value="720p">720p (HD)</option>
+                  <option value="1080p">1080p (Full HD)</option>
+                  <option value="4K">4K (Ultra HD)</option>
+                </select>
+              </div>
+
+              <div className="flex flex-col justify-end">
+                <button
+                  type="button"
+                  onClick={() => triggerMaintenance("capture")}
+                  disabled={popupAlert?.type === "loading"}
+                  className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-sky-50 text-sky-700 hover:bg-sky-100 border border-sky-100/80 px-5 text-sm font-bold shadow-sm transition active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer duration-150"
+                >
+                  <Camera className="h-4 w-4 text-sky-500" />
+                  Chụp 1 ảnh
+                </button>
+              </div>
+            </div>
+          </section>
+
+
+          {/* Card 8 — Maintenance */}
+          <section className="bg-white rounded-[24px] border border-slate-200/70 p-6 md:p-8 shadow-[0_8px_30px_rgb(0,0,0,0.02)] transition-all duration-300 hover:shadow-[0_8px_35px_rgb(0,0,0,0.03)] flex flex-col gap-6">
+            <div className="flex items-center gap-3 pb-4 border-b border-slate-100">
+              <div className="p-2.5 rounded-xl bg-sky-50 text-sky-500">
+                <Wrench className="h-5 w-5" />
+              </div>
+              <div>
+                <h2 className="text-lg font-extrabold text-slate-800">Bảo trì & Đặt lại thiết bị</h2>
+
+              </div>
+            </div>
+
+            <div className="flex flex-wrap gap-4 items-center justify-between sm:justify-start">
+              <button
+                type="button"
+                onClick={() => triggerMaintenance("restart")}
+                disabled={popupAlert?.type === "loading"}
+                className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-5 text-sm font-bold text-slate-700 shadow-sm transition hover:bg-slate-50 hover:border-slate-300 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+              >
+                <RefreshCcw className="h-4 w-4" />
+                Khởi động lại máy
+              </button>
+
+              <button
+                type="button"
+                onClick={() => triggerMaintenance("synctime")}
+                disabled={popupAlert?.type === "loading"}
+                className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-5 text-sm font-bold text-slate-700 shadow-sm transition hover:bg-slate-50 hover:border-slate-300 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+              >
+                <Clock className="h-4 w-4" />
+                Đồng bộ thời gian
+              </button>
+
+              <div className="sm:ml-auto">
+                <button
+                  type="button"
+                  onClick={() => triggerMaintenance("factoryreset")}
+                  disabled={popupAlert?.type === "loading"}
+                  className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border-2 border-rose-200 hover:border-rose-300 bg-white hover:bg-rose-50 px-5 text-sm font-bold text-rose-600 shadow-sm transition active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                >
+                  <AlertCircle className="h-4 w-4" />
+                  Khôi phục cài đặt gốc
+                </button>
+              </div>
+            </div>
+          </section>
 
         </div>
 
-        {/* Floating Popup Alerts */}
-        {popupAlert && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-[2px] animate-in fade-in duration-200">
-            <div className={`flex flex-col items-center text-center gap-4 rounded-2xl border px-6 py-6 shadow-2xl bg-pure-white max-w-sm w-full animate-in zoom-in-95 duration-200 ${
-              popupAlert.type === "success" 
-                ? "border-emerald-100" 
-                : popupAlert.type === "error"
-                ? "border-rose-100"
-                : "border-amber-100"
-            }`}>
-              <div className={`p-3 rounded-full ${
-                popupAlert.type === "success" 
-                  ? "bg-emerald-50 text-emerald-600" 
-                  : popupAlert.type === "error"
-                  ? "bg-rose-50 text-rose-600"
-                  : "bg-amber-50 text-amber-600"
-              }`}>
-                {popupAlert.type === "success" ? (
-                  <Check className="h-8 w-8" />
-                ) : popupAlert.type === "error" ? (
-                  <AlertCircle className="h-8 w-8" />
-                ) : (
-                  <RotateCw className="h-8 w-8 animate-spin" />
-                )}
+        {/* Right Column - Sticky summary card */}
+        <div className="lg:col-span-4 xl:col-span-4 lg:sticky lg:top-8 flex flex-col gap-4 font-sans">
+          <div className="rounded-[24px] border border-sky-100/80 bg-warm-pastel p-6 shadow-sm shadow-sky-100/10">
+            {/* Header section matching ReportExportCard */}
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-xs font-bold uppercase tracking-[0.15em] text-slate-400">
+                TỔNG QUAN TRỰC TIẾP
+              </h3>
+              <span className="text-[11px] font-bold text-slate-600 bg-slate-100/80 px-2.5 py-0.5 rounded-md border border-slate-200/60 font-mono">
+                {machineId}
+              </span>
+            </div>
+
+            <h4 className="text-base font-bold text-sky-950 mb-1">Trạng thái vận hành</h4>
+            <p className="text-xs text-slate-500 mb-6">Theo dõi tức thời các thông số môi trường và cảm biến của thiết bị.</p>
+
+            {/* List of Status Items formatted like ReportExportCard option items */}
+            <div className="space-y-3 mb-6">
+              {/* Device Status */}
+              <div className="flex items-center justify-between rounded-[16px] border border-slate-100 bg-slate-50/50 p-3.5">
+                <span className="text-xs font-semibold text-slate-600">Trạng thái máy</span>
+                <span className={`inline-flex items-center gap-1.5 font-bold text-xs px-2.5 py-1 rounded-full border ${liveStatus.toLowerCase() === "online"
+                  ? "bg-emerald-50 text-emerald-700 border-emerald-200/80"
+                  : liveStatus.toLowerCase() === "warning"
+                    ? "bg-amber-50 text-amber-700 border-amber-200/80"
+                    : "bg-rose-50 text-rose-700 border-rose-200/80"
+                  }`}>
+                  <span className={`h-1.5 w-1.5 rounded-full ${liveStatus.toLowerCase() === "online"
+                    ? "bg-emerald-500 animate-pulse"
+                    : liveStatus.toLowerCase() === "warning"
+                      ? "bg-amber-500 animate-pulse"
+                      : "bg-rose-500"
+                    }`} />
+                  {liveStatus}
+                </span>
               </div>
-              <div className="flex flex-col gap-1">
-                <h3 className="text-base font-extrabold text-slate-800">{popupAlert.title}</h3>
-                <p className="text-xs font-semibold text-slate-500 leading-relaxed">{popupAlert.message}</p>
+
+              {/* Firmware */}
+              <div className="flex items-center justify-between rounded-[16px] border border-slate-100 bg-slate-50/50 p-3.5">
+                <span className="text-xs font-semibold text-slate-600">Phiên bản Firmware</span>
+                <span className="font-mono text-xs font-semibold text-slate-700 bg-white px-2.5 py-0.5 rounded-md border border-slate-200/60">
+                  {liveFirmware}
+                </span>
               </div>
-              {popupAlert.type !== "loading" && (
-                <button 
-                  onClick={() => setPopupAlert(null)}
-                  className="mt-2 w-full h-9 rounded-xl text-xs font-bold transition active:scale-[0.98] cursor-pointer bg-button-gray"
-                >
-                  Đóng
-                </button>
-              )}
+
+              {/* Wi-Fi Signal */}
+              <div className="flex items-center justify-between rounded-[16px] border border-slate-100 bg-slate-50/50 p-3.5">
+                <span className="text-xs font-semibold text-slate-600">Tín hiệu Wi-Fi</span>
+                <span className="inline-flex items-center gap-1.5 font-bold text-xs text-sky-600">
+                  <Wifi className="h-3.5 w-3.5 text-sky-500 shrink-0" />
+                  <span>{liveWifi >= 4 ? "Cực tốt" : liveWifi === 3 ? "Tốt" : liveWifi === 2 ? "Trung bình" : "Yếu"}</span>
+                </span>
+              </div>
+
+              {/* Last Sync */}
+              <div className="flex items-center justify-between rounded-[16px] border border-slate-100 bg-slate-50/50 p-3.5">
+                <span className="text-xs font-semibold text-slate-600">Đồng bộ cuối</span>
+                <span className="inline-flex items-center gap-1.5 font-semibold text-xs text-slate-600">
+                  <Clock className="h-3.5 w-3.5 text-slate-400 shrink-0" />
+                  <span>{liveLastSeen}</span>
+                </span>
+              </div>
+
+              {/* Temperature */}
+              <div className="flex items-center justify-between rounded-[16px] border border-slate-100 bg-slate-50/50 p-3.5">
+                <span className="text-xs font-semibold text-slate-600">Nhiệt độ hiện tại</span>
+                <span className="inline-flex items-center gap-1 text-sm font-extrabold text-rose-600">
+                  <Thermometer className="h-4 w-4 text-rose-500 shrink-0" />
+                  <span>{liveTemp}°C</span>
+                </span>
+              </div>
+
+              {/* Humidity */}
+              <div className="flex items-center justify-between rounded-[16px] border border-slate-100 bg-slate-50/50 p-3.5">
+                <span className="text-xs font-semibold text-slate-600">Độ ẩm hiện tại</span>
+                <span className="inline-flex items-center gap-1 text-sm font-extrabold text-sky-600">
+                  <Droplets className="h-4 w-4 text-sky-500 shrink-0" />
+                  <span>{liveHumi}%</span>
+                </span>
+              </div>
+            </div>
+
+            {/* Quick Summary Note matching ReportExportCard tip */}
+            <div className="rounded-[16px] bg-sky-50/50 border border-sky-100/80 p-3.5 flex gap-2.5 items-start text-xs text-slate-600 leading-relaxed">
+              <Info className="h-4 w-4 text-sky-500 shrink-0 mt-0.5" />
+              <p className="m-0">
+                Giao diện này dùng để cấu hình trực tiếp trạm ấp <strong className="font-bold text-sky-950">{machineId}</strong>. Các thay đổi sẽ được đồng bộ xuống thiết bị ngay khi bấm <strong className="font-bold text-sky-950">Lưu thay đổi</strong>.
+              </p>
             </div>
           </div>
-        )}
+        </div>
+
       </div>
-    );
+
+      {/* Floating Popup Alerts */}
+      {popupAlert && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-[2px] animate-in fade-in duration-200">
+          <div className={`flex flex-col items-center text-center gap-4 rounded-2xl border px-6 py-6 shadow-2xl bg-pure-white max-w-sm w-full animate-in zoom-in-95 duration-200 ${popupAlert.type === "success"
+            ? "border-emerald-100"
+            : popupAlert.type === "error"
+              ? "border-rose-100"
+              : "border-amber-100"
+            }`}>
+            <div className={`p-3 rounded-full ${popupAlert.type === "success"
+              ? "bg-emerald-50 text-emerald-600"
+              : popupAlert.type === "error"
+                ? "bg-rose-50 text-rose-600"
+                : "bg-amber-50 text-amber-600"
+              }`}>
+              {popupAlert.type === "success" ? (
+                <Check className="h-8 w-8" />
+              ) : popupAlert.type === "error" ? (
+                <AlertCircle className="h-8 w-8" />
+              ) : (
+                <RotateCw className="h-8 w-8 animate-spin" />
+              )}
+            </div>
+            <div className="flex flex-col gap-1">
+              <h3 className="text-base font-extrabold text-slate-800">{popupAlert.title}</h3>
+              <p className="text-xs font-semibold text-slate-500 leading-relaxed">{popupAlert.message}</p>
+            </div>
+            {popupAlert.type !== "loading" && (
+              <button
+                onClick={() => setPopupAlert(null)}
+                className="mt-2 w-full h-9 rounded-xl text-xs font-bold transition active:scale-[0.98] cursor-pointer bg-button-gray"
+              >
+                Đóng
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
 }
 
 export default function DeviceConfigurationPage() {

@@ -24,7 +24,7 @@ const menus: MenuItem[] = [
   { label: "Trang chủ", icon: Home, href: "/dashboard" },
   { label: "Thiết bị", icon: Cpu, href: "/devices" },
   { label: "Người dùng", icon: Users, href: "/users" },
-  { label: "Camera & AI", icon: Camera, href: "/camera" },
+  { label: "Camera", icon: Camera, href: "/camera" },
   { label: "Cấu hình ấp", icon: SlidersHorizontal, href: "/settings" },
   // { label: "Cảnh báo", icon: BellRing, href: "/alerts" },
   { label: "Báo cáo & Nhật ký", icon: BarChart3, href: "/reports" },

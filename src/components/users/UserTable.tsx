@@ -120,14 +120,8 @@ export default function UserTable({ users, onAddUser, onRefresh }: UserTableProp
       owner: "Chủ máy",
       guest: "Khách",
     };
-    const colors = {
-      admin: "text-amber-600 font-bold",
-      user: "text-slate-900 font-medium",
-      owner: "text-slate-900 font-bold",
-      guest: "text-slate-900 font-medium",
-    };
     return (
-      <span className={`inline-flex items-center text-xs ${colors[role] || colors.user}`}>
+      <span className="inline-flex items-center text-xs text-slate-900 font-semibold">
         {labels[role] || labels.user}
       </span>
     );
@@ -139,13 +133,8 @@ export default function UserTable({ users, onAddUser, onRefresh }: UserTableProp
       disabled: "Ngoại tuyến",
       pending: "Chờ kết nối",
     };
-    const colors = {
-      active: "text-emerald-600 font-semibold",
-      disabled: "text-rose-600 font-semibold",
-      pending: "text-amber-600 font-semibold",
-    };
     return (
-      <span className={`text-xs ${colors[status]}`}>
+      <span className="text-xs text-slate-900 font-semibold">
         {labels[status]}
       </span>
     );
@@ -156,7 +145,7 @@ export default function UserTable({ users, onAddUser, onRefresh }: UserTableProp
       return <span className="text-xs text-slate-400 italic">Chưa liên kết</span>;
     }
     return (
-      <span className="text-xs font-semibold text-sky-600">
+      <span className="text-xs font-semibold text-slate-900">
         {devices.join(", ")}
       </span>
     );
@@ -248,7 +237,7 @@ export default function UserTable({ users, onAddUser, onRefresh }: UserTableProp
                       )}
                     </div>
                     <div>
-                      <div className="font-semibold text-sky-600 hover:text-sky-700 transition-colors cursor-pointer">
+                      <div className="font-semibold text-slate-900">
                         {user.fullName}
                       </div>
                     </div>
@@ -256,7 +245,7 @@ export default function UserTable({ users, onAddUser, onRefresh }: UserTableProp
                 </td>
 
                 {/* Email */}
-                <td className="px-4 py-2.5 font-medium text-sky-600">
+                <td className="px-4 py-2.5 font-medium text-slate-900">
                   {user.email}
                 </td>
 
@@ -271,7 +260,7 @@ export default function UserTable({ users, onAddUser, onRefresh }: UserTableProp
                 </td>
 
                 {/* Số thiết bị */}
-                <td className="px-4 py-2.5 font-bold text-sky-950 text-center sm:text-left">
+                <td className="px-4 py-2.5 font-bold text-slate-900 text-center sm:text-left">
                   {user.deviceCount}
                 </td>
 
@@ -286,12 +275,7 @@ export default function UserTable({ users, onAddUser, onRefresh }: UserTableProp
                 </td>
 
                 {/* Hoạt động gần nhất */}
-                <td className={`px-4 py-2.5 text-xs font-bold ${user.lastActiveAt === "Đang hoạt động"
-                    ? "text-emerald-600"
-                    : user.lastActiveAt === "Ngoại tuyến"
-                      ? "text-rose-600"
-                      : "text-slate-500"
-                  }`}>
+                <td className="px-4 py-2.5 text-xs font-bold text-slate-900">
                   {user.lastActiveAt}
                 </td>
 

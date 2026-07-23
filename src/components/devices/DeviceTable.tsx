@@ -278,7 +278,7 @@ export default function DeviceTable({ devices, onAddDevice, onRefresh, onDeleteD
                   <div className="flex items-center justify-center gap-2">
                     <Link
                       href={`/settings?id=${device.id}`}
-                      className="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-amber-50 hover:bg-amber-100 border border-amber-200/40 text-amber-600 hover:text-amber-700 transition active:scale-95 duration-100 cursor-pointer"
+                      className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-slate-800 hover:bg-slate-100 transition active:scale-95 duration-100 cursor-pointer"
                       title="Cấu hình ấp"
                     >
                       <MoreHorizontal className="h-4 w-4" />
@@ -286,7 +286,7 @@ export default function DeviceTable({ devices, onAddDevice, onRefresh, onDeleteD
                     <button
                       type="button"
                       onClick={() => setControlModalDevice({ id: device.id, name: device.name })}
-                      className="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-sky-50 hover:bg-sky-100 border border-sky-200/40 text-sky-600 hover:text-sky-700 transition active:scale-95 duration-100 cursor-pointer"
+                      className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-slate-800 hover:bg-slate-100 transition active:scale-95 duration-100 cursor-pointer"
                       title="Điều khiển thiết bị"
                     >
                       <Settings className="h-4 w-4" />
@@ -294,7 +294,7 @@ export default function DeviceTable({ devices, onAddDevice, onRefresh, onDeleteD
                     <button
                       type="button"
                       onClick={() => onDeleteDevice && onDeleteDevice(device.id, device.name)}
-                      className="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-rose-50 hover:bg-rose-100 border border-rose-200/40 text-rose-600 hover:text-rose-700 transition active:scale-95 duration-100 cursor-pointer"
+                      className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-slate-800 hover:bg-slate-100 transition active:scale-95 duration-100 cursor-pointer"
                       title="Xóa máy ấp"
                     >
                       <Trash2 className="h-4 w-4" />

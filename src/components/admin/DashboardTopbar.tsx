@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
-  Bell,
   Menu,
   UserCircle2,
   LogOut,
@@ -13,6 +12,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/src/components/AuthProvider";
 import EditAdminModal from "./EditAdminModal";
+import NotificationBell from "./NotificationBell";
 
 interface DashboardTopbarProps {
   onMenuToggle?: () => void;
@@ -82,14 +82,8 @@ export default function DashboardTopbar({ onMenuToggle }: DashboardTopbarProps) 
       {/* ── Right: Search + Links + Icons + Avatar ── */}
       <div className="flex items-center gap-4 sm:gap-6">
 
-        {/* Bell */}
-        <button
-          type="button"
-          className="flex items-center justify-center rounded-md p-1 text-gray-500 transition hover:bg-gray-100 hover:text-gray-700"
-          aria-label="Notifications"
-        >
-          <Bell className="h-5 w-5" strokeWidth={1.8} />
-        </button>
+        {/* Notification Bell */}
+        <NotificationBell />
 
         {/* Avatar with dropdown */}
         <div className="relative">

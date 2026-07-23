@@ -482,7 +482,7 @@ function DeviceConfigurationContent() {
               </div>
               <div>
                 <h2 className="text-lg font-extrabold text-slate-800">Thông tin chung</h2>
-                <p className="text-xs text-slate-400 font-semibold mt-0.5">Nhận diện cơ bản và chế độ vận hành</p>
+
               </div>
             </div>
 
@@ -529,7 +529,7 @@ function DeviceConfigurationContent() {
               </div>
               <div>
                 <h2 className="text-lg font-extrabold text-slate-800">Chu kỳ ấp trứng</h2>
-                <p className="text-xs text-slate-400 font-semibold mt-0.5">Theo dõi tiến độ và thời gian chu kỳ</p>
+
               </div>
             </div>
 
@@ -618,7 +618,7 @@ function DeviceConfigurationContent() {
               </div>
               <div>
                 <h2 className="text-lg font-extrabold text-slate-800">Cài đặt nhiệt độ</h2>
-                <p className="text-xs text-slate-400 font-semibold mt-0.5">Kiểm soát các ngưỡng nhiệt độ của lò ấp</p>
+
               </div>
             </div>
 
@@ -680,7 +680,7 @@ function DeviceConfigurationContent() {
               </div>
               <div>
                 <h2 className="text-lg font-extrabold text-slate-800">Cài đặt độ ẩm</h2>
-                <p className="text-xs text-slate-400 font-semibold mt-0.5">Kiểm soát dải độ ẩm hoạt động</p>
+
               </div>
             </div>
 
@@ -728,7 +728,7 @@ function DeviceConfigurationContent() {
                 </div>
                 <div>
                   <h2 className="text-lg font-extrabold text-slate-800">Đảo trứng tự động</h2>
-                  <p className="text-xs text-slate-400 font-semibold mt-0.5">Thiết lập chu kỳ và thông số góc xoay đảo trứng</p>
+
                 </div>
               </div>
             </div>
@@ -765,7 +765,7 @@ function DeviceConfigurationContent() {
                 </div>
                 <div>
                   <h2 className="text-lg font-extrabold text-slate-800">Camera</h2>
-                  <p className="text-xs text-slate-400 font-semibold mt-0.5">Kiểm soát chụp ảnh & Trí tuệ nhân tạo (AI) phát hiện phôi</p>
+
                 </div>
               </div>
             </div>
@@ -815,7 +815,7 @@ function DeviceConfigurationContent() {
               </div>
               <div>
                 <h2 className="text-lg font-extrabold text-slate-800">Bảo trì & Đặt lại thiết bị</h2>
-                <p className="text-xs text-slate-400 font-semibold mt-0.5">Kiểm soát các lệnh kỹ thuật và hiệu chuẩn linh kiện</p>
+
               </div>
             </div>
 
