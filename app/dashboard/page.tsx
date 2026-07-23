@@ -27,6 +27,7 @@ export default function DashboardPage() {
   const [cameraFeeds, setCameraFeeds] = useState<CameraItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [ownerEmail, setOwnerEmail] = useState<string>("Đang tải...");
+  const [usersMap, setUsersMap] = useState<Record<string, string>>({});
 
   useEffect(() => {
     // Listen for auth state change to fetch owner email once logged in
@@ -38,12 +39,17 @@ export default function DashboardPage() {
           const usersCol = collection(db, "users");
           const querySnapshot = await getDocs(usersCol);
           let foundEmail = "";
+          const map: Record<string, string> = {};
 
           // First look for role === "owner"
           querySnapshot.forEach((doc) => {
             const userData = doc.data();
-            if (userData.role === "owner" && userData.email) {
-              foundEmail = userData.email;
+            if (userData.email) {
+              const fullName = userData.fullName || userData.name || "Người dùng ẩn danh";
+              map[userData.email.toLowerCase()] = fullName;
+              if (userData.role === "owner") {
+                foundEmail = userData.email;
+              }
             }
           });
 
@@ -57,6 +63,7 @@ export default function DashboardPage() {
             });
           }
 
+          setUsersMap(map);
           if (foundEmail) {
             setOwnerEmail(foundEmail);
           } else {
@@ -108,10 +115,13 @@ export default function DashboardPage() {
               ? Number(item.remainingDays)
               : Math.max(0, totalIncubationDays - incubatingDay);
 
+            const rawOwner = item.ownerEmail || ownerEmail;
+            const resolvedOwner = usersMap[rawOwner.toLowerCase()] || rawOwner;
+
             list.push({
               id: key,
               name: item.name ?? key,
-              owner: ownerEmail, // Always map owner to ownerEmail from Firestore
+              owner: resolvedOwner, // Always map owner to resolved owner name from Firestore
               status: String(item.status ?? (item.alert === "NORMAL" ? "online" : (item.alert ? "warning" : "offline"))).toLowerCase() as any,
               temperature,
               humidity,
@@ -172,7 +182,7 @@ export default function DashboardPage() {
     });
 
     return () => unsubscribe();
-  }, [ownerEmail]); // Re-subscribe when ownerEmail is loaded to update owner column
+  }, [ownerEmail, usersMap]); // Re-subscribe when ownerEmail or usersMap is loaded to update owner column
 
   return (
     <div className="grid gap-4">

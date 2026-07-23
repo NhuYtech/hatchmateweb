@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from "react";
 import DevicePageHeader from "@/src/components/devices/DevicePageHeader";
 import DeviceMiniStatCard from "@/src/components/devices/DeviceMiniStatCard";
-import DeviceFilterBar from "@/src/components/devices/DeviceFilterBar";
 import DeviceTable from "@/src/components/devices/DeviceTable";
 import AddDeviceModal from "@/src/components/devices/AddDeviceModal";
 import DeleteConfirmModal from "@/src/components/devices/DeleteConfirmModal";
@@ -22,15 +21,11 @@ export default function DevicesPage() {
   const [devices, setDevices] = useState<DeviceItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [ownerEmail, setOwnerEmail] = useState<string>("Đang tải...");
+  const [usersMap, setUsersMap] = useState<Record<string, string>>({});
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [deleteDeviceId, setDeleteDeviceId] = useState("");
   const [deleteDeviceName, setDeleteDeviceName] = useState("");
-
-  // Filter & Search states
-  const [search, setSearch] = useState("");
-  const [status, setStatus] = useState("all");
-  const [sort, setSort] = useState("updated_desc");
 
   // 1. Fetch Owner Email from Firestore "users" collection
   useEffect(() => {
@@ -43,11 +38,16 @@ export default function DevicesPage() {
           const usersCol = collection(db, "users");
           const querySnapshot = await getDocs(usersCol);
           let foundEmail = "";
+          const map: Record<string, string> = {};
 
           querySnapshot.forEach((doc) => {
             const userData = doc.data();
-            if (userData.role === "owner" && userData.email) {
-              foundEmail = userData.email;
+            if (userData.email) {
+              const fullName = userData.fullName || userData.name || "Người dùng ẩn danh";
+              map[userData.email.toLowerCase()] = fullName;
+              if (userData.role === "owner") {
+                foundEmail = userData.email;
+              }
             }
           });
 
@@ -60,6 +60,7 @@ export default function DevicesPage() {
             });
           }
 
+          setUsersMap(map);
           if (foundEmail) {
             setOwnerEmail(foundEmail);
           } else {
@@ -108,10 +109,13 @@ export default function DevicesPage() {
             ? "paused"
             : (totalIncubationDays - incubatingDay <= 3 ? "hatchingSoon" : "incubating");
 
+        const rawOwner = item.ownerEmail || ownerEmail;
+        const resolvedOwner = usersMap[rawOwner.toLowerCase()] || rawOwner;
+
         list.push({
           id: key,
           name: item.name ?? key,
-          owner: item.ownerEmail || ownerEmail,
+          owner: resolvedOwner,
           status: String(item.status ?? (item.alert === "NORMAL" ? "online" : (item.alert ? "warning" : "offline"))).toLowerCase() as any,
           incubationStatus,
           temperature,
@@ -146,7 +150,7 @@ export default function DevicesPage() {
     });
 
     return () => unsubscribe();
-  }, [ownerEmail]);
+  }, [ownerEmail, usersMap]);
 
   // 3. Manual refresh function triggered by clicking RotateCw
   const handleRefresh = async () => {
@@ -164,28 +168,7 @@ export default function DevicesPage() {
     }
   };
 
-  // Handle Filtering & Sorting client-side
-  const filteredDevices = devices.filter((device) => {
-    const matchesSearch =
-      device.name.toLowerCase().includes(search.toLowerCase()) ||
-      device.id.toLowerCase().includes(search.toLowerCase()) ||
-      device.owner.toLowerCase().includes(search.toLowerCase());
-
-    const matchesStatus = status === "all" || device.status === status;
-
-    return matchesSearch && matchesStatus;
-  });
-
-  const sortedDevices = [...filteredDevices].sort((a, b) => {
-    if (sort === "name_asc") {
-      return a.name.localeCompare(b.name);
-    } else if (sort === "incubating_desc") {
-      return b.incubatingDay - a.incubatingDay;
-    } else {
-      // updated_desc / default: sort by id
-      return a.id.localeCompare(b.id);
-    }
-  });
+  const sortedDevices = [...devices].sort((a, b) => a.id.localeCompare(b.id));
 
   // Calculate live KPI statistics
   const total = devices.length;
@@ -219,13 +202,6 @@ export default function DevicesPage() {
           accent="rose"
         />
       </section>
-
-      {/* Search & Filter Bar */}
-      <DeviceFilterBar
-        onSearchChange={setSearch}
-        onStatusChange={setStatus}
-        onSortChange={setSort}
-      />
 
       {/* Device Table Component Section */}
       <DeviceTable

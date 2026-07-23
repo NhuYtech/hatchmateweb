@@ -213,7 +213,7 @@ export default function UserTable({ users, onAddUser, onRefresh }: UserTableProp
       <div className="overflow-x-auto relative min-h-[300px]">
         <table className="w-full min-w-[1200px] border-collapse text-left text-sm whitespace-nowrap">
           <thead>
-            <tr className="border-b border-slate-100 bg-slate-50/40 text-[11px] font-bold uppercase tracking-wider text-slate-400">
+            <tr className="border-b border-slate-200 bg-white text-xs font-semibold text-slate-700">
               <th className="px-4 py-2.5">Người dùng</th>
               <th className="px-4 py-2.5">Email</th>
               <th className="px-4 py-2.5">Vai trò</th>
@@ -226,10 +226,12 @@ export default function UserTable({ users, onAddUser, onRefresh }: UserTableProp
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
-            {paginatedUsers.map((user) => (
+            {paginatedUsers.map((user, index) => (
               <tr
                 key={user.id}
-                className="group hover:bg-sky-50/10 transition-colors duration-150"
+                className={`group transition-colors duration-150 ${
+                  index % 2 === 0 ? "bg-white" : "bg-[#F5F7FA]"
+                } hover:bg-sky-50/30`}
               >
                 {/* Người dùng */}
                 <td className="px-4 py-2.5">
@@ -246,7 +248,7 @@ export default function UserTable({ users, onAddUser, onRefresh }: UserTableProp
                       )}
                     </div>
                     <div>
-                      <div className="font-bold text-sky-950 group-hover:text-sky-600 transition-colors">
+                      <div className="font-semibold text-sky-600 hover:text-sky-700 transition-colors cursor-pointer">
                         {user.fullName}
                       </div>
                     </div>
@@ -254,7 +256,7 @@ export default function UserTable({ users, onAddUser, onRefresh }: UserTableProp
                 </td>
 
                 {/* Email */}
-                <td className="px-4 py-2.5 font-medium text-slate-600">
+                <td className="px-4 py-2.5 font-medium text-sky-600">
                   {user.email}
                 </td>
 

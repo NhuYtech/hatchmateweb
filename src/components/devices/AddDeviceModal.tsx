@@ -99,16 +99,16 @@ export default function AddDeviceModal({ isOpen, onClose, onSuccess }: AddDevice
     // 1. Device ID Validation
     const idTrimmed = deviceId.trim();
     if (!idTrimmed) {
-      newErrors.deviceId = "Mã ID thiết bị không được để trống";
+      newErrors.deviceId = "Mã thiết bị không được để trống";
     } else if (!/^[a-zA-Z0-9_-]+$/.test(idTrimmed)) {
-      newErrors.deviceId = "ID chỉ chứa chữ cái, số, dấu gạch ngang (-) và gạch dưới (_)";
+      newErrors.deviceId = "Mã thiết bị chỉ chứa chữ cái, số, dấu gạch ngang (-) và gạch dưới (_)";
     } else {
       // Check if device ID already exists in Firebase RTDB
       try {
         const deviceRef = ref(rtdb, `incubators/${idTrimmed}`);
         const snapshot = await get(deviceRef);
         if (snapshot.exists()) {
-          newErrors.deviceId = "Mã ID thiết bị này đã tồn tại trên hệ thống";
+          newErrors.deviceId = "Mã thiết bị này đã tồn tại trên hệ thống";
         }
       } catch (err) {
         console.error("Lỗi kiểm tra trùng lặp ID:", err);
@@ -357,13 +357,12 @@ export default function AddDeviceModal({ isOpen, onClose, onSuccess }: AddDevice
           {/* Owner Input */}
           <div className="space-y-1.5">
             <label className="text-xs font-bold text-slate-500 uppercase tracking-wider block pl-1">
-              Chủ sở hữu (Email) (Tùy chọn)
+              Chủ sở hữu (Email)
             </label>
             <div className="relative flex items-center">
               <User className="absolute left-3.5 h-4 w-4 text-slate-400 z-10" />
               <input
                 type="text"
-                list="users-list"
                 disabled={loading}
                 value={selectedUserEmail}
                 onChange={(e) => {
@@ -376,13 +375,6 @@ export default function AddDeviceModal({ isOpen, onClose, onSuccess }: AddDevice
                   : "border-slate-200 focus:border-amber-500 focus:ring-amber-100"
                   }`}
               />
-              <datalist id="users-list">
-                {users.map((u) => (
-                  <option key={u.email} value={u.email}>
-                    {u.fullName}
-                  </option>
-                ))}
-              </datalist>
             </div>
             {errors.owner && (
               <p className="text-xs text-rose-600 font-semibold pl-1 flex items-center gap-1">

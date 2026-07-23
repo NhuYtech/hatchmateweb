@@ -117,7 +117,7 @@ export default function AIAnalysisTable({ records, onRefresh }: AIAnalysisTableP
       <div className="overflow-x-auto relative min-h-[300px]">
         <table className="w-full min-w-[1000px] border-collapse text-left text-sm">
           <thead>
-            <tr className="border-b border-slate-100 bg-slate-50/40 text-[11px] font-bold uppercase tracking-wider text-slate-400">
+            <tr className="border-b border-slate-200 bg-white text-xs font-semibold text-slate-700">
               <th className="px-6 py-4">Thời gian chụp</th>
               <th className="px-6 py-4">Ảnh quét</th>
               <th className="px-6 py-4">Thiết bị / Camera</th>
@@ -129,10 +129,12 @@ export default function AIAnalysisTable({ records, onRefresh }: AIAnalysisTableP
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
-            {paginatedRecords.map((record) => (
+            {paginatedRecords.map((record, index) => (
               <tr 
                 key={record.id} 
-                className="group hover:bg-sky-50/10 transition-colors duration-150"
+                className={`group transition-colors duration-150 ${
+                  index % 2 === 0 ? "bg-white" : "bg-[#F5F7FA]"
+                } hover:bg-sky-50/30`}
               >
                 {/* Thời gian chụp */}
                 <td className="px-6 py-4 text-xs font-semibold text-slate-500 whitespace-nowrap">
@@ -157,7 +159,7 @@ export default function AIAnalysisTable({ records, onRefresh }: AIAnalysisTableP
                 {/* Thiết bị / Camera */}
                 <td className="px-6 py-4">
                   <div>
-                    <div className="font-bold text-sky-950 group-hover:text-sky-600 transition-colors">
+                    <div className="font-semibold text-sky-600 hover:text-sky-700 transition-colors cursor-pointer">
                       {record.deviceName}
                     </div>
                     <p className="text-[10px] text-slate-400 font-semibold font-mono mt-0.5">

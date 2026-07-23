@@ -128,56 +128,58 @@ export default function IncubationPhaseTable() {
         ) : (
           <table className="w-full min-w-[860px] text-xs">
             <thead>
-              <tr className="border-b border-slate-100 bg-gradient-to-r from-sky-50/40 to-slate-50/20">
-                <th className="px-5 py-3 text-left text-[10px] font-extrabold uppercase tracking-[0.14em] text-slate-400">
+              <tr className="border-b border-slate-200 bg-white text-xs font-semibold text-slate-700">
+                <th className="px-5 py-3 text-left">
                   Giai đoạn
                 </th>
-                <th className="px-4 py-3 text-left text-[10px] font-extrabold uppercase tracking-[0.14em] text-slate-400">
+                <th className="px-4 py-3 text-left">
                   Ngày
                 </th>
-                <th className="px-4 py-3 text-left text-[10px] font-extrabold uppercase tracking-[0.14em] text-slate-400">
+                <th className="px-4 py-3 text-left">
                   <span className="flex items-center gap-1">
                     <Thermometer className="h-3.5 w-3.5 text-orange-400" />
                     Nhiệt độ
                   </span>
                 </th>
-                <th className="px-4 py-3 text-left text-[10px] font-extrabold uppercase tracking-[0.14em] text-slate-400">
+                <th className="px-4 py-3 text-left">
                   <span className="flex items-center gap-1">
                     <Droplets className="h-3.5 w-3.5 text-blue-400" />
                     Độ ẩm
                   </span>
                 </th>
-                <th className="px-4 py-3 text-left text-[10px] font-extrabold uppercase tracking-[0.14em] text-slate-400">
+                <th className="px-4 py-3 text-left">
                   Chu kỳ đảo
                 </th>
-                <th className="px-4 py-3 text-left text-[10px] font-extrabold uppercase tracking-[0.14em] text-slate-400">
+                <th className="px-4 py-3 text-left">
                   TG đảo
                 </th>
-                <th className="px-4 py-3 text-left text-[10px] font-extrabold uppercase tracking-[0.14em] text-slate-400">
+                <th className="px-4 py-3 text-left">
                   Chế độ đảo
                 </th>
-                <th className="px-4 py-3 text-left text-[10px] font-extrabold uppercase tracking-[0.14em] text-slate-400">
+                <th className="px-4 py-3 text-left">
                   Ghi chú
                 </th>
-                <th className="px-4 py-3 text-right text-[10px] font-extrabold uppercase tracking-[0.14em] text-slate-400">
+                <th className="px-4 py-3 text-right">
                   Hành động
                 </th>
               </tr>
             </thead>
 
-            <tbody className="divide-y divide-slate-50">
+            <tbody className="divide-y divide-slate-100">
               {paginated.map((phase, idx) => {
                 const globalIdx = (currentPage - 1) * pageSize + idx;
                 return (
                   <tr
                     key={phase.id}
-                    className="group transition-colors duration-100 hover:bg-sky-50/30"
+                    className={`group transition-colors duration-100 ${
+                      idx % 2 === 0 ? "bg-white" : "bg-[#F5F7FA]"
+                    } hover:bg-sky-50/30`}
                   >
                     {/* Phase name + badge */}
                     <td className="px-5 py-4">
                       <div className="flex items-center gap-2.5">
                         <PhaseBadge index={globalIdx} />
-                        <span className="font-bold text-sky-950">{phase.phaseName}</span>
+                        <span className="font-semibold text-slate-800">{phase.phaseName}</span>
                       </div>
                     </td>
 

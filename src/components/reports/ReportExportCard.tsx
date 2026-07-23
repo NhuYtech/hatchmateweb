@@ -243,11 +243,10 @@ export default function ReportExportCard({ items, stats }: ReportExportCardProps
       
       {/* 1. Report Export Form Card */}
       <div className="rounded-[24px] border border-sky-100/80 bg-white p-6 shadow-sm shadow-sky-100/10">
-        <h3 className="text-xs font-bold uppercase tracking-[0.15em] text-slate-400 mb-2">
+        <h3 className="text-center text-xs font-bold uppercase tracking-[0.15em] text-slate-400 mb-2">
           XUẤT BÁO CÁO
         </h3>
-        <h4 className="text-base font-bold text-sky-950 mb-1">Cấu hình kết xuất</h4>
-        <p className="text-xs text-slate-500 mb-6">Tải xuống báo cáo hoạt động hệ thống chi tiết dưới các định dạng thông dụng.</p>
+        <p className="text-center text-xs text-slate-500 mb-6">Tải xuống báo cáo hoạt động hệ thống chi tiết dưới các định dạng thông dụng.</p>
 
         {/* Form selection */}
         <div className="space-y-3 mb-6">

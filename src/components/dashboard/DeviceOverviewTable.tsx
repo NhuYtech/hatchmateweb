@@ -25,8 +25,8 @@ export default function DeviceOverviewTable({ devices }: DeviceOverviewTableProp
       <div className="overflow-x-auto -mx-4 px-4 sm:-mx-6 sm:px-6">
         <table className="w-full min-w-[1050px] border-collapse text-left">
           <thead>
-            <tr className="border-b border-slate-100 text-xs font-semibold uppercase tracking-wider text-slate-400">
-              <th className="pb-4 pt-2 font-semibold">ID Máy</th>
+            <tr className="border-b border-slate-200 bg-white text-xs font-semibold text-slate-700">
+              <th className="pb-4 pt-2 font-semibold">Mã máy</th>
               <th className="pb-4 pt-2 font-semibold">Tên máy</th>
               <th className="pb-4 pt-2 font-semibold">Chủ sở hữu</th>
               <th className="pb-4 pt-2 font-semibold text-center">Trạng thái</th>
@@ -34,13 +34,13 @@ export default function DeviceOverviewTable({ devices }: DeviceOverviewTableProp
               <th className="pb-4 pt-2 font-semibold text-center">Độ ẩm</th>
               <th className="pb-4 pt-2 font-semibold text-center">Ngày ấp</th>
               <th className="pb-4 pt-2 font-semibold text-center">Còn lại</th>
-              <th className="pb-4 pt-2 font-semibold text-center">Camera</th>
+              <th className="pb-4 pt-2 font-semibold text-center">Trạng thái Camera</th>
               <th className="pb-4 pt-2 font-semibold text-center">Cập nhật cuối</th>
               <th className="pb-4 pt-2 font-semibold text-right">Hành động</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100/80">
-            {devices.map((device) => {
+            {devices.map((device, index) => {
               // Status Badge configuration
               let statusBadge = null;
               if (device.status === "online") {
@@ -59,7 +59,7 @@ export default function DeviceOverviewTable({ devices }: DeviceOverviewTableProp
                 );
               } else {
                 statusBadge = (
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-50 border border-slate-200/60 px-2.5 py-1 text-xs font-medium text-slate-500">
+                  <span className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-500">
                     <span className="h-1.5 w-1.5 rounded-full bg-slate-400" />
                     Offline
                   </span>
@@ -69,18 +69,20 @@ export default function DeviceOverviewTable({ devices }: DeviceOverviewTableProp
               return (
                 <tr
                   key={device.id}
-                  className="group hover:bg-slate-50/50 transition-colors duration-200"
+                  className={`group transition-colors duration-200 ${
+                    index % 2 === 0 ? "bg-white" : "bg-[#F5F7FA]"
+                  } hover:bg-slate-100/30`}
                 >
                   {/* Device ID */}
                   <td className="py-4 align-middle text-sm font-semibold text-slate-900">
                     {device.id}
                   </td>
                   {/* Name */}
-                  <td className="py-4 align-middle text-sm font-medium text-slate-800">
+                  <td className="py-4 align-middle text-sm font-semibold text-sky-600 hover:text-sky-700 transition-colors cursor-pointer">
                     {device.name}
                   </td>
                   {/* Owner */}
-                  <td className="py-4 align-middle text-sm text-slate-500">
+                  <td className="py-4 align-middle text-sm text-slate-700 font-medium">
                     {device.owner}
                   </td>
                   {/* Status */}
@@ -119,14 +121,12 @@ export default function DeviceOverviewTable({ devices }: DeviceOverviewTableProp
                   {/* Camera */}
                   <td className="py-4 align-middle text-center">
                     {device.hasCamera ? (
-                      <span className="inline-flex items-center gap-1.5 rounded-full bg-sky-50 border border-sky-200/30 px-2.5 py-1 text-xs font-medium text-sky-700">
-                        <Camera className="h-3.5 w-3.5" />
-                        Có ảnh
+                      <span className="text-xs font-bold text-sky-700">
+                        Online
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-50 border border-slate-200/50 px-2.5 py-1 text-xs font-medium text-slate-400">
-                        <CameraOff className="h-3.5 w-3.5" />
-                        Chưa có ảnh
+                      <span className="text-xs font-semibold text-slate-400">
+                        Offline
                       </span>
                     )}
                   </td>

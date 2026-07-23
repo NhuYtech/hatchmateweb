@@ -56,7 +56,7 @@ export default function DeviceTable({ devices, onAddDevice, onRefresh, onDeleteD
       );
     } else {
       return (
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-50 border border-slate-200/60 px-2.5 py-1 text-xs font-medium text-slate-500">
+        <span className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-500">
           <span className="h-1.5 w-1.5 rounded-full bg-slate-400" />
           Offline
         </span>
@@ -67,7 +67,7 @@ export default function DeviceTable({ devices, onAddDevice, onRefresh, onDeleteD
   const getIncubationBadge = (status: DeviceItem["incubationStatus"], day: number, total: number) => {
     if (status === "paused") {
       return (
-        <span className="inline-flex rounded-lg border border-slate-200/60 bg-slate-50 px-2 py-0.5 text-xs font-semibold text-slate-500">
+        <span className="text-sm font-semibold text-slate-500">
           Tạm dừng
         </span>
       );
@@ -76,7 +76,7 @@ export default function DeviceTable({ devices, onAddDevice, onRefresh, onDeleteD
     if (status === "hatchingSoon") {
       return (
         <div className="space-y-1">
-          <span className="inline-flex rounded-lg border border-orange-100 bg-gradient-to-r from-amber-50 to-orange-50 px-2 py-0.5 text-xs font-semibold text-orange-700">
+          <span className="text-sm font-semibold text-orange-700">
             Sắp nở
           </span>
           <p className="text-[11px] font-medium text-slate-500 pl-0.5">
@@ -109,7 +109,7 @@ export default function DeviceTable({ devices, onAddDevice, onRefresh, onDeleteD
   };
 
   const handleExport = () => {
-    const headers = ["ID Máy", "Tên máy", "Chủ sở hữu", "Trạng thái", "Chu kỳ", "Nhiệt độ (°C)", "Độ ẩm (%)", "Camera", "Cập nhật cuối"];
+    const headers = ["Mã máy", "Tên máy", "Chủ sở hữu", "Trạng thái", "Chu kỳ", "Nhiệt độ (°C)", "Độ ẩm (%)", "Trạng thái Camera", "Cập nhật cuối"];
     const rows = devices.map(device => [
       device.id,
       device.name,
@@ -118,7 +118,7 @@ export default function DeviceTable({ devices, onAddDevice, onRefresh, onDeleteD
       device.incubationStatus === "incubating" ? "Đang ấp" : (device.incubationStatus === "hatchingSoon" ? "Sắp nở" : "Tạm dừng"),
       device.temperature > 0 ? device.temperature.toFixed(1) : "--",
       device.humidity > 0 ? device.humidity.toString() : "--",
-      device.hasCamera ? "Có ảnh" : "Chưa có",
+      device.hasCamera ? "Online" : "Offline",
       device.lastSeen
     ]);
 
@@ -186,40 +186,42 @@ export default function DeviceTable({ devices, onAddDevice, onRefresh, onDeleteD
       <div className="overflow-x-auto relative min-h-[300px]">
         <table className="w-full min-w-[1100px] border-collapse text-left text-sm">
           <thead>
-            <tr className="border-b border-slate-100 bg-slate-50/40 text-[11px] font-bold uppercase tracking-wider text-slate-400">
-              <th className="px-6 py-4">ID Máy</th>
+            <tr className="border-b border-slate-200 bg-white text-xs font-semibold text-slate-700">
+              <th className="px-6 py-4">Mã máy</th>
               <th className="px-6 py-4">Tên máy</th>
               <th className="px-6 py-4">Chủ sở hữu</th>
               <th className="px-6 py-4">Trạng thái</th>
               <th className="px-6 py-4">Chu kỳ ấp</th>
               <th className="px-6 py-4">Nhiệt độ</th>
               <th className="px-6 py-4">Độ ẩm</th>
-              <th className="px-6 py-4">Camera</th>
+              <th className="px-6 py-4">Trạng thái Camera</th>
               <th className="px-6 py-4">Cập nhật cuối</th>
               <th className="px-6 py-4 text-center">Hành động</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
-            {paginatedDevices.map((device) => (
+            {paginatedDevices.map((device, index) => (
               <tr
                 key={device.id}
-                className="group hover:bg-sky-50/10 transition-colors duration-150"
+                className={`group transition-colors duration-150 ${
+                  index % 2 === 0 ? "bg-white" : "bg-[#F5F7FA]"
+                } hover:bg-sky-50/30`}
               >
                 {/* Device ID */}
-                <td className="px-6 py-4 font-mono text-xs font-bold text-sky-600">
+                <td className="px-6 py-4 font-mono text-xs font-bold text-slate-700">
                   {device.id}
                 </td>
 
                 {/* Tên máy */}
                 <td className="px-6 py-4">
-                  <div className="font-bold text-sky-950 group-hover:text-sky-600 transition-colors">
+                  <div className="font-semibold text-sky-600 hover:text-sky-700 transition-colors cursor-pointer">
                     {device.name}
                   </div>
                 </td>
 
                 {/* Chủ sở hữu */}
                 <td className="px-6 py-4">
-                  <span className="text-xs text-slate-500 font-semibold">{device.owner}</span>
+                  <span className="text-xs text-slate-700 font-medium">{device.owner}</span>
                 </td>
 
                 {/* Trạng thái */}
@@ -256,20 +258,18 @@ export default function DeviceTable({ devices, onAddDevice, onRefresh, onDeleteD
                   )}
                 </td>
 
-                {/* Camera */}
-                <td className="px-6 py-4">
-                  {device.hasCamera ? (
-                    <span className="inline-flex items-center gap-1 rounded-md bg-sky-50 px-2 py-0.5 text-xs font-bold text-sky-700 border border-sky-100">
-                      <Camera className="h-3 w-3" />
-                      Có ảnh
-                    </span>
-                  ) : (
-                    <span className="inline-flex items-center gap-1 rounded-md bg-slate-50 px-2 py-0.5 text-xs font-semibold text-slate-400 border border-slate-100">
-                      <CameraOff className="h-3 w-3" />
-                      Chưa có
-                    </span>
-                  )}
-                </td>
+                  {/* Camera */}
+                  <td className="px-6 py-4">
+                    {device.hasCamera ? (
+                      <span className="text-xs font-bold text-sky-700">
+                        Online
+                      </span>
+                    ) : (
+                      <span className="text-xs font-semibold text-slate-400">
+                        Offline
+                      </span>
+                    )}
+                  </td>
 
                 {/* Cập nhật cuối */}
                 <td className="px-6 py-4 text-xs text-slate-400 font-semibold">

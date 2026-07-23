@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from "react";
 import UserPageHeader from "@/src/components/users/UserPageHeader";
 import UserMiniStatCard from "@/src/components/users/UserMiniStatCard";
-import UserFilterBar from "@/src/components/users/UserFilterBar";
 import UserTable from "@/src/components/users/UserTable";
 import AddUserModal from "@/src/components/users/AddUserModal";
 import { ref, onValue } from "firebase/database";
@@ -22,11 +21,6 @@ export default function UsersPage() {
   const [loading, setLoading] = useState(true);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
-  // Search & filter states
-  const [search, setSearch] = useState("");
-  const [role, setRole] = useState("all");
-  const [status, setStatus] = useState("all");
-  const [sort, setSort] = useState("name_asc");
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   useEffect(() => {
@@ -147,44 +141,7 @@ export default function UsersPage() {
     };
   }, [refreshTrigger]);
 
-  // Filter & sort logic
-  const filteredUsers = users.filter((user) => {
-    const matchesSearch =
-      user.fullName.toLowerCase().includes(search.toLowerCase()) ||
-      user.email.toLowerCase().includes(search.toLowerCase()) ||
-      user.uid.toLowerCase().includes(search.toLowerCase());
-
-    const matchesRole = role === "all" || user.role === role;
-    const matchesStatus = status === "all" || user.status === status;
-
-    return matchesSearch && matchesRole && matchesStatus;
-  });
-
-  const sortedUsers = [...filteredUsers].sort((a, b) => {
-    if (sort === "name_asc") {
-      return a.fullName.localeCompare(b.fullName);
-    } else if (sort === "devices_desc") {
-      return b.deviceCount - a.deviceCount;
-    } else if (sort === "created_desc") {
-      const parseDate = (dStr: string) => {
-        if (!dStr || dStr === "Chưa khởi động") return 0;
-        const parts = dStr.split(" ");
-        const dateParts = parts[0].split("/");
-        const day = parseInt(dateParts[0], 10);
-        const month = parseInt(dateParts[1], 10) - 1;
-        const year = parseInt(dateParts[2], 10);
-        if (parts[1]) {
-          const timeParts = parts[1].split(":");
-          const hour = parseInt(timeParts[0], 10);
-          const minute = parseInt(timeParts[1], 10);
-          return new Date(year, month, day, hour, minute).getTime();
-        }
-        return new Date(year, month, day).getTime();
-      };
-      return parseDate(b.createdAt) - parseDate(a.createdAt);
-    }
-    return 0;
-  });
+  const sortedUsers = [...users].sort((a, b) => a.fullName.localeCompare(b.fullName));
 
   // Calculate live summary stats
   const totalUsers = users.length;
@@ -224,20 +181,6 @@ export default function UsersPage() {
           accent="rose"
         />
       </section>
-
-      {/* Search & Filter Bar */}
-      <UserFilterBar
-        onSearchChange={setSearch}
-        onRoleChange={setRole}
-        onStatusChange={setStatus}
-        onSortChange={setSort}
-        onReset={() => {
-          setSearch("");
-          setRole("all");
-          setStatus("all");
-          setSort("name_asc");
-        }}
-      />
 
       {/* User Table Component Section */}
       <UserTable 

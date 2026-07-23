@@ -190,7 +190,7 @@ export default function LogsTable({ logs, onRefresh }: LogsTableProps) {
       <div className="overflow-x-auto relative min-h-[300px] w-full min-w-0">
         <table className="w-full min-w-[1200px] border-collapse text-left text-sm">
           <thead>
-            <tr className="border-b border-slate-100 bg-slate-50/40 text-[11px] font-bold uppercase tracking-wider text-slate-400">
+            <tr className="border-b border-slate-200 bg-white text-xs font-semibold text-slate-700">
               <th className="px-6 py-4">Thời gian</th>
               <th className="px-6 py-4">Loại log</th>
               <th className="px-6 py-4">Mức độ</th>
@@ -202,10 +202,12 @@ export default function LogsTable({ logs, onRefresh }: LogsTableProps) {
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
-            {paginatedLogs.map((log) => (
+            {paginatedLogs.map((log, index) => (
               <tr 
                 key={log.id} 
-                className="group hover:bg-sky-50/10 transition-colors duration-150"
+                className={`group transition-colors duration-150 ${
+                  index % 2 === 0 ? "bg-white" : "bg-[#F5F7FA]"
+                } hover:bg-sky-50/30`}
               >
                 {/* Thời gian */}
                 <td className="px-6 py-4 text-xs font-semibold text-slate-500 whitespace-nowrap">
@@ -226,7 +228,7 @@ export default function LogsTable({ logs, onRefresh }: LogsTableProps) {
                 <td className="px-6 py-4">
                   {log.deviceId ? (
                     <div>
-                      <div className="font-bold text-sky-950 flex items-center gap-1">
+                      <div className="font-semibold text-sky-600 hover:text-sky-700 flex items-center gap-1 transition-colors cursor-pointer">
                         <Cpu className="h-3.5 w-3.5 text-sky-500" />
                         <span>{log.deviceName}</span>
                       </div>
@@ -243,12 +245,12 @@ export default function LogsTable({ logs, onRefresh }: LogsTableProps) {
                     <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-slate-50 border border-slate-100">
                       {getActorIcon(log.actorType)}
                     </div>
-                    <span className="text-xs text-slate-600 font-bold">{log.actorName || "Hệ thống"}</span>
+                    <span className="text-xs text-slate-600 font-semibold">{log.actorName || "Hệ thống"}</span>
                   </div>
                 </td>
 
                 {/* Tiêu đề */}
-                <td className="px-6 py-4 font-bold text-sky-950">
+                <td className="px-6 py-4 font-semibold text-slate-800">
                   {log.title}
                 </td>
 

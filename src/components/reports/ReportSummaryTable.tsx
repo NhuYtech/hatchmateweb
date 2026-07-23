@@ -80,7 +80,7 @@ export default function ReportSummaryTable({ items }: ReportSummaryTableProps) {
       <div className="overflow-x-auto w-full min-w-0">
         <table className="w-full min-w-[800px] border-collapse text-left text-sm">
           <thead>
-            <tr className="border-b border-slate-100 bg-slate-50/40 text-[11px] font-bold uppercase tracking-wider text-slate-400">
+            <tr className="border-b border-slate-200 bg-white text-xs font-semibold text-slate-700">
               <th className="px-6 py-4">Thiết bị</th>
               <th className="px-6 py-4">Nhiệt độ TB</th>
               <th className="px-6 py-4">Độ ẩm TB</th>
@@ -91,15 +91,17 @@ export default function ReportSummaryTable({ items }: ReportSummaryTableProps) {
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
-            {paginatedItems.map((item) => (
+            {paginatedItems.map((item, index) => (
               <tr 
                 key={item.deviceId} 
-                className="group hover:bg-sky-50/10 transition-colors duration-150"
+                className={`group transition-colors duration-150 ${
+                  index % 2 === 0 ? "bg-white" : "bg-[#F5F7FA]"
+                } hover:bg-sky-50/30`}
               >
                 {/* Thiết bị */}
                 <td className="px-6 py-4">
                   <div>
-                    <div className="font-bold text-sky-950 group-hover:text-sky-600 transition-colors">
+                    <div className="font-semibold text-sky-600 hover:text-sky-700 transition-colors cursor-pointer">
                       {item.deviceName}
                     </div>
                     <p className="text-[10px] text-slate-400 font-semibold font-mono mt-0.5">{item.deviceId}</p>

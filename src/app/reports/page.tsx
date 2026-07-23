@@ -10,7 +10,6 @@ import { rtdb } from "@/src/lib/firebase";
 import { ReportChartPoint, ReportSummaryItem } from "@/src/types/report";
 
 // Imports for Logs
-import LogFilterBar from "@/src/components/logs/LogFilterBar";
 import LogsTable from "@/src/components/logs/LogsTable";
 import LogsMiniStatCard from "@/src/components/logs/LogsMiniStatCard";
 import { LogItem } from "@/src/types/log";
@@ -39,8 +38,6 @@ export default function ReportsPage() {
 
   // Logs State
   const [logs, setLogs] = useState<LogItem[]>([]);
-  const [logSearch, setLogSearch] = useState("");
-  const [logDevice, setLogDevice] = useState("all");
   const [logsStats, setLogsStats] = useState({
     totalToday: 0,
     deviceLogs: 0,
@@ -250,20 +247,6 @@ export default function ReportsPage() {
     return () => unsubscribe();
   }, []);
 
-  // Filter logs locally
-  const filteredLogs = logs.filter((log) => {
-    const searchMatch = !logSearch || 
-      (log.deviceName && log.deviceName.toLowerCase().includes(logSearch.toLowerCase())) ||
-      (log.deviceId && log.deviceId.toLowerCase().includes(logSearch.toLowerCase())) ||
-      (log.message && log.message.toLowerCase().includes(logSearch.toLowerCase())) ||
-      (log.title && log.title.toLowerCase().includes(logSearch.toLowerCase())) ||
-      (log.actorName && log.actorName.toLowerCase().includes(logSearch.toLowerCase()));
-
-    const deviceMatch = logDevice === "all" || log.deviceId === logDevice;
-
-    return searchMatch && deviceMatch;
-  });
-
   return (
     <div className="grid gap-4 w-full min-w-0">
       {/* Top Header Section */}
@@ -366,21 +349,12 @@ export default function ReportsPage() {
             />
           </section>
 
-          <LogFilterBar
-            onSearchChange={setLogSearch}
-            onDeviceChange={setLogDevice}
-            onReset={() => {
-              setLogSearch("");
-              setLogDevice("all");
-            }}
-          />
-
           {loading ? (
             <div className="flex h-32 items-center justify-center text-xs text-slate-400 font-semibold">
               Đang tải nhật ký hệ thống...
             </div>
           ) : (
-            <LogsTable logs={filteredLogs} />
+            <LogsTable logs={logs} />
           )}
         </div>
       )}

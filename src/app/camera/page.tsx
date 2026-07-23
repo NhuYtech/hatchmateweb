@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from "react";
 import CameraPageHeader from "@/src/components/camera/CameraPageHeader";
 import CameraMiniStatCard from "@/src/components/camera/CameraMiniStatCard";
-import CameraFilterBar from "@/src/components/camera/CameraFilterBar";
 import CameraGrid from "@/src/components/camera/CameraGrid";
 import AIAnalysisTable from "@/src/components/camera/AIAnalysisTable";
 import { ref, onValue } from "firebase/database";
@@ -155,9 +154,6 @@ export default function CameraPage() {
           accent="rose"
         />
       </section>
-
-      {/* Camera Filter Bar */}
-      <CameraFilterBar />
 
       {/* Camera Grid Section */}
       {loading ? (
