@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import CameraPageHeader from "@/src/components/camera/CameraPageHeader";
 import CameraMiniStatCard from "@/src/components/camera/CameraMiniStatCard";
 import CameraGrid from "@/src/components/camera/CameraGrid";
+import CameraTable from "@/src/components/camera/CameraTable";
 import AIAnalysisTable from "@/src/components/camera/AIAnalysisTable";
 import { ref, onValue } from "firebase/database";
 import { rtdb } from "@/src/lib/firebase";
@@ -12,7 +13,8 @@ import {
   Video,
   ShieldCheck,
   Camera,
-  Brain
+  Brain,
+  VideoOff
 } from "lucide-react";
 
 export default function CameraPage() {
@@ -155,17 +157,36 @@ export default function CameraPage() {
         />
       </section>
 
-      {/* Camera Grid Section */}
+      {/* Camera Grid & Table Section */}
       {loading ? (
         <div className="flex h-32 items-center justify-center text-xs text-slate-400 font-semibold">
           Đang tải thông tin camera...
         </div>
+      ) : cameras.length === 0 ? (
+        <div className="rounded-[24px] border border-sky-100/80 bg-white p-16 text-center shadow-sm shadow-sky-100/10">
+          <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-50 text-amber-500 shadow-sm shadow-amber-100">
+            <VideoOff className="h-8 w-8 stroke-[2.2] animate-pulse" />
+          </div>
+          <h3 className="text-lg font-bold text-sky-950">Chưa có camera nào</h3>
+          <p className="mx-auto mt-2 max-w-sm text-sm text-slate-500 leading-relaxed">
+            Hiện tại không tìm thấy thiết bị camera nào khớp với tiêu chí tìm kiếm hoặc trạng thái của bộ lọc.
+          </p>
+        </div>
       ) : (
-        <CameraGrid cameras={cameras} />
+        <>
+          <CameraGrid cameras={cameras} />
+          
+          <CameraTable 
+            cameras={cameras}
+            onCaptureNew={(id) => {
+              console.log("Request manual capture for camera:", id);
+            }}
+          />
+        </>
       )}
 
       {/* AI Analysis Section */}
-      {!loading && <AIAnalysisTable records={aiRecords} />}
+      {!loading && aiRecords.length > 0 && <AIAnalysisTable records={aiRecords} />}
     </div>
   );
 }
