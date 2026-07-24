@@ -135,10 +135,20 @@ export default function NotificationBell() {
       initialized = true;
 
       setNotifs((prev) => {
+        // For each newly constructed alertNotif, if it already exists in `prev`,
+        // preserve its original timestamp so we don't reset it to the current time.
+        const updatedAlertNotifs = alertNotifs.map((newNotif) => {
+          const existing = prev.find((n) => n.id === newNotif.id);
+          if (existing) {
+            return { ...newNotif, timestamp: existing.timestamp };
+          }
+          return newNotif;
+        });
+
         // Remove stale alert/offline/new_device notifs, keep user notifs
         const userNotifs = prev.filter((n) => n.type === "new_user");
         const prevNewDevices = prev.filter((n) => n.type === "new_device");
-        return [...alertNotifs, ...newDeviceNotifs, ...prevNewDevices, ...userNotifs];
+        return [...updatedAlertNotifs, ...newDeviceNotifs, ...prevNewDevices, ...userNotifs];
       });
     });
 

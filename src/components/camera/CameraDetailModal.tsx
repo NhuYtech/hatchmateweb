@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { ref, onValue, set } from "firebase/database";
 import { rtdb } from "@/src/lib/firebase";
@@ -52,6 +52,12 @@ export default function CameraDetailModal({
   const [isRecording, setIsRecording] = useState(false);
   const [recordingSeconds, setRecordingSeconds] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
+
+  const imgRef = useRef<HTMLImageElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const recordedChunksRef = useRef<Blob[]>([]);
+  const drawLoopRef = useRef<any>(null);
 
   // Events list matching UI
   const [events, setEvents] = useState<EventItem[]>([
@@ -143,8 +149,23 @@ export default function CameraDetailModal({
     } else {
       setRecordingSeconds(0);
     }
-    return () => clearInterval(recTimer);
   }, [isRecording]);
+
+  // Cleanup recording on unmount or modal close
+  useEffect(() => {
+    return () => {
+      if (drawLoopRef.current) {
+        cancelAnimationFrame(drawLoopRef.current);
+      }
+      if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive") {
+        try {
+          mediaRecorderRef.current.stop();
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    };
+  }, []);
 
   if (!isOpen) return null;
 
@@ -172,17 +193,104 @@ export default function CameraDetailModal({
     }, 3000);
   };
 
-  // Record Trigger
-  const handleToggleRecord = () => {
-    setIsRecording(!isRecording);
-    showToast(!isRecording ? "Bắt đầu ghi hình camera..." : "Đã dừng và lưu file ghi hình!");
+  // Record Trigger (Ghi hình)
+  const startRecording = () => {
+    const img = imgRef.current;
+    if (!img || !isPlaying) {
+      showToast("Chỉ có thể ghi hình khi camera đang mở!");
+      return;
+    }
+
+    try {
+      recordedChunksRef.current = [];
+      const canvas = document.createElement("canvas");
+      canvasRef.current = canvas;
+      
+      // Đặt kích thước cho canvas đồng bộ với video
+      canvas.width = img.naturalWidth || img.width || 640;
+      canvas.height = img.naturalHeight || img.height || 480;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return;
+
+      // Vòng lặp vẽ liên tục từ img tag lên canvas ở tần số làm tươi trình duyệt
+      const draw = () => {
+        if (img && ctx) {
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        }
+        drawLoopRef.current = requestAnimationFrame(draw);
+      };
+      draw();
+
+      // Trích xuất luồng MediaStream từ canvas (15 khung hình/giây)
+      const stream = canvas.captureStream(15);
+      
+      // Chọn codec tối ưu được hỗ trợ bởi trình duyệt
+      let options = { mimeType: "video/webm;codecs=vp9" };
+      if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+        options = { mimeType: "video/webm;codecs=vp8" };
+      }
+      if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+        options = { mimeType: "video/webm" };
+      }
+
+      const recorder = new MediaRecorder(stream, options);
+      mediaRecorderRef.current = recorder;
+
+      recorder.ondataavailable = (event) => {
+        if (event.data && event.data.size > 0) {
+          recordedChunksRef.current.push(event.data);
+        }
+      };
+
+      recorder.onstop = () => {
+        if (drawLoopRef.current) {
+          cancelAnimationFrame(drawLoopRef.current);
+          drawLoopRef.current = null;
+        }
+
+        const blob = new Blob(recordedChunksRef.current, { type: "video/webm" });
+        const url = URL.createObjectURL(blob);
+        
+        // Tạo tải về video cho người dùng
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `recording_${Date.now()}.webm`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        showToast("Đã tải tệp ghi hình thành công!");
+      };
+
+      recorder.start();
+      setIsRecording(true);
+      showToast("Bắt đầu ghi hình camera...");
+    } catch (err) {
+      console.error("Lỗi khởi tạo ghi hình:", err);
+      showToast("Trình duyệt không hỗ trợ ghi hình!");
+    }
   };
 
-  // Snapshot Trigger
+  const stopRecording = () => {
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive") {
+      mediaRecorderRef.current.stop();
+    }
+    setIsRecording(false);
+  };
+
+  const handleToggleRecord = () => {
+    if (isRecording) {
+      stopRecording();
+    } else {
+      startRecording();
+    }
+  };
+
+  // Snapshot Trigger (Chụp ảnh)
   const handleCaptureSnapshot = async () => {
     showToast("Đang chụp ảnh camera...");
     
-    // Add current time snapshot to event logs
+    // 1. Thêm vào nhật ký sự kiện giao diện
     const now = new Date();
     const pad = (n: number) => n.toString().padStart(2, "0");
     const currentTimeStr = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
@@ -192,18 +300,49 @@ export default function CameraDetailModal({
       title: "Ảnh vừa chụp",
       time: currentTimeStr
     };
-
     setEvents(prev => [newEvent, ...prev]);
 
-    // Send a trigger to Firebase for manual capture
+    // 2. Gửi lệnh chụp thủ công lên Firebase để kích hoạt chụp bên phần cứng (nếu cần thiết)
     try {
       await set(ref(rtdb, `incubators/${deviceId}/control/camera`), true);
-      // Automatically reset trigger after 1.5 seconds
       setTimeout(async () => {
         await set(ref(rtdb, `incubators/${deviceId}/control/camera`), false);
       }, 1500);
     } catch (err) {
-      console.error("Lỗi gửi tín hiệu chụp ảnh:", err);
+      console.error("Lỗi gửi tín hiệu chụp ảnh lên Firebase:", err);
+    }
+
+    // 3. Thực hiện chụp từ luồng video hiển thị trên Web bằng Canvas
+    if (imgRef.current && isPlaying) {
+      try {
+        const img = imgRef.current;
+        const canvas = document.createElement("canvas");
+        canvas.width = img.naturalWidth || img.width || 640;
+        canvas.height = img.naturalHeight || img.height || 480;
+        const ctx = canvas.getContext("2d");
+        if (ctx) {
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          const dataUrl = canvas.toDataURL("image/jpeg");
+          
+          // Tạo liên kết tải về ảnh chụp
+          const a = document.createElement("a");
+          a.href = dataUrl;
+          a.download = `snapshot_${Date.now()}.jpg`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          showToast("Đã tải ảnh chụp thành công!");
+        }
+      } catch (err) {
+        console.error("Lỗi canvas download snapshot:", err);
+        // Fallback: Nếu lỗi CORS, tải trực tiếp từ api /capture của mạch ESP32
+        const captureUrl = camera.ipAddress.startsWith("http") 
+          ? `${camera.ipAddress.replace(/:81/, "")}/capture` 
+          : `http://${camera.ipAddress.replace(/:81/, "")}/capture`;
+        window.open(captureUrl, "_blank");
+      }
+    } else {
+      showToast("Chỉ chụp được ảnh khi camera đang mở!");
     }
   };
 
@@ -266,11 +405,9 @@ export default function CameraDetailModal({
           
           {/* Top Info Bar */}
           <div className="flex items-center justify-between w-full z-10 text-[9px] font-mono font-semibold tracking-wider text-white/90">
-            <div className="flex items-center gap-1.5 bg-black/35 backdrop-blur-sm px-2 py-0.5 rounded-full border border-white/5">
+            <div className="flex items-center gap-1.5 bg-black/35 backdrop-blur-sm px-2.5 py-0.5 rounded-full border border-white/5">
               <span className={`h-1.5 w-1.5 rounded-full bg-red-600 ${camera.status === "online" ? "animate-pulse" : ""}`} />
               <span className="font-extrabold text-red-500">● LIVE</span>
-              <span className="text-white/60">|</span>
-              <span>{camera.ipAddress || "192.168.88.220:81"}/stream</span>
             </div>
             <div className="flex items-center gap-2 bg-black/35 backdrop-blur-sm px-2 py-0.5 rounded-full border border-white/5">
               <span>{streamTime || "24/07/2026 13:44:10"}</span>
@@ -367,6 +504,8 @@ export default function CameraDetailModal({
                 {isPlaying ? (
                   /* Live MJPEG Stream Image */
                   <img
+                    ref={imgRef}
+                    crossOrigin="anonymous"
                     src={finalStreamUrl}
                     alt="Live Camera Stream"
                     className="h-full w-full object-cover rounded-xl"
