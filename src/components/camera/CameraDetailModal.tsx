@@ -1,24 +1,15 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
-import { ref, onValue, set } from "firebase/database";
+import { ref, onValue } from "firebase/database";
 import { rtdb } from "@/src/lib/firebase";
 import { CameraItem } from "@/src/types/camera";
 import {
   X,
   WifiOff,
-  Maximize2,
-  RefreshCw,
-  Pencil,
-  Circle,
-  Camera,
-  History,
   Image,
-  ImageOff,
-  Check,
-  Play,
-  Pause
+  ImageOff
 } from "lucide-react";
 
 interface CameraDetailModalProps {
@@ -42,22 +33,6 @@ export default function CameraDetailModal({
 }: CameraDetailModalProps) {
   const [camera, setCamera] = useState<CameraItem>(initialCamera);
   const [loading, setLoading] = useState(true);
-  const [isEditingIp, setIsEditingIp] = useState(false);
-  const [newIp, setNewIp] = useState(initialCamera.ipAddress || "192.168.88.220:81");
-  const [savingIp, setSavingIp] = useState(false);
-  
-  // Realtime clock overlay in stream
-  const [streamTime, setStreamTime] = useState("");
-  const [bitrate, setBitrate] = useState(294);
-  const [isRecording, setIsRecording] = useState(false);
-  const [recordingSeconds, setRecordingSeconds] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(true);
-
-  const imgRef = useRef<HTMLImageElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const recordedChunksRef = useRef<Blob[]>([]);
-  const drawLoopRef = useRef<any>(null);
 
   // Events list matching UI
   const [events, setEvents] = useState<EventItem[]>([
@@ -77,6 +52,7 @@ export default function CameraDetailModal({
     const unsubscribe = onValue(deviceRef, (snapshot) => {
       if (snapshot.exists()) {
         const item = snapshot.val();
+        const cameraStatus = (item.camera?.status ?? item.status ?? "offline").toLowerCase() === "online" ? "online" : "offline";
         const status = String(item.status ?? (item.alert === "NORMAL" ? "online" : (item.alert ? "warning" : "offline"))).toLowerCase();
         const lastSeen = item.lastSeen ?? "Vừa xong";
         const deviceName = item.name ?? deviceId;
@@ -84,7 +60,6 @@ export default function CameraDetailModal({
         const eggCount = item.telemetry?.eggCount !== undefined ? Number(item.telemetry.eggCount) : (initialCamera.eggCount || 24);
         const previousEggCount = status === "warning" ? 24 : eggCount;
         const hasVariation = eggCount !== previousEggCount;
-        const ipAddress = item.ipAddress ?? item.ip ?? item.telemetry?.ip ?? initialCamera.ipAddress ?? "192.168.88.220:81";
 
         setCamera({
           id: `cam-${deviceId}`,
@@ -92,8 +67,8 @@ export default function CameraDetailModal({
           deviceName,
           cameraName: `Cam ${deviceName}`,
           locationLabel: "Trạm ấp",
-          status: status === "offline" ? "offline" : "online",
-          previewImage: item.previewImage || null,
+          status: cameraStatus,
+          previewImage: null,
           lastCaptureAt: lastSeen,
           aiStatus: hasVariation ? "alert" : "analyzed",
           aiAlertCount: hasVariation ? 1 : 0,
@@ -101,17 +76,10 @@ export default function CameraDetailModal({
             ? `Cảnh báo: Số lượng trứng thay đổi (Ban đầu: ${previousEggCount}, Hiện tại: ${eggCount})` 
             : `Số lượng trứng ổn định: ${eggCount} quả`,
           lastAiConfidence: 98,
-          streamEnabled: true,
+          streamEnabled: false,
           eggCount,
           previousEggCount,
-          ipAddress,
         });
-
-        if (item.ipAddress) {
-          setNewIp(item.ipAddress);
-        } else if (item.ip) {
-          setNewIp(item.ip);
-        }
       }
       setLoading(false);
     });
@@ -119,72 +87,7 @@ export default function CameraDetailModal({
     return () => unsubscribe();
   }, [isOpen, deviceId, initialCamera]);
 
-  // Clock tick & random bitrate generator
-  useEffect(() => {
-    if (!isOpen) return;
-
-    const timer = setInterval(() => {
-      const now = new Date();
-      const pad = (n: number) => n.toString().padStart(2, "0");
-      setStreamTime(`${pad(now.getDate())}/${pad(now.getMonth() + 1)}/${now.getFullYear()} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`);
-      
-      // randomize bitrate slightly
-      setBitrate(prev => {
-        const delta = Math.floor(Math.random() * 21) - 10;
-        const next = prev + delta;
-        return next < 150 ? 150 : next > 450 ? 450 : next;
-      });
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, [isOpen]);
-
-  // Recording timer
-  useEffect(() => {
-    let recTimer: NodeJS.Timeout;
-    if (isRecording) {
-      recTimer = setInterval(() => {
-        setRecordingSeconds(prev => prev + 1);
-      }, 1000);
-    } else {
-      setRecordingSeconds(0);
-    }
-  }, [isRecording]);
-
-  // Cleanup recording on unmount or modal close
-  useEffect(() => {
-    return () => {
-      if (drawLoopRef.current) {
-        cancelAnimationFrame(drawLoopRef.current);
-      }
-      if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive") {
-        try {
-          mediaRecorderRef.current.stop();
-        } catch (e) {
-          console.error(e);
-        }
-      }
-    };
-  }, []);
-
   if (!isOpen) return null;
-
-  // Handle Save IP Address
-  const handleSaveIp = async () => {
-    if (!newIp.trim()) return;
-    setSavingIp(true);
-    try {
-      // Save directly to Firebase RTDB
-      await set(ref(rtdb, `incubators/${deviceId}/ipAddress`), newIp.trim());
-      setIsEditingIp(false);
-      showToast("Cập nhật IP thành công!");
-    } catch (err) {
-      console.error("Lỗi cập nhật IP:", err);
-      showToast("Lỗi khi lưu IP!");
-    } finally {
-      setSavingIp(false);
-    }
-  };
 
   const showToast = (msg: string) => {
     setNotification(msg);
@@ -193,181 +96,11 @@ export default function CameraDetailModal({
     }, 3000);
   };
 
-  // Record Trigger (Ghi hình)
-  const startRecording = () => {
-    const img = imgRef.current;
-    if (!img || !isPlaying) {
-      showToast("Chỉ có thể ghi hình khi camera đang mở!");
-      return;
-    }
-
-    try {
-      recordedChunksRef.current = [];
-      const canvas = document.createElement("canvas");
-      canvasRef.current = canvas;
-      
-      // Đặt kích thước cho canvas đồng bộ với video
-      canvas.width = img.naturalWidth || img.width || 640;
-      canvas.height = img.naturalHeight || img.height || 480;
-      const ctx = canvas.getContext("2d");
-      if (!ctx) return;
-
-      // Vòng lặp vẽ liên tục từ img tag lên canvas ở tần số làm tươi trình duyệt
-      const draw = () => {
-        if (img && ctx) {
-          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        }
-        drawLoopRef.current = requestAnimationFrame(draw);
-      };
-      draw();
-
-      // Trích xuất luồng MediaStream từ canvas (15 khung hình/giây)
-      const stream = canvas.captureStream(15);
-      
-      // Chọn codec tối ưu được hỗ trợ bởi trình duyệt
-      let options = { mimeType: "video/webm;codecs=vp9" };
-      if (!MediaRecorder.isTypeSupported(options.mimeType)) {
-        options = { mimeType: "video/webm;codecs=vp8" };
-      }
-      if (!MediaRecorder.isTypeSupported(options.mimeType)) {
-        options = { mimeType: "video/webm" };
-      }
-
-      const recorder = new MediaRecorder(stream, options);
-      mediaRecorderRef.current = recorder;
-
-      recorder.ondataavailable = (event) => {
-        if (event.data && event.data.size > 0) {
-          recordedChunksRef.current.push(event.data);
-        }
-      };
-
-      recorder.onstop = () => {
-        if (drawLoopRef.current) {
-          cancelAnimationFrame(drawLoopRef.current);
-          drawLoopRef.current = null;
-        }
-
-        const blob = new Blob(recordedChunksRef.current, { type: "video/webm" });
-        const url = URL.createObjectURL(blob);
-        
-        // Tạo tải về video cho người dùng
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = `recording_${Date.now()}.webm`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-        showToast("Đã tải tệp ghi hình thành công!");
-      };
-
-      recorder.start();
-      setIsRecording(true);
-      showToast("Bắt đầu ghi hình camera...");
-    } catch (err) {
-      console.error("Lỗi khởi tạo ghi hình:", err);
-      showToast("Trình duyệt không hỗ trợ ghi hình!");
-    }
-  };
-
-  const stopRecording = () => {
-    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive") {
-      mediaRecorderRef.current.stop();
-    }
-    setIsRecording(false);
-  };
-
-  const handleToggleRecord = () => {
-    if (isRecording) {
-      stopRecording();
-    } else {
-      startRecording();
-    }
-  };
-
-  // Snapshot Trigger (Chụp ảnh)
-  const handleCaptureSnapshot = async () => {
-    showToast("Đang chụp ảnh camera...");
-    
-    // 1. Thêm vào nhật ký sự kiện giao diện
-    const now = new Date();
-    const pad = (n: number) => n.toString().padStart(2, "0");
-    const currentTimeStr = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
-    
-    const newEvent: EventItem = {
-      id: `evt-${Date.now()}`,
-      title: "Ảnh vừa chụp",
-      time: currentTimeStr
-    };
-    setEvents(prev => [newEvent, ...prev]);
-
-    // 2. Gửi lệnh chụp thủ công lên Firebase để kích hoạt chụp bên phần cứng (nếu cần thiết)
-    try {
-      await set(ref(rtdb, `incubators/${deviceId}/control/camera`), true);
-      setTimeout(async () => {
-        await set(ref(rtdb, `incubators/${deviceId}/control/camera`), false);
-      }, 1500);
-    } catch (err) {
-      console.error("Lỗi gửi tín hiệu chụp ảnh lên Firebase:", err);
-    }
-
-    // 3. Thực hiện chụp từ luồng video hiển thị trên Web bằng Canvas
-    if (imgRef.current && isPlaying) {
-      try {
-        const img = imgRef.current;
-        const canvas = document.createElement("canvas");
-        canvas.width = img.naturalWidth || img.width || 640;
-        canvas.height = img.naturalHeight || img.height || 480;
-        const ctx = canvas.getContext("2d");
-        if (ctx) {
-          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-          const dataUrl = canvas.toDataURL("image/jpeg");
-          
-          // Tạo liên kết tải về ảnh chụp
-          const a = document.createElement("a");
-          a.href = dataUrl;
-          a.download = `snapshot_${Date.now()}.jpg`;
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-          showToast("Đã tải ảnh chụp thành công!");
-        }
-      } catch (err) {
-        console.error("Lỗi canvas download snapshot:", err);
-        // Fallback: Nếu lỗi CORS, tải trực tiếp từ api /capture của mạch ESP32
-        const captureUrl = camera.ipAddress.startsWith("http") 
-          ? `${camera.ipAddress.replace(/:81/, "")}/capture` 
-          : `http://${camera.ipAddress.replace(/:81/, "")}/capture`;
-        window.open(captureUrl, "_blank");
-      }
-    } else {
-      showToast("Chỉ chụp được ảnh khi camera đang mở!");
-    }
-  };
-
-  // Fullscreen trigger (Mock)
-  const handleExpandView = () => {
-    showToast("Mở chế độ toàn màn hình");
-  };
-
   // Remove event from list
   const handleRemoveEvent = (id: string) => {
     setEvents(prev => prev.filter(evt => evt.id !== id));
     showToast("Đã xóa sự kiện khỏi danh sách");
   };
-
-  const formatRecordingTime = (totalSec: number) => {
-    const min = Math.floor(totalSec / 60);
-    const sec = totalSec % 60;
-    return `${min.toString().padStart(2, "0")}:${sec.toString().padStart(2, "0")}`;
-  };
-
-  const streamUrl = camera.ipAddress 
-    ? (camera.ipAddress.startsWith("http") ? camera.ipAddress : `http://${camera.ipAddress}`)
-    : "http://192.168.88.220:81/stream";
-  
-  const finalStreamUrl = streamUrl.includes("/stream") ? streamUrl : `${streamUrl.replace(/\/$/, "")}/stream`;
 
   return createPortal(
     <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-md animate-in fade-in duration-200">
@@ -400,220 +133,20 @@ export default function CameraDetailModal({
           </button>
         </div>
 
-        {/* 1. Black Stream Monitor Panel */}
-        <div className="relative aspect-video w-full rounded-[28px] bg-black overflow-hidden flex flex-col justify-between p-4 shadow-inner border border-black/10 select-none">
-          
-          {/* Top Info Bar */}
-          <div className="flex items-center justify-between w-full z-10 text-[9px] font-mono font-semibold tracking-wider text-white/90">
-            <div className="flex items-center gap-1.5 bg-black/35 backdrop-blur-sm px-2.5 py-0.5 rounded-full border border-white/5">
-              <span className={`h-1.5 w-1.5 rounded-full bg-red-600 ${camera.status === "online" ? "animate-pulse" : ""}`} />
-              <span className="font-extrabold text-red-500">● LIVE</span>
-            </div>
-            <div className="flex items-center gap-2 bg-black/35 backdrop-blur-sm px-2 py-0.5 rounded-full border border-white/5">
-              <span>{streamTime || "24/07/2026 13:44:10"}</span>
-              <span className="text-white/60">|</span>
-              <span className="font-bold text-amber-500">{bitrate} KB/s</span>
-            </div>
-          </div>
-
-          {/* Central Connecting/Offline States */}
-          <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-6 bg-gradient-to-t from-black/80 via-transparent to-black/20 z-0">
-            {camera.status === "offline" ? (
-              <div className="flex flex-col items-center max-w-sm mt-3 animate-in fade-in duration-300">
-                <div className="mb-3.5 flex h-14 w-14 items-center justify-center rounded-full bg-white/5 border border-white/10 text-white/40 shadow-lg">
-                  <WifiOff className="h-7 w-7 stroke-[1.5]" />
-                </div>
-                <h4 className="text-base font-extrabold text-white tracking-wide">
-                  Ngoại tuyến
-                </h4>
-                <p className="text-[10px] text-white/40 font-semibold mt-1">
-                  Lỗi kết nối camera
-                </p>
-                <p className="text-[9px] font-mono text-white/30 mt-0.5 break-all">
-                  URL: http://{camera.ipAddress || "192.168.88.220:81"}/stream
-                </p>
-
-                {/* Edit IP Form Inline */}
-                {isEditingIp ? (
-                  <div className="mt-4 flex flex-col gap-2 w-full max-w-[240px]">
-                    <div className="flex gap-1.5 items-center bg-zinc-900 border border-zinc-700/60 rounded-xl px-2.5 py-1">
-                      <input
-                        type="text"
-                        value={newIp}
-                        onChange={(e) => setNewIp(e.target.value)}
-                        className="bg-transparent text-white font-mono text-xs w-full focus:outline-none placeholder-zinc-500"
-                        placeholder="IP:Port (e.g. 192.168.1.50:81)"
-                        autoFocus
-                      />
-                    </div>
-                    <div className="flex gap-2 justify-center">
-                      <button
-                        onClick={() => setIsEditingIp(false)}
-                        disabled={savingIp}
-                        className="h-7 px-3 text-[10px] font-bold rounded-lg border border-zinc-700 text-zinc-400 hover:bg-zinc-800 transition"
-                      >
-                        Hủy
-                      </button>
-                      <button
-                        onClick={handleSaveIp}
-                        disabled={savingIp}
-                        className="h-7 px-3 text-[10px] font-bold rounded-lg bg-amber-500 text-black hover:bg-amber-400 active:scale-95 transition flex items-center gap-1"
-                      >
-                        {savingIp ? <RefreshCw className="h-3 w-3 animate-spin" /> : <Check className="h-3.5 w-3.5" />}
-                        <span>Lưu</span>
-                      </button>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="mt-5 flex gap-2.5">
-                    <button
-                      onClick={() => {
-                        showToast("Đang kết nối lại...");
-                      }}
-                      className="inline-flex h-8 items-center gap-1.5 rounded-full bg-zinc-800 hover:bg-zinc-700 text-[10px] font-bold text-white px-4 transition active:scale-95 duration-100 shadow-lg border border-zinc-700/50 cursor-pointer"
-                    >
-                      <RefreshCw className="h-3.5 w-3.5" />
-                      <span>Thử lại</span>
-                    </button>
-                    <button
-                      onClick={() => setIsEditingIp(true)}
-                      className="inline-flex h-8 items-center gap-1.5 rounded-full bg-[#EAB308] hover:bg-yellow-400 text-[10px] font-bold text-black px-4 transition active:scale-95 duration-100 shadow-lg cursor-pointer"
-                    >
-                      <Pencil className="h-3 w-3 text-black" />
-                      <span>Đổi IP</span>
-                    </button>
-                  </div>
-                )}
-              </div>
-            ) : (
-              // Online Simulated Stream Image/Viewfinder
-              <div className="relative h-full w-full flex items-center justify-center">
-                {/* Simulated live viewfinder grid/brackets */}
-                <div className="absolute top-0 right-0 w-3.5 h-3.5 border-t-2 border-r-2 border-white/40 rounded-tr-sm"></div>
-                <div className="absolute top-0 left-0 w-3.5 h-3.5 border-t-2 border-l-2 border-white/40 rounded-tl-sm"></div>
-                <div className="absolute bottom-0 right-0 w-3.5 h-3.5 border-b-2 border-r-2 border-white/40 rounded-br-sm"></div>
-                <div className="absolute bottom-0 left-0 w-3.5 h-3.5 border-b-2 border-l-2 border-white/40 rounded-bl-sm"></div>
-
-                {isRecording && (
-                  <div className="absolute top-0 left-0 flex items-center gap-1 bg-red-600/90 text-[9px] font-mono font-bold text-white px-2 py-0.5 rounded-md border border-red-500 animate-pulse z-20">
-                    <span className="h-1.5 w-1.5 rounded-full bg-white" />
-                    <span>REC {formatRecordingTime(recordingSeconds)}</span>
-                  </div>
-                )}
-
-                {isPlaying ? (
-                  /* Live MJPEG Stream Image */
-                  <img
-                    ref={imgRef}
-                    crossOrigin="anonymous"
-                    src={finalStreamUrl}
-                    alt="Live Camera Stream"
-                    className="h-full w-full object-cover rounded-xl"
-                    onError={(e) => {
-                      console.error("Lỗi tải live stream");
-                    }}
-                  />
-                ) : (
-                  /* Standby / Paused state with Play Button overlay */
-                  <div 
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setIsPlaying(true);
-                    }}
-                    className="relative h-full w-full flex items-center justify-center bg-slate-950/45 rounded-xl transition duration-200"
-                  >
-                    {camera.previewImage ? (
-                      <img
-                        src={camera.previewImage}
-                        alt="Stream Standby"
-                        className="h-full w-full object-cover rounded-xl opacity-40"
-                      />
-                    ) : (
-                      <div className="text-center text-white/40 space-y-1">
-                        <Camera className="h-8 w-8 stroke-[1.2] text-white/20 mx-auto" />
-                        <p className="text-xs font-bold font-mono text-white/40">Stream đang tạm dừng</p>
-                      </div>
-                    )}
-                    
-                    {/* Large Play Button Overlay */}
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="flex h-14 w-14 items-center justify-center rounded-full bg-black/60 hover:bg-black/80 border border-white/20 text-white transition active:scale-95 duration-100 shadow-2xl hover:scale-105">
-                        <Play className="h-6 w-6 fill-current text-white ml-1" />
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {/* Hover pause hint overlay */}
-                {isPlaying && (
-                  <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center pointer-events-none">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-black/55 border border-white/10 text-white shadow-xl animate-in scale-in duration-150">
-                      <Pause className="h-5 w-5 text-white" />
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-
-          {/* Bottom Controls Bar (Play/Pause & Fullscreen) */}
-          <div className="w-full flex justify-between items-center z-10">
-            <button
-              onClick={() => setIsPlaying(!isPlaying)}
-              className="flex h-7 w-7 items-center justify-center rounded-full bg-black/45 hover:bg-black/60 border border-white/10 text-white/80 transition duration-150 cursor-pointer shadow-md"
-              title={isPlaying ? "Tạm dừng Stream" : "Phát Stream"}
-            >
-              {isPlaying ? <Pause className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5 fill-current" />}
-            </button>
-
-            <button
-              onClick={handleExpandView}
-              className="flex h-7 w-7 items-center justify-center rounded-full bg-black/45 hover:bg-black/60 border border-white/10 text-white/80 transition duration-150 cursor-pointer shadow-md"
-              title="Toàn màn hình"
-            >
-              <Maximize2 className="h-3.5 w-3.5" />
-            </button>
-          </div>
-        </div>
-
-        {/* 2. Control Buttons Bar (Record, Capture, Fullscreen) */}
-        <div className="bg-[#FFF8F6] border border-[#F5E1D6] rounded-[24px] p-4 flex justify-around items-center shadow-sm">
-          {/* Record button */}
-          <button
-            onClick={handleToggleRecord}
-            className="flex flex-col items-center gap-1.5 group cursor-pointer"
-          >
-            <div className={`h-11 w-11 rounded-full flex items-center justify-center border transition-all duration-200 ${
-              isRecording 
-                ? "bg-red-50 border-red-200 text-red-500 shadow-sm" 
-                : "bg-white border-[#F5E1D6] text-slate-500 hover:bg-slate-50"
-            }`}>
-              <Circle className={`h-5 w-5 fill-current ${isRecording ? "animate-pulse" : "text-red-500"}`} />
-            </div>
-            <span className="text-[10px] font-extrabold text-slate-600">Ghi hình</span>
-          </button>
-
-          {/* Capture photo button */}
-          <button
-            onClick={handleCaptureSnapshot}
-            className="flex flex-col items-center gap-1.5 group cursor-pointer"
-          >
-            <div className="h-11 w-11 rounded-full bg-white border border-[#F5E1D6] text-slate-500 hover:bg-slate-50 flex items-center justify-center transition shadow-sm">
-              <Camera className="h-5 w-5 text-sky-950 group-hover:scale-105 transition" />
-            </div>
-            <span className="text-[10px] font-extrabold text-slate-600">Chụp ảnh</span>
-          </button>
-
-          {/* Expand/More button */}
-          <button
-            onClick={handleExpandView}
-            className="flex flex-col items-center gap-1.5 group cursor-pointer"
-          >
-            <div className="h-11 w-11 rounded-full bg-white border border-[#F5E1D6] text-slate-500 hover:bg-slate-50 flex items-center justify-center transition shadow-sm">
-              <Maximize2 className="h-4.5 w-4.5 text-sky-950" />
-            </div>
-            <span className="text-[10px] font-extrabold text-slate-600">Mở rộng</span>
-          </button>
+        {/* 1. Camera Status Panel (Admin only, NO live image stream) */}
+        <div className="relative aspect-video w-full rounded-[28px] bg-slate-900 flex flex-col items-center justify-center gap-2 text-white/70 shadow-inner border border-slate-950/20 select-none">
+          {camera.status === "online" ? (
+            <>
+              <span className="h-2.5 w-2.5 rounded-full bg-emerald-500 animate-pulse" />
+              <p className="text-sm font-bold">Camera đang hoạt động</p>
+            </>
+          ) : (
+            <>
+              <WifiOff className="h-6 w-6 text-white/40" />
+              <p className="text-sm font-bold">Camera ngắt kết nối</p>
+            </>
+          )}
+          <p className="text-[10px] text-white/40">Cập nhật: {camera.lastCaptureAt}</p>
         </div>
 
         {/* 3. Event logs "SỰ KIỆN" list */}
@@ -669,18 +202,6 @@ export default function CameraDetailModal({
           </div>
         </div>
 
-        {/* 4. Playback Button at bottom */}
-        <button
-          onClick={() => {
-            showToast("Bắt đầu phát lại dữ liệu camera lịch sử...");
-          }}
-          className="bg-[#FFF8F6] border border-[#F5E1D6] hover:bg-[#FAF0E6] rounded-[24px] p-4 flex items-center justify-center gap-2.5 transition active:scale-98 duration-100 shadow-sm cursor-pointer"
-        >
-          <History className="h-5 w-5 text-amber-500" />
-          <span className="text-xs font-extrabold text-sky-950 uppercase tracking-wider">
-            Phát Lại
-          </span>
-        </button>
 
       </div>
     </div>,

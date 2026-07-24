@@ -161,31 +161,38 @@ export default function NotificationBell() {
     let initialized = false;
 
     const usersCol = collection(db, "users");
-    const unsubscribe = onSnapshot(usersCol, (snapshot) => {
-      const now = new Date();
-      const newUserNotifs: NotifItem[] = [];
+    const unsubscribe = onSnapshot(
+      usersCol, 
+      (snapshot) => {
+        const now = new Date();
+        const newUserNotifs: NotifItem[] = [];
 
-      snapshot.docs.forEach((doc) => {
-        if (initialized && !knownUserIds.has(doc.id)) {
-          const data = doc.data();
-          const name = data.fullName || data.displayName || data.email || "Người dùng mới";
-          newUserNotifs.push({
-            id: `new-user-${doc.id}-${now.getTime()}`,
-            type: "new_user",
-            title: "Người dùng mới",
-            message: `"${name}" vừa được thêm vào hệ thống.`,
-            timestamp: now,
-          });
+        snapshot.docs.forEach((doc) => {
+          if (initialized && !knownUserIds.has(doc.id)) {
+            const data = doc.data();
+            const name = data.fullName || data.displayName || data.email || "Người dùng mới";
+            newUserNotifs.push({
+              id: `new-user-${doc.id}-${now.getTime()}`,
+              type: "new_user",
+              title: "Người dùng mới",
+              message: `"${name}" vừa được thêm vào hệ thống.`,
+              timestamp: now,
+            });
+          }
+          knownUserIds.add(doc.id);
+        });
+
+        initialized = true;
+
+        if (newUserNotifs.length > 0) {
+          setNotifs((prev) => [...newUserNotifs, ...prev]);
         }
-        knownUserIds.add(doc.id);
-      });
-
-      initialized = true;
-
-      if (newUserNotifs.length > 0) {
-        setNotifs((prev) => [...newUserNotifs, ...prev]);
+      },
+      (err) => {
+        // Silently catch permission-denied or unauthenticated listeners
+        console.warn("Firestore users listener warning:", err.message);
       }
-    });
+    );
 
     return () => unsubscribe();
   }, []);

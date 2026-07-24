@@ -7,10 +7,11 @@ import CameraGrid from "@/src/components/camera/CameraGrid";
 import CameraTable from "@/src/components/camera/CameraTable";
 import AIAnalysisTable from "@/src/components/camera/AIAnalysisTable";
 import CameraDetailModal from "@/src/components/camera/CameraDetailModal";
+
 import { ref, onValue } from "firebase/database";
 import { rtdb } from "@/src/lib/firebase";
 import { CameraItem, AiRecord } from "@/src/types/camera";
-import { 
+import {
   Video,
   ShieldCheck,
   Camera,
@@ -43,8 +44,9 @@ export default function CameraPage() {
           const item = data[key];
           if (typeof item === "object" && item !== null) {
             // Check if device has camera
-            const hasCamera = Boolean(item.hasCamera ?? item.control?.camera);
+            const hasCamera = Boolean(item.hasCamera ?? item.control?.camera ?? item.camera);
             if (hasCamera) {
+              const cameraStatus = (item.camera?.status ?? item.status ?? "offline").toLowerCase() === "online" ? "online" : "offline";
               const status = String(item.status ?? (item.alert === "NORMAL" ? "online" : (item.alert ? "warning" : "offline"))).toLowerCase();
               const lastSeen = item.lastSeen ?? "Vừa xong";
               const deviceName = item.name ?? key;
@@ -52,7 +54,6 @@ export default function CameraPage() {
               const eggCount = item.telemetry?.eggCount !== undefined ? Number(item.telemetry.eggCount) : 24;
               const previousEggCount = status === "warning" ? 24 : eggCount;
               const hasVariation = eggCount !== previousEggCount;
-              const ipAddress = item.ipAddress ?? item.ip ?? item.telemetry?.ip ?? "192.168.88.220:81";
 
               activeCameras.push({
                 id: `cam-${key}`,
@@ -60,19 +61,18 @@ export default function CameraPage() {
                 deviceName: deviceName,
                 cameraName: `Cam ${deviceName}`,
                 locationLabel: "Trạm ấp",
-                status: status === "offline" ? "offline" : "online",
+                status: cameraStatus,
                 previewImage: null,
                 lastCaptureAt: lastSeen,
                 aiStatus: hasVariation ? "alert" : "analyzed",
                 aiAlertCount: hasVariation ? 1 : 0,
-                lastAiSummary: hasVariation 
-                  ? `Cảnh báo: Số lượng trứng thay đổi (Ban đầu: ${previousEggCount}, Hiện tại: ${eggCount})` 
+                lastAiSummary: hasVariation
+                  ? `Cảnh báo: Số lượng trứng thay đổi (Ban đầu: ${previousEggCount}, Hiện tại: ${eggCount})`
                   : `Số lượng trứng ổn định: ${eggCount} quả`,
                 lastAiConfidence: 98,
-                streamEnabled: true,
+                streamEnabled: false,
                 eggCount,
                 previousEggCount,
-                ipAddress,
               });
 
               activeAiRecords.push({
@@ -84,8 +84,8 @@ export default function CameraPage() {
                 imageUrl: null,
                 resultStatus: hasVariation ? "warning" : "normal",
                 resultTitle: hasVariation ? "Số lượng thay đổi" : "Số lượng ổn định",
-                resultSummary: hasVariation 
-                  ? `Phát hiện số trứng thay đổi từ ${previousEggCount} xuống ${eggCount} quả` 
+                resultSummary: hasVariation
+                  ? `Phát hiện số trứng thay đổi từ ${previousEggCount} xuống ${eggCount} quả`
                   : `AI nhận diện thành công: ${eggCount} quả trứng, không có thay đổi`,
                 confidence: 98,
                 processedBy: "HatchMate AI v1.0",
@@ -167,23 +167,23 @@ export default function CameraPage() {
           Đang tải thông tin camera...
         </div>
       ) : cameras.length === 0 ? (
-        <div className="rounded-[24px] border border-sky-100/80 bg-white p-16 text-center shadow-sm shadow-sky-100/10">
-          <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-50 text-amber-500 shadow-sm shadow-amber-100">
-            <VideoOff className="h-8 w-8 stroke-[2.2] animate-pulse" />
+        <div className="rounded-[24px] border border-sky-100/80 bg-white p-8 text-center shadow-sm shadow-sky-100/10">
+          <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-50 text-amber-500 shadow-sm shadow-amber-100">
+            <VideoOff className="h-6 w-6 stroke-[2.2] animate-pulse" />
           </div>
-          <h3 className="text-lg font-bold text-sky-950">Chưa có camera nào</h3>
-          <p className="mx-auto mt-2 max-w-sm text-sm text-slate-500 leading-relaxed">
+          <h3 className="text-base font-bold text-sky-950">Chưa có camera nào</h3>
+          <p className="mx-auto mt-1 max-w-sm text-xs text-slate-500 leading-relaxed">
             Hiện tại không tìm thấy thiết bị camera nào khớp với tiêu chí tìm kiếm hoặc trạng thái của bộ lọc.
           </p>
         </div>
       ) : (
         <>
-          <CameraGrid 
-            cameras={cameras} 
+          <CameraGrid
+            cameras={cameras}
             onViewDetail={setSelectedCamera}
           />
-          
-          <CameraTable 
+
+          <CameraTable
             cameras={cameras}
             onSelectCamera={setSelectedCamera}
             onCaptureNew={(id) => {

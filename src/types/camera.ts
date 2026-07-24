@@ -26,6 +26,8 @@ export interface CameraItem {
   previousEggCount?: number;
   lastCountChangedAt?: string;
   ipAddress?: string;
+  streamUrl?: string;
+  captureUrl?: string;
 }
 
 export type AiResultStatus = "normal" | "warning" | "danger";
