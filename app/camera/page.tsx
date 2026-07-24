@@ -6,6 +6,7 @@ import CameraMiniStatCard from "@/src/components/camera/CameraMiniStatCard";
 import CameraGrid from "@/src/components/camera/CameraGrid";
 import CameraTable from "@/src/components/camera/CameraTable";
 import AIAnalysisTable from "@/src/components/camera/AIAnalysisTable";
+import CameraDetailModal from "@/src/components/camera/CameraDetailModal";
 import { ref, onValue } from "firebase/database";
 import { rtdb } from "@/src/lib/firebase";
 import { CameraItem, AiRecord } from "@/src/types/camera";
@@ -18,6 +19,7 @@ import {
 } from "lucide-react";
 
 export default function CameraPage() {
+  const [selectedCamera, setSelectedCamera] = useState<CameraItem | null>(null);
   const [cameras, setCameras] = useState<CameraItem[]>([]);
   const [aiRecords, setAiRecords] = useState<AiRecord[]>([]);
   const [stats, setStats] = useState({
@@ -50,6 +52,7 @@ export default function CameraPage() {
               const eggCount = item.telemetry?.eggCount !== undefined ? Number(item.telemetry.eggCount) : 24;
               const previousEggCount = status === "warning" ? 24 : eggCount;
               const hasVariation = eggCount !== previousEggCount;
+              const ipAddress = item.ipAddress ?? item.ip ?? item.telemetry?.ip ?? "192.168.88.220:81";
 
               activeCameras.push({
                 id: `cam-${key}`,
@@ -69,6 +72,7 @@ export default function CameraPage() {
                 streamEnabled: true,
                 eggCount,
                 previousEggCount,
+                ipAddress,
               });
 
               activeAiRecords.push({
@@ -174,10 +178,14 @@ export default function CameraPage() {
         </div>
       ) : (
         <>
-          <CameraGrid cameras={cameras} />
+          <CameraGrid 
+            cameras={cameras} 
+            onViewDetail={setSelectedCamera}
+          />
           
           <CameraTable 
             cameras={cameras}
+            onSelectCamera={setSelectedCamera}
             onCaptureNew={(id) => {
               console.log("Request manual capture for camera:", id);
             }}
@@ -187,6 +195,16 @@ export default function CameraPage() {
 
       {/* AI Analysis Section */}
       {!loading && aiRecords.length > 0 && <AIAnalysisTable records={aiRecords} />}
+
+      {/* Camera Detail Modal */}
+      {selectedCamera && (
+        <CameraDetailModal
+          isOpen={selectedCamera !== null}
+          onClose={() => setSelectedCamera(null)}
+          deviceId={selectedCamera.deviceId}
+          initialCamera={selectedCamera}
+        />
+      )}
     </div>
   );
 }

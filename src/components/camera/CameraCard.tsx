@@ -18,9 +18,10 @@ import { CameraItem } from "@/src/types/camera";
 interface CameraCardProps {
   camera: CameraItem;
   onRefreshCapture?: (id: string) => void;
+  onViewDetail?: (camera: CameraItem) => void;
 }
 
-export default function CameraCard({ camera, onRefreshCapture }: CameraCardProps) {
+export default function CameraCard({ camera, onRefreshCapture, onViewDetail }: CameraCardProps) {
   const [activeDropdown, setActiveDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -217,7 +218,8 @@ export default function CameraCard({ camera, onRefreshCapture }: CameraCardProps
       <div className="mt-5 grid grid-cols-2 gap-2.5">
         <button
           type="button"
-          className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-sky-100 bg-sky-50/20 text-xs font-bold text-sky-700 shadow-sm transition hover:bg-sky-50 active:scale-95 duration-150"
+          onClick={() => onViewDetail && onViewDetail(camera)}
+          className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-sky-100 bg-sky-50/20 text-xs font-bold text-sky-700 shadow-sm transition hover:bg-sky-50 active:scale-95 duration-150 cursor-pointer"
         >
           <Eye className="h-4 w-4" />
           <span>Xem chi tiết</span>

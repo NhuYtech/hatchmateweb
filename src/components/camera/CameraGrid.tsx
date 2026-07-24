@@ -8,9 +8,10 @@ import { VideoOff } from "lucide-react";
 interface CameraGridProps {
   cameras: CameraItem[];
   onRefreshCapture?: (id: string) => void;
+  onViewDetail?: (camera: CameraItem) => void;
 }
 
-export default function CameraGrid({ cameras, onRefreshCapture }: CameraGridProps) {
+export default function CameraGrid({ cameras, onRefreshCapture, onViewDetail }: CameraGridProps) {
   if (cameras.length === 0) {
     return (
       <div className="rounded-[24px] border border-sky-100/80 bg-white p-16 text-center shadow-sm shadow-sky-100/10">
@@ -32,6 +33,7 @@ export default function CameraGrid({ cameras, onRefreshCapture }: CameraGridProp
           key={camera.id} 
           camera={camera} 
           onRefreshCapture={onRefreshCapture}
+          onViewDetail={onViewDetail}
         />
       ))}
     </div>
